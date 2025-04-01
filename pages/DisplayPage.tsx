@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Image, FlatList, TouchableHighlight , StatusBar } from 'react-native';
+import { View, Text, StyleSheet, Image, FlatList, TouchableHighlight , StatusBar, ScrollView} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => {
@@ -23,7 +23,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
 
     const { restaurants } = route.params;
     return (
-        <SafeAreaView  style={styles.safeArea}>
+        <View style={styles.fullview}>
             <StatusBar backgroundColor="white" barStyle="light-content" />
         <View style={styles.container}>
             <FlatList
@@ -32,7 +32,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
                     const cuisines = item.cuisines.map((cuisine: any) => cuisine.name).join(', ');
                     return (
                         <TouchableHighlight
-                            underlayColor={'gray'}
+                            underlayColor={'#F8F8F8'}
                             onPress={() => {}}
                         >
                             <View style={styles.card}>
@@ -52,40 +52,37 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
                             <View style= {styles.separator} />
                                 <View style={styles.lowerPart}>
                                     <Text style={styles.cuisine}>{cuisines}</Text>
-                                    <Text style={styles.cuisine}>{item.address.firstLine + ' ' + item.address.city}</Text>
+                                    <Text style={styles.cuisine}>{item.address.firstLine + ', ' + item.address.city}</Text>
                                 </View>
                             </View>
                         </TouchableHighlight>
-                    )
+                    );
                 }}
                 keyExtractor={(item) => item.id.toString()}
+                ListFooterComponent={<View style={{ height: 50 }} />}
             />
         </View>
-        </SafeAreaView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    safeArea: {
+  fullview: {
       flex: 1,
-      //remove the top bar of the app
-      marginTop: -StatusBar.currentHeight,
       backgroundColor: '#F8F8F8', // Light gray background for the entire page
+      marginBottom: 0,
     },
     container: {
       flex: 1,
       paddingHorizontal: 16,
-      paddingVertical: 12,
+      paddingVertical: 4,
     },
     card: {
       backgroundColor: 'white',
       borderRadius: 12, // Rounded corners for a modern look
       marginBottom: 16,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 3, // Shadow for Android
+      borderColor: 'red', // Subtle border color
+      elevation: 1, // Shadow for Android
       overflow: 'hidden', // Ensures content stays within rounded corners
     },
     upperPart: {
