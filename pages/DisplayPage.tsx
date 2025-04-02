@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useColorScheme, View, Text, StyleSheet, Image, FlatList, TouchableHighlight, StatusBar } from 'react-native';
+import { useColorScheme, View, Text, Image, FlatList, TouchableHighlight } from 'react-native';
+import { sortResData } from '../functions/Sorting_Functions/sortRestaurantData';
+import { SelectList } from 'react-native-dropdown-select-list';
+import { displayPageStyles } from '../stylesheets/DisplayPage_StyleSheet';
 
 const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => {
+  const { restaurants } = route.params;
   const [postcode, setPostcode] = useState('');
+  const [selected, setSelected] = React.useState('');
+  const [sortedRestaurants, setSortedRestaurants] = useState(restaurants);
+  const data = [
+    { key: '1', value: 'Rating (High to Low)' },
+    { key: '2', value: 'Rating (Low to High)' },
+  ];
+
   const colorScheme = useColorScheme();
   useEffect(() => {   // Prevents infinite postcode rendering on the header
     if (route.params.postcode && route.params.postcode !== postcode) {
@@ -15,7 +26,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
     navigation.setOptions({
       title: `Restaurants at ${postcode}`,
       fontsize: 20,
-      headerTitleAlign: 'center', //the title should be in the center
+      headerTitleAlign: 'center',
       headerStyle: {
         backgroundColor: '#FF8000',
       },
@@ -27,157 +38,82 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
     },);
   }, [navigation, route, postcode, route.params.postcode]);
 
+  useEffect(() => {
+    if (selected) {
+      // "Rating(High to Low)" = descending order.
+      if (selected === 'Rating (High to Low)') {
+        setSortedRestaurants(sortResData(restaurants, 'desc'));
+      }
+      // "Rating(Low to High)" = ascending order.
+      else if (selected === 'Rating (Low to High)') {
+        setSortedRestaurants(sortResData(restaurants, 'asc'));
+      }
+    } else {
+      // If no selection yet, show unsorted data.
+      setSortedRestaurants(restaurants);
+    }
+  }, [selected, restaurants]);
+
   const isDarkMode = colorScheme === 'dark';
 
-  const { restaurants } = route.params;
   return (
-    <View style={[styles.fullview, isDarkMode && styles.darkfullview]}>
-      <StatusBar backgroundColor="white" barStyle="light-content" />
-      <View style={styles.container}>
+    <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
+      <SelectList //The selectlist displays sorting options.
+        setSelected={(value) => setSelected(value)}
+        data={data}
+        save="value"
+        placeholder="Sort By"
+        search={false}
+        // Use placeholderStyle to control the placeholder's text color and size.
+        placeholderStyle={[displayPageStyles.placeholder, isDarkMode && displayPageStyles.darkplaceholder]}
+        boxStyles={[displayPageStyles.dropdownBox, isDarkMode && displayPageStyles.darkDropdownBox]}
+        dropdownStyles={[displayPageStyles.dropdown, isDarkMode && displayPageStyles.darkDropdown]}
+        dropdownTextStyles={[displayPageStyles.dropdownText, isDarkMode && displayPageStyles.darkDropdownText]}
+      />
+      <View style={displayPageStyles.container}>
         <FlatList
           showsVerticalScrollIndicator={false} //Hide Vertical Scrollbar
           showsHorizontalScrollIndicator={false} //Hide Horizontal Scrollbar
-          data={restaurants}
+          data={sortedRestaurants}
           renderItem={({ item }) => {
             const cuisines = item.cuisines.map((cuisine: any) => cuisine.name).join(', ');
             return (
               <TouchableHighlight
-                underlayColor={isDarkMode ? '#1A1A1A' : '#F1F1F1'}
+                underlayColor={isDarkMode ? '#1A1A1A' : '#F8F9FA'}
                 onPress={() => { }}
-                style={styles.touchableHighlight}
+                style={displayPageStyles.touchableHighlight}
               >
-                <View style={[styles.card, isDarkMode && styles.darkcard]}>
-                  <View style={styles.upperPart}>
+                <View style={[displayPageStyles.card, isDarkMode && displayPageStyles.darkcard]}>
+                  <View style={displayPageStyles.upperPart}>
                     <Image
                       source={{ uri: item.logoUrl }}
-                      style={styles.image}
+                      style={displayPageStyles.image}
                     />
-                    <View style={styles.textContainer}>
-                      <Text style={[styles.name, isDarkMode && styles.darkname]}>{item.name}</Text>
-                      <View style={styles.ratingContainer}>
-                        <Image style={styles.ratingImage} source={require('../images/golden_star.png')} />
-                        <Text style={styles.rating}>{item.rating.starRating}</Text>
-                        <Text style={[styles.ratingNumbers, isDarkMode && styles.darkratingNumbers]}> ({item.rating.count})</Text>
+                    <View style={displayPageStyles.textContainer}>
+                      <Text style={[displayPageStyles.name, isDarkMode && displayPageStyles.darkname]}>{item.name}</Text>
+                      <View style={displayPageStyles.ratingContainer}>
+                        <Image style={displayPageStyles.ratingImage} source={require('../images/golden_star.png')} />
+                        <Text style={displayPageStyles.rating}>{item.rating.starRating}</Text>
+                        <Text style={[displayPageStyles.ratingNumbers, isDarkMode && displayPageStyles.darkratingNumbers]}> ({item.rating.count})</Text>
                       </View>
                     </View>
                   </View>
-                  <View style={styles.separator} />
-                  <View style={styles.lowerPart}>
-                    <Text style={[styles.cuisine, isDarkMode && styles.darkcuisine]}>{cuisines}</Text>
-                    <Text style={[styles.cuisine, isDarkMode && styles.darkcuisine]}>{item.address.firstLine + ', ' + item.address.city}</Text>
+                  <View style={displayPageStyles.separator} />
+                  <View style={displayPageStyles.lowerPart}>
+                    <Text style={[displayPageStyles.cuisine, isDarkMode && displayPageStyles.darkcuisine]}>{cuisines}</Text>
+                    <Text style={[displayPageStyles.cuisine, isDarkMode && displayPageStyles.darkcuisine]}>{item.address.firstLine + ', ' + item.address.city}</Text>
                   </View>
                 </View>
               </TouchableHighlight>
             );
           }}
           keyExtractor={(item) => item.id.toString()}
-          ListFooterComponent={<View style={styles.listfooterComponent} />}
+          ListFooterComponent={<View style={displayPageStyles.listfooterComponent} />}
         />
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  fullview: {
-    flex: 1,
-    backgroundColor: '#F1F1F1',
-  },
-  darkfullview:{
-    backgroundColor: '#1A1A18',
-  },
-  touchableHighlight: {
-    borderRadius: 12,
-    overflow: 'hidden',
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  card: {
-    backgroundColor: '#F7F7F7',
-    borderRadius: 12,
-    marginTop: 10,
-    marginBottom: 10,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    elevation: 1,
-  },
-  darkcard: {
-    backgroundColor: '#262626',
-  },
-  upperPart: {
-    flexDirection: 'row', // Align image and text side by side
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  image: {
-    width: 60,
-    height: 60,
-    borderRadius: 35, // Circular image
-    backgroundColor: '#F5F5F5', // Placeholder background color
-  },
-  textContainer: {
-    flex: 1,
-    marginLeft: 16, // Space between image and text
-  },
-  name: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333333',
-    marginBottom: 4,
-  },
-  darkname:{
-    color: 'white',
-  },
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  ratingImage: {
-    width: 16,
-    height: 16,
-    marginRight: 4, // Space between star icon and rating text
-  },
-  rating: {
-    fontSize: 14,
-    color: '#FF8000', // Just Eat orange for ratings
-    fontWeight: 'bold',
-  },
-  ratingNumbers:{
-    fontSize: 13,
-    color: '#333333',
-  },
-  darkratingNumbers:{
-    color: 'white',
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#EEEEEE',
-    marginHorizontal: 16,
-    marginVertical: 8,
-  },
-  lowerPart: {
-    paddingHorizontal: 16,
-    paddingBottom: 12,
-  },
-  cuisine: {
-    fontSize: 14,
-    color: '#393939',
-    marginBottom: 6,
-    textAlign: 'left',
-  },
-  darkcuisine:{
-    color: '#e6e6e6',
-  },
-  listfooterComponent: {
-    height: 50,
-  },
-}
-);
 
 
 export default DisplayPage;

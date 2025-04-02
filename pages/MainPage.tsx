@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { useColorScheme, Text, View, StyleSheet, Alert } from 'react-native';
+import { useColorScheme, Text, View, Alert } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { handleSearch } from '../functions/API_Functions/apiRequest';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
-
+import { mainpageStyles } from '../stylesheets/MainPage_StyleSheet';
 
 const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
 
@@ -28,6 +28,7 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
   }, [navigation, route]);
 
   const onSubmit = async (text: string) => {    //The handleSearch function is in 'functions/API_Functions/apiRequest.ts'
+    if (!text) { return null; } //If the user submits empty string, return null.
     text = text.replace(/\s/g, '').toUpperCase(); //Strip all spaces for API Calls.
     setLoading(true);
     const ten_restaurants = await handleSearch(text); //Ten Restaurants waiting to be returned.
@@ -43,20 +44,21 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
   const isDarkMode = colorScheme === 'dark';
   SystemNavigationBar.setNavigationColor(isDarkMode ? '#262626' : '#ff8000');
   return (
-    <View style={[styles.container, isDarkMode && styles.darkcontainer]}>
-      <View style={styles.searchContainer}>
-        <Text style={[styles.title, isDarkMode && styles.darktitle]}>Find Restaurants Near You</Text>
+    <View style={[mainpageStyles.container, isDarkMode && mainpageStyles.darkcontainer]}>
+      <View style={mainpageStyles.searchContainer}>
+        <Text style={[mainpageStyles.title, isDarkMode && mainpageStyles.darktitle]}>Find Restaurants Near You</Text>
         <SearchBar
           placeholder="UK postcode, e.g. SW1A 1AA"
           onChangeText={((text: string) => setPostcode(text))}
-          // onClear={() => setPostcode('')}
           value={postcode}
           onSubmitEditing={() => onSubmit(postcode)}
-          /* Three styles for adjusting how the searchBar looks*/
-          containerStyle={[styles.searchBarContainer, isDarkMode && styles.darksearchBarContainer]}
-          inputContainerStyle={styles.searchInputContainer}
-          inputStyle={styles.searchInput}
-          placeholderTextColor= "#888" // Subtle placeholder color
+          
+          /* Three mainpageStyles for adjusting how the searchBar looks*/
+          containerStyle={[mainpageStyles.searchBarContainer, isDarkMode && mainpageStyles.darksearchBarContainer]}
+          inputContainerStyle={mainpageStyles.searchInputContainer}
+          inputStyle={mainpageStyles.searchInput}
+
+          placeholderTextColor="#888" // Subtle placeholder color
           searchIcon={null} //Hide searchIcon
           clearIcon={null} //Hide clearIcon
           showLoading={loading} // ActivityIndicator for showing loading status.
@@ -66,61 +68,5 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1, //Span the whole page
-    backgroundColor: '#F8F9FA', // Light gray background for the main page
-    paddingHorizontal: 20, //Padding for the search Bar
-    justifyContent: 'center',
-  },
-  darkcontainer:{
-    backgroundColor: '#262626',
-  },
-  searchContainer: {
-    width: '100%',
-    marginTop: -180, //Move up to make the search bar appear in the middle instead of the text.
-  },
-  title: { //style of the text "Find Restaurants Near You"
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
-    fontStyle: 'italic',
-  },
-  darktitle:{
-    color: '#FFFFFF',
-  },
-  searchBarContainer: {
-    shadowColor: 'gray', // Add subtle shadow for depth
-    backgroundColor: '#F8F9FA', // Remove default grey background
-    borderTopWidth: 0, // Remove top border
-    borderBottomWidth: 0, // Remove bottom border
-    paddingHorizontal: 1, // Remove extra padding
-    marginLeft: 20,
-    marginRight: 20,
-    width: '90%',
-  },
-  darksearchBarContainer: {
-    backgroundColor: '#262626',
-  },
-  searchInputContainer: {
-    backgroundColor: 'white', // Set clean white background for input field
-    borderRadius: 25,
-    height: 60,
-    shadowColor: '#000', // Add subtle shadow for depth
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1, // Softer shadow opacity
-    shadowRadius: 4, // Smooth shadow blur
-    elevation: 8,
-  },
-  searchInput: {
-    fontSize: 16,
-    color: '#333', // Text color inside the input field
-    paddingHorizontal: 10, // Adjust text padding inside input field
-  },
-});
-
-
 
 export default MainPage;
