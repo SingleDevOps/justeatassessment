@@ -1,12 +1,16 @@
 import React, { useEffect } from 'react';
-import { useColorScheme, Text, View, StyleSheet, Alert, ActivityIndicator } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { useColorScheme, Text, View, StyleSheet, Alert } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import {handleSearch} from '../functions/API_Functions/apiRequest';
+import { handleSearch } from '../functions/API_Functions/apiRequest';
+import SystemNavigationBar from 'react-native-system-navigation-bar';
+
 
 const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
+
   const [postcode, setPostcode] = React.useState('');
   const [loading, setLoading] = React.useState(false);
+  const colorScheme = useColorScheme();
+
   useEffect(() => {
     //Show page title, and header style setting.
     navigation.setOptions({
@@ -36,25 +40,27 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
     }
   };
 
+  const isDarkMode = colorScheme === 'dark';
+  SystemNavigationBar.setNavigationColor(isDarkMode ? '#262626' : '#ff8000');
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isDarkMode && styles.darkcontainer]}>
       <View style={styles.searchContainer}>
-        <Text style={styles.title}>Find Restaurants Near You</Text>
+        <Text style={[styles.title, isDarkMode && styles.darktitle]}>Find Restaurants Near You</Text>
         <SearchBar
           placeholder="UK postcode, e.g. SW1A 1AA"
           onChangeText={((text: string) => setPostcode(text))}
-          onClear={() => setPostcode('')}
+          // onClear={() => setPostcode('')}
           value={postcode}
           onSubmitEditing={() => onSubmit(postcode)}
           /* Three styles for adjusting how the searchBar looks*/
-          containerStyle={styles.searchBarContainer}
+          containerStyle={[styles.searchBarContainer, isDarkMode && styles.darksearchBarContainer]}
           inputContainerStyle={styles.searchInputContainer}
           inputStyle={styles.searchInput}
-          placeholderTextColor="#888" // Subtle placeholder color
+          placeholderTextColor= "#888" // Subtle placeholder color
           searchIcon={null} //Hide searchIcon
           clearIcon={null} //Hide clearIcon
           showLoading={loading} // ActivityIndicator for showing loading status.
-          loadingProps={{color: '#FF8000', size: 'small'}} // Style of loading indicator
+          loadingProps={{ color: '#FF8000', size: 'small' }} // Style of loading indicator
         />
       </View>
     </View>
@@ -68,6 +74,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20, //Padding for the search Bar
     justifyContent: 'center',
   },
+  darkcontainer:{
+    backgroundColor: '#262626',
+  },
   searchContainer: {
     width: '100%',
     marginTop: -180, //Move up to make the search bar appear in the middle instead of the text.
@@ -79,6 +88,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontStyle: 'italic',
   },
+  darktitle:{
+    color: '#FFFFFF',
+  },
   searchBarContainer: {
     shadowColor: 'gray', // Add subtle shadow for depth
     backgroundColor: '#F8F9FA', // Remove default grey background
@@ -88,6 +100,9 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     width: '90%',
+  },
+  darksearchBarContainer: {
+    backgroundColor: '#262626',
   },
   searchInputContainer: {
     backgroundColor: 'white', // Set clean white background for input field
