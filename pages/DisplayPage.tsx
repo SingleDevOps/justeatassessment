@@ -3,13 +3,15 @@ import { View, Text, StyleSheet, Image, FlatList, TouchableHighlight , StatusBar
 
 const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => {
     const [postcode, setPostcode] = useState('');
-    useEffect(() => {
+
+    useEffect(() => {   // Prevents infinite postcode rendering on the header
       if (route.params.postcode && route.params.postcode !== postcode){
         setPostcode(route.params.postcode);
       }
     }, [route.params.postcode, postcode]);
+
     useEffect(() => {
-        //Show page title
+        //Show page title, and its style setting
         navigation.setOptions({
             title: `Restaurants at ${postcode}`,
             fontsize: 20,
@@ -35,11 +37,12 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
                 showsHorizontalScrollIndicator={false} //Hide Horizontal Scrollbar
                 data={restaurants}
                 renderItem={({ item }) => {
-                    const cuisines = item.cuisines.map((cuisine: object) => cuisine.name).join(', ');
+                    const cuisines = item.cuisines.map((cuisine: any) => cuisine.name).join(', ');
                     return (
                         <TouchableHighlight
-                            underlayColor={'#F8F8F8'}
+                            underlayColor={'#F1F1F1'}
                             onPress={() => {}}
+                            style = {styles.touchableHighlight}
                         >
                             <View style={styles.card}>
                                 <View style={styles.upperPart}>
@@ -75,22 +78,28 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
 const styles = StyleSheet.create({
   fullview: {
       flex: 1,
-      backgroundColor: '#F8F8F8', // Light gray background for the entire page
-      marginBottom: 0,
+      backgroundColor: '#F1F1F1', // Light gray background for the entire page
+    },
+    touchableHighlight:{
+      borderRadius: 12,
+      overflow:'hidden',
+      marginTop:5,
     },
     container: {
       flex: 1,
       paddingHorizontal: 16,
-      paddingVertical: 3,
     },
     card: {
-      backgroundColor: 'white',
-      borderRadius: 12, // Rounded corners for a modern look
-      marginBottom: 16,
-      borderColor: 'red', // Subtle border color
-      elevation: 1, // Shadow for Android
-      overflow: 'hidden', // Ensures content stays within rounded corners
-    },
+      backgroundColor: '#F7F7F7',
+      borderRadius: 12,
+      marginTop: 10,
+      marginBottom: 10,
+      overflow: 'hidden',
+      shadowColor: '#000',
+      shadowOpacity: 0.2,
+      shadowRadius: 1,
+      elevation: 1,
+      },
     upperPart: {
       flexDirection: 'row', // Align image and text side by side
       alignItems: 'center',
@@ -100,17 +109,17 @@ const styles = StyleSheet.create({
     image: {
       width: 60,
       height: 60,
-      borderRadius: 30, // Circular image
+      borderRadius: 35, // Circular image
       backgroundColor: '#F5F5F5', // Placeholder background color
     },
     textContainer: {
       flex: 1,
-      marginLeft: 12, // Space between image and text
+      marginLeft: 16, // Space between image and text
     },
     name: {
       fontSize: 18,
       fontWeight: 'bold',
-      color: '#333333', // Dark gray for better readability
+      color: '#333333', // Dark font for better readability
       marginBottom: 4,
     },
     ratingContainer: {

@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
-import { useColorScheme, Text, View, StyleSheet, Alert } from 'react-native';
+import { useColorScheme, Text, View, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { SearchBar } from 'react-native-elements';
-import {validatePostcode, fetchRestaurantsFromJustEat} from '../functions/API_Functions/apiRequest';
+import {handleSearch} from '../functions/API_Functions/apiRequest';
 
 const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
   const [postcode, setPostcode] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
   useEffect(() => {
-    //Show page title
+    //Show page title, and header style setting.
     navigation.setOptions({
       title: 'Just Eat Postcode Search',
       headerTitleAlign: 'center',
@@ -21,34 +23,15 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
     });
   }, [navigation, route]);
 
-  async function handleSearch(text: string): Promise<any[] | null> {
-    // Create a timeout promise that resolves to "TIMEOUT" after 3000ms
-    const timeoutPromise = new Promise<string>((resolve) =>
-      setTimeout(() => resolve('TIMEOUT'), 3000)
-    );
-
-    // Race the validation promise against the timeout promise
-    const validationResult = await Promise.race([
-      validatePostcode(text),
-      timeoutPromise,
-    ]);
-
-    if (validationResult === 'TIMEOUT') {
-      console.log('Validation API request timed out. Sending postcode directly to Just Eat API.');
-      return await fetchRestaurantsFromJustEat(text);
-    } else {
-      console.log('Postcode validated successfully. Fetching restaurants from Just Eat API.');
-      return await fetchRestaurantsFromJustEat(text);
-    }
-  }
-
-  const onSubmit = async (text: string) => {
-    text = text.replace(/\s/g, '').toUpperCase();
-    const ten_restaurants = await handleSearch(text);
+  const onSubmit = async (text: string) => {    //The handleSearch function is in 'functions/API_Functions/apiRequest.ts'
+    text = text.replace(/\s/g, '').toUpperCase(); //Strip all spaces for API Calls.
+    setLoading(true);
+    const ten_restaurants = await handleSearch(text); //Ten Restaurants waiting to be returned.
+    setLoading(false);
     if (ten_restaurants) {
-      navigation.navigate('DisplayPage', { postcode: text, restaurants: ten_restaurants });
+      navigation.navigate('DisplayPage', { postcode: text, restaurants: ten_restaurants }); //When the ten restaurants data is received, navigate to the DisplayPage and send parameters to the page.
     } else {
-      Alert.alert('Invalid postcode', 'This postcode is not a valid UK postcode.');
+      Alert.alert('Invalid postcode', 'This postcode is not a valid UK postcode.');  //If not received, alert the user.
       console.log('Invalid postcode, this postcode is not a valid UK postcode.');
     }
   };
@@ -63,12 +46,15 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
           onClear={() => setPostcode('')}
           value={postcode}
           onSubmitEditing={() => onSubmit(postcode)}
+          /* Three styles for adjusting how the searchBar looks*/
           containerStyle={styles.searchBarContainer}
           inputContainerStyle={styles.searchInputContainer}
           inputStyle={styles.searchInput}
           placeholderTextColor="#888" // Subtle placeholder color
-          searchIcon={null}
-          clearIcon={null} // Subtle clear icon color
+          searchIcon={null} //Hide searchIcon
+          clearIcon={null} //Hide clearIcon
+          showLoading={loading} // ActivityIndicator for showing loading status.
+          loadingProps={{color: '#FF8000', size: 'small'}} // Style of loading indicator
         />
       </View>
     </View>
@@ -77,17 +63,16 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1, //Span the whole page
     backgroundColor: '#F8F9FA', // Light gray background for the main page
-    paddingHorizontal: 20,
+    paddingHorizontal: 20, //Padding for the search Bar
     justifyContent: 'center',
-    alignItems: 'center',
   },
   searchContainer: {
     width: '100%',
-    marginTop: -150,
+    marginTop: -180, //Move up to make the search bar appear in the middle instead of the text.
   },
-  title: {
+  title: { //style of the text "Find Restaurants Near You"
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
@@ -106,13 +91,13 @@ const styles = StyleSheet.create({
   },
   searchInputContainer: {
     backgroundColor: 'white', // Set clean white background for input field
-    borderRadius: 25, // Rounded corners for modern look
+    borderRadius: 25,
     height: 60,
     shadowColor: '#000', // Add subtle shadow for depth
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1, // Softer shadow opacity
     shadowRadius: 4, // Smooth shadow blur
-    elevation: 3, // Elevation for Android shadow
+    elevation: 8,
   },
   searchInput: {
     fontSize: 16,

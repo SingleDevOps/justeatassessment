@@ -13,7 +13,7 @@ export async function validatePostcode(text: string): Promise<boolean> {
     }
   }
 
-export async function fetchRestaurantsFromJustEat(text: string): Promise<any[] | null> {
+export async function fetchRestaurantsFromJustEat(text: string): Promise<object[] | null> {
     const justeatUrl = `https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/${text}`;
     try {
       const response = await fetch(justeatUrl, { method: 'GET' });
@@ -35,4 +35,24 @@ export async function fetchRestaurantsFromJustEat(text: string): Promise<any[] |
       console.error('Error fetching restaurants:', error);
       return null;
     }
+}
+
+export async function handleSearch(text: string): Promise<any[] | null> {
+  // Create a timeout promise that resolves to "TIMEOUT" after 3000ms
+  const timeoutPromise = new Promise<string>((resolve) =>
+    setTimeout(() => resolve('TIMEOUT'), 3000)
+  );
+
+  // Race the validation promise against the timeout promise
+  const validationResult = await Promise.race([
+    validatePostcode(text),
+    timeoutPromise,
+  ]);
+
+  if (validationResult === 'TIMEOUT') {
+    console.log('Validation API request timed out. Sending postcode directly to Just Eat API.');
+  } else {
+    console.log('Postcode validated successfully. Fetching restaurants from Just Eat API.');
+  }
+  return await fetchRestaurantsFromJustEat(text);
 }
