@@ -1,15 +1,19 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Image, FlatList, TouchableHighlight , StatusBar, ScrollView} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, FlatList, TouchableHighlight , StatusBar} from 'react-native';
 
 const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => {
+    const [postcode, setPostcode] = useState('');
+    useEffect(() => {
+      if (route.params.postcode && route.params.postcode !== postcode){
+        setPostcode(route.params.postcode);
+      }
+    }, [route.params.postcode, postcode]);
     useEffect(() => {
         //Show page title
         navigation.setOptions({
-            title: `Restaurants at ${route.params.postcode.replace(/\s/g, '').toUpperCase()}`,
+            title: `Restaurants at ${postcode}`,
             fontsize: 20,
-            //the title should be in the center
-            headerTitleAlign: 'center',
+            headerTitleAlign: 'center', //the title should be in the center
             headerStyle: {
                 backgroundColor: '#FF8000',
             },
@@ -19,7 +23,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
                 fontSize: 20,
             },
         },);
-    }, [navigation, route, route.params]);
+    }, [navigation, route, postcode, route.params.postcode]);
 
     const { restaurants } = route.params;
     return (
@@ -27,9 +31,11 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
             <StatusBar backgroundColor="white" barStyle="light-content" />
         <View style={styles.container}>
             <FlatList
+                showsVerticalScrollIndicator={false} //Hide Vertical Scrollbar
+                showsHorizontalScrollIndicator={false} //Hide Horizontal Scrollbar
                 data={restaurants}
                 renderItem={({ item }) => {
-                    const cuisines = item.cuisines.map((cuisine: any) => cuisine.name).join(', ');
+                    const cuisines = item.cuisines.map((cuisine: object) => cuisine.name).join(', ');
                     return (
                         <TouchableHighlight
                             underlayColor={'#F8F8F8'}
@@ -59,7 +65,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
                     );
                 }}
                 keyExtractor={(item) => item.id.toString()}
-                ListFooterComponent={<View style={{ height: 50 }} />}
+                ListFooterComponent={<View style={styles.listfooterComponent} />}
             />
         </View>
         </View>
@@ -75,7 +81,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       paddingHorizontal: 16,
-      paddingVertical: 4,
+      paddingVertical: 3,
     },
     card: {
       backgroundColor: 'white',
@@ -136,6 +142,9 @@ const styles = StyleSheet.create({
       color: '#666666', // Medium gray for secondary text
       marginBottom: 6,
       textAlign:'left',
+  },
+  listfooterComponent:{
+    height:50,
   },
 }
 );

@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react';
 import { useColorScheme, Text, View, StyleSheet, Alert } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-
+import {validatePostcode, fetchRestaurantsFromJustEat} from '../functions/API_Functions/apiRequest';
 
 const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
+  const [postcode, setPostcode] = React.useState('');
   useEffect(() => {
     //Show page title
     navigation.setOptions({
       title: 'Just Eat Postcode Search',
-      //the title is italic
-      //the title should be in the center
       headerTitleAlign: 'center',
       headerStyle: {
         backgroundColor: '#FF8000',
@@ -21,57 +20,46 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
       },
     });
   }, [navigation, route]);
-  const [postcode, setPostcode] = React.useState('');
 
-  async function handleSearch(text: string) {
-    text = text.replace(/\s/g, '');
-    const validation_url = `https://postcodes.io/postcodes/${text}/validate`;
-    //Validate the postcode using API of postcodes.io
-    var result = await (fetch(validation_url, {
-      method: 'GET',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        if (data.result === true) {
-          console.log('Valid postcode');
-          //Fetch restaurants details using Just Eat API Endpoint
-          const url = `https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/${text}`;
-          return fetch(url, {
-            method: 'GET',
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              const restaurants = data.restaurants;
-              const ten_restaurants = restaurants.slice(0, 10);
-              console.log(ten_restaurants);
-              return ten_restaurants;
-            });
-        } else {
-          console.log('Invalid postcode');
-          return null;
-        }
-      }
-      ));
+  async function handleSearch(text: string): Promise<any[] | null> {
+    // Create a timeout promise that resolves to "TIMEOUT" after 3000ms
+    const timeoutPromise = new Promise<string>((resolve) =>
+      setTimeout(() => resolve('TIMEOUT'), 3000)
+    );
 
-    return result;
+    // Race the validation promise against the timeout promise
+    const validationResult = await Promise.race([
+      validatePostcode(text),
+      timeoutPromise,
+    ]);
+
+    if (validationResult === 'TIMEOUT') {
+      console.log('Validation API request timed out. Sending postcode directly to Just Eat API.');
+      return await fetchRestaurantsFromJustEat(text);
+    } else {
+      console.log('Postcode validated successfully. Fetching restaurants from Just Eat API.');
+      return await fetchRestaurantsFromJustEat(text);
+    }
   }
+
   const onSubmit = async (text: string) => {
+    text = text.replace(/\s/g, '').toUpperCase();
     const ten_restaurants = await handleSearch(text);
     if (ten_restaurants) {
-      navigation.navigate('DisplayPage', { postcode: postcode, restaurants: ten_restaurants });
+      navigation.navigate('DisplayPage', { postcode: text, restaurants: ten_restaurants });
     } else {
       Alert.alert('Invalid postcode', 'This postcode is not a valid UK postcode.');
-      console.log('Invalid postcode');
+      console.log('Invalid postcode, this postcode is not a valid UK postcode.');
     }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
         <Text style={styles.title}>Find Restaurants Near You</Text>
         <SearchBar
           placeholder="UK postcode, e.g. SW1A 1AA"
-          onChangeText={(text) => setPostcode(text)}
+          onChangeText={((text: string) => setPostcode(text))}
           onClear={() => setPostcode('')}
           value={postcode}
           onSubmitEditing={() => onSubmit(postcode)}
@@ -79,8 +67,8 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
           inputContainerStyle={styles.searchInputContainer}
           inputStyle={styles.searchInput}
           placeholderTextColor="#888" // Subtle placeholder color
-          searchIcon={false}
-          clearIcon={false} // Subtle clear icon color
+          searchIcon={null}
+          clearIcon={null} // Subtle clear icon color
         />
       </View>
     </View>
