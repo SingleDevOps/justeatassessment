@@ -3,18 +3,22 @@ import { useColorScheme, View, Text, Image, FlatList, TouchableHighlight } from 
 import { sortResData } from '../functions/Sorting_Functions/sortRestaurantData';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { displayPageStyles } from '../stylesheets/DisplayPage_StyleSheet';
+import { filterCuisines } from '../functions/Filtering_Functions/filter';
 
 const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => {
   const { restaurants } = route.params;
   const [postcode, setPostcode] = useState('');
   const [selected, setSelected] = React.useState('');
   const [sortedRestaurants, setSortedRestaurants] = useState(restaurants);
+
   const data = [
     { key: '1', value: 'Rating (High to Low)' },
     { key: '2', value: 'Rating (Low to High)' },
   ];
-
   const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
+
+
   useEffect(() => {   // Prevents infinite postcode rendering on the header
     if (route.params.postcode && route.params.postcode !== postcode) {
       setPostcode(route.params.postcode);
@@ -54,7 +58,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
     }
   }, [selected, restaurants]);
 
-  const isDarkMode = colorScheme === 'dark';
+
 
   return (
     <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
@@ -76,7 +80,8 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
           showsHorizontalScrollIndicator={false} //Hide Horizontal Scrollbar
           data={sortedRestaurants}
           renderItem={({ item }) => {
-            const cuisines = item.cuisines.map((cuisine: any) => cuisine.name).join(', ');
+            const cuisines = filterCuisines(item);
+
             return (
               <TouchableHighlight
                 underlayColor={isDarkMode ? '#1A1A1A' : '#F8F9FA'}
