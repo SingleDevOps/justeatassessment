@@ -5,72 +5,136 @@ export function filterCuisines(item) {
             const lower = name.toLowerCase();
 
             switch (true) {
-                case lower.includes('chinese'):
-                    return name + ' 🥡';
+                case lower.includes('fish & chips'):
+                    return name + ' 🐟🍟\n';
                 case lower.includes('curry'):
-                    return name + ' 🍛';
+                    return name + ' 🍛\n';
                 case lower.includes('groceries'):
-                    return name + ' 🛍️';
+                    return name + ' 🛍️\n';
                 case lower.includes('low delivery fee'):
-                    return name + ' 💸';
+                    return name + ' 💸\n';
                 case lower.includes('shops'):
-                    return name + ' 🛒';
+                    return name + ' 🛒\n';
                 case lower.includes('collect stamps'):
-                    return name + ' 📮';
+                    return name + ' 📮\n';
                 case lower.includes('deals'):
-                    return name + ' 🤑';
+                    return name + ' 🤑\n';
                 case lower.includes('pharmacy'):
-                    return name + ' ❌';
+                    return name + ' 💊\n';
                 case lower.includes('alcohol'):
-                    return name + ' 🍺';
+                    return name + ' 🍺\n';
                 case lower.includes('pizza'):
-                    return name + ' 🍕';
+                    return name + ' 🍕\n';
                 case lower.includes('off'):
-                    return name + ' 💲';
+                    return name + ' 💲\n';
                 case lower.includes('halal'):
-                    return name + ' حلال';
+                    return name + ' حلال\n';
                 case lower.includes('burger'):
-                    return name + ' 🍔';
+                    return name + ' 🍔\n';
                 case lower.includes('chicken'):
-                    return name + ' 🍗';
+                    return name + ' 🍗\n';
                 case lower.includes('convenience'):
-                    return name + ' 🏪';
+                    return name + ' 🏪\n';
                 case lower.includes('local legends'):
-                    return name + ' 👑';
+                    return name + ' 👑\n';
                 case lower.includes('sandwich'):
-                    return name + ' 🥪';
+                    return name + ' 🥪\n';
                 case lower.includes('kebab'):
-                    return name + ' 🍖';
+                    return name + ' 🍖\n';
                 case lower.includes('breakfast'):
-                    return name + ' 🍳';
+                    return name + ' 🍳\n';
                 case lower.includes('desserts'):
-                    return name + ' 🍰';
+                    return name + ' 🍰\n';
                 case lower.includes('sushi'):
-                    return name + ' 🍣';
+                    return name + ' 🍣\n';
                 case lower.includes('curry'):
-                    return name + ' 🍛';
+                    return name + ' 🍛\n';
                 case lower.includes('coffee'):
-                    return name + ' ☕';
+                    return name + ' ☕\n';
                 case lower.includes('indian'):
-                    return name + ' 🍛';
-                case lower.includes('japanese'):
-                    return name + ' 🍣';
+                    return name + ' 🇮🇳\n';
                 case lower.includes('chinese'):
-                    return name + ' 🥡';
+                    return name + ' 🥡\n';
                 case lower.includes('milkshakes'):
-                    return name + ' 🥤';
+                    return name + ' 🥤\n';
                 case lower.includes('doughnuts'):
-                    return name + ' 🍩';
+                    return name + ' 🍩\n';
                 case lower.includes('bakery'):
-                    return name + ' 🍞';
+                    return name + ' 🍞\n';
                 case lower.includes('steak'):
-                    return name + ' 🥩';
+                    return name + ' 🥩\n';
                 case lower.includes('pasta'):
-                    return name + ' 🍝';
+                    return name + ' 🍝\n';
+                case lower.includes('thai'):
+                    return name + ' 🇹🇭\n';
+                case /^american$/.test(lower): //only matches American instead of South American.
+                    return name + ' 🇺🇸\n';
+                case lower.includes('south america'):
+                    return name + ' 🌎\n';
+                case lower.includes('italian'):
+                    return name + ' 🇮🇹\n';
+                case lower.includes('japanese'):
+                    return name + ' 🇯🇵\n';
+                case lower.includes('sushi'):
+                    return name + ' 🍣\n';
+                case lower.includes('freebies'):
+                    return name + ' 🆓\n';
+                case lower.includes('lunch'):
+                    return name + ' 🍴\n';
+                case lower.includes('dinner'):
+                    return name + ' 🍽️\n';
+                case lower.includes('asia'):
+                    return name + ' 🥢\n';
+                case lower.includes('leban'):
+                    return name + ' 🇱🇧\n';
+                case lower.includes('grill'):
+                    return name + ' 🔥\n';
+                case lower.includes('noodle'):
+                    return name + ' 🍜\n';
+                case lower.includes('ramen'):
+                    return name + ' 🍜\n';
+                case lower.includes('health'):
+                    return name + ' 💚\n';
+                case lower.includes('gree'):
+                    return name + ' 🇬🇷\n';
+                case lower.includes('turk'):
+                    return name + ' 🇹🇷\n';
+                case lower.includes('caribb'):
+                    return name + ' 🏝️\n';
+                case lower.includes('mexi'):
+                    return name + ' 🇲🇽\n';
+                case lower.includes('burrito'):
+                    return name + ' 🌯\n';
+                case lower.includes('jamaica'):
+                    return name + ' 🇯🇲\n';
+                case lower.includes('mediterranean'):
+                    return name + ' ⛵\n';
+                case lower.includes('korea'):
+                    return name + ' 🇰🇷\n';
                 // Add more cases if needed
+                case lower.includes('jerk'):
+                    return name + ' 🐂\n';
+                case lower.includes('africa'):
+                    return name + ' 🌍\n';
+                case lower.includes('nigeria'):
+                    return name + ' 🇳🇬\n';
+                case lower.includes('electron'):
+                    return name + ' 📱\n';
+                case lower.includes('salad'):
+                    return name + ' 🥗\n';
+                case lower.includes('venezue'):
+                    return name + ' 🇻🇪\n';
+                case lower.includes('veg'):
+                    return name + ' 🥑\n';
+                case lower.includes('wrap'):
+                    return name + ' 🌯\n';
+                case lower.includes('pakist'):
+                    return name + ' 🇵🇰\n';
+                case lower.includes('peri peri'):
+                    return name + ' 🌶️🍗\n';
                 default:
-                    return name;
+                    return name + ' \n';
             }
         })
-        .join(', ');
+        .join('');
 }

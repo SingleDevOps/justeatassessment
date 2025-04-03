@@ -31,8 +31,8 @@ export const displayPageStyles = StyleSheet.create({
         elevation: 1,
     },
     darkcard: {
-        borderColor: '#2C2C2C',
-        borderWidth: 0.8,
+        borderColor: '#858a7e',
+        borderWidth: 0.1,
         backgroundColor: '#262626',
     },
     upperPart: {
@@ -114,23 +114,27 @@ export const displayPageStyles = StyleSheet.create({
         color: 'white',
     },
     dropdownBox: {
-        marginHorizontal: 30,
+        top:5,
+        marginHorizontal: 17,
         marginVertical: 10,
-        borderWidth: 1,
+        borderWidth: 0.5,
         borderColor: '#ccc',
         borderRadius: 8,
         backgroundColor: 'white',
         paddingVertical: 6,
         paddingHorizontal: 10,
+        marginBottom:17,
     },
     dropdown: {
-        width:345,
+        width:372,
+        borderColor:'#F8F9FA',
         backgroundColor: 'white',
         alignSelf:'center',
         marginTop:-2,
         paddingHorizontal:20,
     },
     dropdownText: {
+        textAlign:'left',
         fontSize: 16,
         color: 'black',
         maxWidth: 400,
@@ -138,13 +142,15 @@ export const displayPageStyles = StyleSheet.create({
     },
     // Dropdown styles for dark mode
     darkDropdownBox: {
-        borderColor: '#555',
-        backgroundColor: '#ECDFCC',
+        borderColor: '#1A1A18',
+        backgroundColor: '#ABB0B8',
     },
     darkDropdown: {
+        borderColor:'#1A1A18',
         backgroundColor: '#262626',
     },
     darkDropdownText: {
+        textAlign:'left',
         color: 'white',
     },
 }
