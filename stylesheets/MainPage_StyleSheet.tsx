@@ -8,18 +8,35 @@ export const mainpageStyles = StyleSheet.create({
         justifyContent: 'center',
     },
     darkcontainer: {
-        backgroundColor: '#262626',
+        backgroundColor: '#1A1A18',
+    },
+    logoContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        position: 'absolute',
+        top: '15%',
+    },
+    logo: {
+        marginTop:-200,
+        width: '60%',
+        height: undefined,
+        aspectRatio: 1,
+        resizeMode: 'contain',
+        alignSelf: 'center',
     },
     searchContainer: {
         width: '100%',
-        marginTop: -180, //Move up to make the search bar appear in the middle instead of the text.
+        marginTop: 30,     // Adjust this value based on your layout needs
+        alignItems: 'center',
     },
     title: { //style of the text "Find Restaurants Near You"
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 'bold',
-        color: '#333',
+        color: '#888',
         textAlign: 'center',
         fontStyle: 'italic',
+        marginBottom: 5,
     },
     darktitle: {
         color: '#FFFFFF',
@@ -35,21 +52,29 @@ export const mainpageStyles = StyleSheet.create({
         width: '90%',
     },
     darksearchBarContainer: {
-        backgroundColor: '#262626',
+        backgroundColor: '#1A1A18',
     },
     searchInputContainer: {
+        borderColor: '#D4C9BE',
+        borderWidth:1,
         backgroundColor: 'white', // Set clean white background for input field
         borderRadius: 25,
         height: 60,
-        shadowColor: '#000', // Add subtle shadow for depth
-        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1, // Softer shadow opacity
         shadowRadius: 4, // Smooth shadow blur
-        elevation: 8,
+        elevation: 1,
+    },
+    darksearchInputContainer:{
+        backgroundColor: '#1A1A18',
+        elevation: 0,
+        borderWidth: 1,
     },
     searchInput: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#333', // Text color inside the input field
         paddingHorizontal: 10, // Adjust text padding inside input field
+    },
+    darksearchInput: {
+        color: '#e0e0e0',
     },
 });

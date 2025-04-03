@@ -1,31 +1,34 @@
 import React, { useEffect } from 'react';
-import { useColorScheme, Text, View, Alert } from 'react-native';
+import { useColorScheme, Text, View, Alert, Image } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { handleSearch } from '../functions/API_Functions/apiRequest';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 import { mainpageStyles } from '../stylesheets/MainPage_StyleSheet';
+
 
 const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
 
   const [postcode, setPostcode] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const colorScheme = useColorScheme();
-
+  const isDarkMode = colorScheme === 'dark';
   useEffect(() => {
     //Show page title, and header style setting.
     navigation.setOptions({
-      title: 'Just Eat Postcode Search',
+      title: 'Restaurant Search',
       headerTitleAlign: 'center',
       headerStyle: {
-        backgroundColor: '#FF8000',
+        backgroundColor: isDarkMode ? '#1A1A18' : '#F8F9FA',
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#FF8000',
       headerTitleStyle: {
+        fontFamily: 'OpenSans-Italic',
         fontWeight: 'bold',
         fontSize: 20,
+        color: isDarkMode ? 'white' : 'black',
       },
     });
-  }, [navigation, route]);
+  }, [navigation, route, isDarkMode]);
 
   const onSubmit = async (text: string) => {    //The handleSearch function is in 'functions/API_Functions/apiRequest.ts'
     if (!text) { return null; } //If the user submits empty string, return null.
@@ -41,10 +44,16 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
     }
   };
 
-  const isDarkMode = colorScheme === 'dark';
-  SystemNavigationBar.setNavigationColor(isDarkMode ? '#262626' : '#ff8000');
+
+  SystemNavigationBar.setNavigationColor(isDarkMode ? '#262626' : 'gray');
   return (
     <View style={[mainpageStyles.container, isDarkMode && mainpageStyles.darkcontainer]}>
+      <View styles={mainpageStyles.logoContainer}>
+        <Image
+          source={require('../images/new_just_eat_logo_.png')}
+          style={mainpageStyles.logo}
+        />
+      </View>
       <View style={mainpageStyles.searchContainer}>
         <Text style={[mainpageStyles.title, isDarkMode && mainpageStyles.darktitle]}>Find Restaurants Near You</Text>
         <SearchBar
@@ -52,13 +61,13 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
           onChangeText={((text: string) => setPostcode(text))}
           value={postcode}
           onSubmitEditing={() => onSubmit(postcode)}
-          
+
           /* Three mainpageStyles for adjusting how the searchBar looks*/
           containerStyle={[mainpageStyles.searchBarContainer, isDarkMode && mainpageStyles.darksearchBarContainer]}
-          inputContainerStyle={mainpageStyles.searchInputContainer}
-          inputStyle={mainpageStyles.searchInput}
+          inputContainerStyle={[mainpageStyles.searchInputContainer, isDarkMode && mainpageStyles.darksearchInputContainer]}
+          inputStyle={[mainpageStyles.searchInput, isDarkMode && mainpageStyles.darksearchInput]}
 
-          placeholderTextColor="#888" // Subtle placeholder color
+          placeholderTextColor= "#888" // Subtle placeholder color
           searchIcon={null} //Hide searchIcon
           clearIcon={null} //Hide clearIcon
           showLoading={loading} // ActivityIndicator for showing loading status.

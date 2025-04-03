@@ -32,15 +32,16 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
       fontsize: 20,
       headerTitleAlign: 'center',
       headerStyle: {
-        backgroundColor: '#FF8000',
+        backgroundColor: isDarkMode ? '#1A1A18' : '#F8F9FA',
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#FF8000',
       headerTitleStyle: {
         fontWeight: 'bold',
         fontSize: 20,
+        color: isDarkMode ? 'white' : 'black',
       },
     },);
-  }, [navigation, route, postcode, route.params.postcode]);
+  }, [navigation, route, postcode, route.params.postcode, isDarkMode]);
 
   useEffect(() => {
     if (selected) {
@@ -84,7 +85,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
 
             return (
               <TouchableHighlight
-                underlayColor={isDarkMode ? '#1A1A1A' : '#F8F9FA'}
+                underlayColor={isDarkMode ? '#1A1A18' : '#F8F9FA'}
                 onPress={() => { }}
                 style={displayPageStyles.touchableHighlight}
               >

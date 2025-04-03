@@ -132,6 +132,8 @@ export function filterCuisines(item) {
                     return name + ' 🇵🇰\n';
                 case lower.includes('peri peri'):
                     return name + ' 🌶️🍗\n';
+                case lower.includes('waffle'):
+                    return name + ' 🧇\n';
                 default:
                     return name + ' \n';
             }

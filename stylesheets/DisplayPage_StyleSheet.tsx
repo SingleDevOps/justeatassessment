@@ -33,7 +33,7 @@ export const displayPageStyles = StyleSheet.create({
     darkcard: {
         borderColor: '#858a7e',
         borderWidth: 0.1,
-        backgroundColor: '#262626',
+        backgroundColor: '#272724',
     },
     upperPart: {
         flexDirection: 'row', // Align image and text side by side
@@ -52,8 +52,8 @@ export const displayPageStyles = StyleSheet.create({
         marginLeft: 16, // Space between image and text
     },
     name: {
+        fontFamily:'OpenSans-Bold',
         fontSize: 18,
-        fontWeight: 'bold',
         color: '#333333',
         marginBottom: 4,
     },
@@ -70,11 +70,12 @@ export const displayPageStyles = StyleSheet.create({
         marginRight: 4, // Space between star icon and rating text
     },
     rating: {
+        fontFamily:'OpenSans-Bold',
         fontSize: 14,
         color: '#FF8000', // Just Eat orange for ratings
-        fontWeight: 'bold',
     },
     ratingNumbers: {
+        fontFamily:'OpenSans-Regular',
         fontSize: 12,
         color: '#333333',
     },
@@ -94,6 +95,7 @@ export const displayPageStyles = StyleSheet.create({
         paddingBottom: 12,
     },
     cuisine: {
+        fontFamily:'OpenSans-Regular',
         top:5,
         fontSize: 14,
         color: '#393939',
@@ -114,6 +116,7 @@ export const displayPageStyles = StyleSheet.create({
         color: 'white',
     },
     dropdownBox: {
+        fontFamily:'OpenSans-Regular',
         top:5,
         marginHorizontal: 17,
         marginVertical: 10,
@@ -134,6 +137,7 @@ export const displayPageStyles = StyleSheet.create({
         paddingHorizontal:20,
     },
     dropdownText: {
+        fontFamily:'OpenSans-Regular',
         textAlign:'left',
         fontSize: 16,
         color: 'black',
