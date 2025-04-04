@@ -6,17 +6,17 @@ import { displayPageStyles } from '../stylesheets/DisplayPage_StyleSheet';
 import { filterCuisines } from '../functions/Filtering_Functions/filter';
 
 const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => {
-  const { restaurants } = route.params;
-  const [postcode, setPostcode] = useState('');
-  const [selected, setSelected] = React.useState('');
-  const [sortedRestaurants, setSortedRestaurants] = useState(restaurants);
+  const { restaurants } = route.params; //Get the restaurant data from the previous page.
+  const [postcode, setPostcode] = useState(''); //State for postcode, to show at the page title.
+  const [selected, setSelected] = React.useState(''); //State for the selected sorting option.
+  const [sortedRestaurants, setSortedRestaurants] = useState(restaurants); //State for the sorted restaurant data.
 
-  const data = [
+  const selectListOptions = [ //Options for the sorting dropdown list.
     { key: '1', value: 'Rating (High to Low)' },
     { key: '2', value: 'Rating (Low to High)' },
   ];
-  const colorScheme = useColorScheme();
-  const isDarkMode = colorScheme === 'dark';
+  const colorScheme = useColorScheme(); // Get the current color scheme (light or dark mode).
+  const isDarkMode = colorScheme === 'dark'; // Check if the current color scheme is dark mode.
 
 
   useEffect(() => {   // Prevents infinite postcode rendering on the header
@@ -38,7 +38,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
       headerTitleStyle: {
         fontWeight: 'bold',
         fontSize: 20,
-        color: isDarkMode ? 'white' : 'black',
+        color: isDarkMode ? 'white' : '#888',
       },
     },);
   }, [navigation, route, postcode, route.params.postcode, isDarkMode]);
@@ -65,7 +65,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
     <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
       <SelectList //The selectlist displays sorting options.
         setSelected={(value) => setSelected(value)}
-        data={data}
+        data={selectListOptions}
         save="value"
         placeholder="Sort By"
         search={false}
