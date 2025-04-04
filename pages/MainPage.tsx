@@ -57,7 +57,7 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
       <View style={mainpageStyles.searchContainer}>
         <Text style={[mainpageStyles.title, isDarkMode && mainpageStyles.darktitle]}>Find Restaurants Near You</Text>
         <SearchBar
-          placeholder="UK postcode, e.g. SW1A 1AA"
+          placeholder="Enter an UK postcode"
           onChangeText={((text: string) => setPostcode(text))}
           value={postcode}
           onSubmitEditing={() => onSubmit(postcode)}

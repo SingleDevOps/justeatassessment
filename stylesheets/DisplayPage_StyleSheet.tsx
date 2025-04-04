@@ -147,11 +147,11 @@ export const displayPageStyles = StyleSheet.create({
     // Dropdown styles for dark mode
     darkDropdownBox: {
         borderColor: '#1A1A18',
-        backgroundColor: '#ABB0B8',
+        backgroundColor: '#6a6a62',
     },
     darkDropdown: {
         borderColor:'#1A1A18',
-        backgroundColor: '#262626',
+        backgroundColor: '#6a6a62',
     },
     darkDropdownText: {
         textAlign:'left',

@@ -11,7 +11,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
   const [selected, setSelected] = React.useState('');
   const [sortedRestaurants, setSortedRestaurants] = useState(restaurants);
 
-  const data = [
+  const selectListOptions = [
     { key: '1', value: 'Rating (High to Low)' },
     { key: '2', value: 'Rating (Low to High)' },
   ];
@@ -65,7 +65,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
     <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
       <SelectList //The selectlist displays sorting options.
         setSelected={(value) => setSelected(value)}
-        data={data}
+        data={selectListOptions}
         save="value"
         placeholder="Sort By"
         search={false}

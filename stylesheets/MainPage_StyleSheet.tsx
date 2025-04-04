@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export const mainpageStyles = StyleSheet.create({
     container: {
-        flex: 1, //Span the whole page
+        flex: 1,
         backgroundColor: '#F8F9FA', // Light gray background for the main page
         paddingHorizontal: 20, //Padding for the search Bar
         justifyContent: 'center',
@@ -19,7 +19,7 @@ export const mainpageStyles = StyleSheet.create({
     },
     logo: {
         marginTop:-200,
-        width: '60%',
+        width: '70%',
         height: undefined,
         aspectRatio: 1,
         resizeMode: 'contain',
@@ -32,10 +32,9 @@ export const mainpageStyles = StyleSheet.create({
     },
     title: { //style of the text "Find Restaurants Near You"
         fontSize: 20,
-        fontWeight: 'bold',
+        fontFamily:'OpenSans-Italic',
         color: '#888',
         textAlign: 'center',
-        fontStyle: 'italic',
         marginBottom: 5,
     },
     darktitle: {
@@ -47,22 +46,23 @@ export const mainpageStyles = StyleSheet.create({
         borderTopWidth: 0, // Remove top border
         borderBottomWidth: 0, // Remove bottom border
         paddingHorizontal: 1, // Remove extra padding
-        marginLeft: 20,
-        marginRight: 20,
+        marginHorizontal: 40,
         width: '90%',
     },
     darksearchBarContainer: {
         backgroundColor: '#1A1A18',
     },
     searchInputContainer: {
+        marginHorizontal: 46,
         borderColor: '#D4C9BE',
         borderWidth:1,
         backgroundColor: 'white', // Set clean white background for input field
         borderRadius: 25,
-        height: 60,
+        height: 70,
         shadowOpacity: 0.1, // Softer shadow opacity
         shadowRadius: 4, // Smooth shadow blur
         elevation: 1,
+        alignItems:'center',
     },
     darksearchInputContainer:{
         backgroundColor: '#1A1A18',
@@ -70,6 +70,7 @@ export const mainpageStyles = StyleSheet.create({
         borderWidth: 1,
     },
     searchInput: {
+        textAlign: 'center',
         fontSize: 18,
         color: '#333', // Text color inside the input field
         paddingHorizontal: 10, // Adjust text padding inside input field
