@@ -43,7 +43,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
     },);
   }, [navigation, route, postcode, route.params.postcode, isDarkMode]);
 
-  useEffect(() => {
+  useEffect(() => { //When the selected sorting option changes, sort the restaurant data accordingly.
     if (selected) {
       // "Rating(High to Low)" = descending order.
       if (selected === 'Rating (High to Low)') {
@@ -61,7 +61,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
 
 
 
-  return (
+  return ( // The display page of the app, displaying the restaurant data.
     <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
       <SelectList //The selectlist displays sorting options.
         setSelected={(value) => setSelected(value)}
@@ -107,7 +107,10 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
                   <View style={displayPageStyles.separator} />
                   <View style={displayPageStyles.lowerPart}>
                     <Text style={[displayPageStyles.cuisine, isDarkMode && displayPageStyles.darkcuisine]}>{cuisines}</Text>
-                    <Text style={[displayPageStyles.cuisine, isDarkMode && displayPageStyles.darkcuisine]}>{item.address.firstLine + ', ' + item.address.city}</Text>
+                    <View style={displayPageStyles.addressContainer}>
+                      <Text style={[displayPageStyles.pinIcon, isDarkMode && displayPageStyles.darkaddress]}>{'📍'}</Text>
+                      <Text style={[displayPageStyles.address, isDarkMode && displayPageStyles.darkaddress]}>{item.address.firstLine + ', ' + item.address.city}</Text>
+                    </View>
                   </View>
                 </View>
               </TouchableHighlight>

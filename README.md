@@ -153,6 +153,13 @@ If everything is set up correctly, you should see your new app running in the An
 
 This is one way to run your app — you can also build it directly from Android Studio or Xcode.
 
+# Application Interface
+## MainPage
+![image](interface_showcases\MainPage_no_input.png)
+![image](interface_showcases\MainPage_Darkmode_noinput.png)
+## DisplayPage
+![image](interface_showcases\DisplayPage_Lightmode.png)
+![image](interface_showcases\DisplayPage_Darkmode.png)
 
 # Assumptions
 The definition of “restaurant” is not specified. There are non-restaurants in the “restaurants” list, such as pharmacies and convenience stores. However, since they are in the data, this program assumes that they are “restaurants”.

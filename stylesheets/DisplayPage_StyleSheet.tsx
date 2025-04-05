@@ -92,17 +92,39 @@ export const displayPageStyles = StyleSheet.create({
     },
     lowerPart: {
         paddingHorizontal: 16,
-        paddingBottom: 12,
     },
     cuisine: {
         fontFamily:'OpenSans-Regular',
         top:5,
         fontSize: 14,
-        color: '#393939',
+        color: 'black',
         marginBottom: 6,
         textAlign: 'left',
     },
     darkcuisine: {
+        color: '#e6e6e6',
+    },
+    addressContainer: {
+        flexDirection: 'row',
+        right: 7,
+        marginRight: 10,
+        paddingRight: 15, // Add some padding for longer addresses
+        paddingBottom:10,
+    },
+    pinIcon: {
+        fontFamily: 'OpenSans-LightItalic',
+        fontSize: 14,
+        marginRight: 4, // Add some space between the icon and text
+        lineHeight: 20, // Match with the address line height
+    },
+    address: {
+        fontFamily: 'OpenSans-LightItalic',
+        fontSize: 14,
+        color: 'black',
+        flex: 1, // Allow text to take remaining space
+        lineHeight: 20, // Consistent line height for multi-line text
+    },
+    darkaddress:{
         color: '#e6e6e6',
     },
     listfooterComponent: {
