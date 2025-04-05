@@ -169,7 +169,7 @@ The definition of "cuisine" is not specified. There are names such as "Local Leg
 ## Potential Improvements
 
 1. Better Displaying of Cuisine Items & Better Distinguishability of Restaurants / Non-Restaurants.
-2. More components for each part of the **\** to increase modularity.
+2. More custom components to increase modularity.
 3. Better StyleSheet Design.
 4. Restaurant Details in a full page when each restaurant card is clicked.
 5. Tests for checking the returned data and the correct rendering of elements.
