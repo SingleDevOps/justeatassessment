@@ -5,6 +5,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import { displayPageStyles } from '../stylesheets/DisplayPage_StyleSheet';
 import { filterCuisines } from '../functions/Filtering_Functions/filter';
 
+
 const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => {
   const { restaurants } = route.params; //Get the restaurant data from the previous page.
   const [postcode, setPostcode] = useState(''); //State for postcode, to show at the page title.
@@ -34,11 +35,11 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
       headerStyle: {
         backgroundColor: isDarkMode ? '#1A1A18' : '#F8F9FA',
       },
-      headerTintColor: '#FF8000',
+      headerTintColor: '#FF8000', // Just Eat Orange, for the return arrow's color.
       headerTitleStyle: {
         fontWeight: 'bold',
         fontSize: 20,
-        color: isDarkMode ? 'white' : '#888',
+        color: '#FF8000',
       },
     },);
   }, [navigation, route, postcode, route.params.postcode, isDarkMode]);
@@ -64,33 +65,41 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
   return ( // The display page of the app, displaying the restaurant data.
     <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
       <SelectList //The selectlist displays sorting options.
+        arrowicon={<Image source={require('../images/downarrow.png')} tintColor={isDarkMode ? 'white' : 'black'} style={[displayPageStyles.downarrow, isDarkMode && displayPageStyles.darkdownarrow]} />}
         setSelected={(value) => setSelected(value)}
         data={selectListOptions}
         save="value"
         placeholder="Sort By"
+        // eslint-disable-next-line react-native/no-inline-styles
+        inputStyles={isDarkMode ? { color: 'white' } : { color: 'black' }} //The placeholder text color based on light mode / dark mode
         search={false}
         // Use placeholderStyle to control the placeholder's text color and size.
-        placeholderStyle={[displayPageStyles.placeholder, isDarkMode && displayPageStyles.darkplaceholder]}
+        placeholderStyle={[displayPageStyles.placeholder, isDarkMode && displayPageStyles.darkPlaceholder]}
+        // Three other styles for the selectlist dropdown list design
         boxStyles={[displayPageStyles.dropdownBox, isDarkMode && displayPageStyles.darkDropdownBox]}
         dropdownStyles={[displayPageStyles.dropdown, isDarkMode && displayPageStyles.darkDropdown]}
         dropdownTextStyles={[displayPageStyles.dropdownText, isDarkMode && displayPageStyles.darkDropdownText]}
       />
+      {/********************* The container of all restaurant cards *************************/}
       <View style={displayPageStyles.container}>
+        {/* The FlatList for showing each restaurant */}
         <FlatList
           showsVerticalScrollIndicator={false} //Hide Vertical Scrollbar
           showsHorizontalScrollIndicator={false} //Hide Horizontal Scrollbar
           data={sortedRestaurants}
           renderItem={({ item }) => {
             const cuisines = filterCuisines(item);
-
             return (
+              // Each restaurant card
               <TouchableHighlight
                 underlayColor={isDarkMode ? '#1A1A18' : '#F8F9FA'}
                 onPress={() => { }}
                 style={displayPageStyles.touchableHighlight}
               >
+                {/********************* The card has two parts: upperPart & lowerPart ********************/}
                 <View style={[displayPageStyles.card, isDarkMode && displayPageStyles.darkcard]}>
                   <View style={displayPageStyles.upperPart}>
+                    {/******************    The Logo   ******************/}
                     <Image
                       source={{ uri: item.logoUrl }}
                       style={displayPageStyles.image}
@@ -98,18 +107,26 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
                     <View style={displayPageStyles.textContainer}>
                       <Text style={[displayPageStyles.name, isDarkMode && displayPageStyles.darkname]}>{item.name}</Text>
                       <View style={displayPageStyles.ratingContainer}>
-                        <Image style={displayPageStyles.ratingImage} source={require('../images/golden_star.png')} />
+                        <Image style={displayPageStyles.ratingImage} source={require('../images/Just-Eat-Star.png')} />
                         <Text style={displayPageStyles.rating}>{item.rating.starRating}</Text>
                         <Text style={[displayPageStyles.ratingNumbers, isDarkMode && displayPageStyles.darkratingNumbers]}> ({item.rating.count})</Text>
                       </View>
                     </View>
                   </View>
+                  {/*********** upperPart Ends ***********/}
+
                   <View style={displayPageStyles.separator} />
+
+                  {/*********** lowerPart Starts *********/}
                   <View style={displayPageStyles.lowerPart}>
+                    {/* The cuisine is separated from the address text */}
                     <Text style={[displayPageStyles.cuisine, isDarkMode && displayPageStyles.darkcuisine]}>{cuisines}</Text>
+                    {/* The address container, with pin icon and address text */}
                     <View style={displayPageStyles.addressContainer}>
                       <Text style={[displayPageStyles.pinIcon, isDarkMode && displayPageStyles.darkaddress]}>{'📍'}</Text>
-                      <Text style={[displayPageStyles.address, isDarkMode && displayPageStyles.darkaddress]}>{item.address.firstLine + ', ' + item.address.city}</Text>
+                      <View style={displayPageStyles.addressTextContainer}>
+                        <Text style={[displayPageStyles.address, isDarkMode && displayPageStyles.darkaddress]}>{item.address.firstLine + ', ' + item.address.city}</Text>
+                      </View>
                     </View>
                   </View>
                 </View>
@@ -117,7 +134,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
             );
           }}
           keyExtractor={(item) => item.id.toString()}
-          ListFooterComponent={<View style={displayPageStyles.listfooterComponent} />}
+          ListFooterComponent={<View style={displayPageStyles.listfooterComponent} />} // Add extra space so that the last card is not blocked by Android's navigation bar.
         />
       </View>
     </View>

@@ -25,14 +25,18 @@ Besides, this application has dark mode design, for the night usage.
 
 # Getting Started
 
-If you do not want to set up the project by yourself, you can download the **just-eat-assessment.apk** file from this link and install it on your phone.
-File URL: **https://1drv.ms/u/c/bd222029f4f1d186/EbpmCEIQJodClYBfCwtU_pgBO2IgNR7k8wyzWFzr7sHVkA?e=mHF5c2**
+**If you do not want to set up the project by yourself, you can download the "just-eat-assessment.apk" file from this link and install it on your phone.**
+
+File URL: **https://1drv.ms/u/c/bd222029f4f1d186/EZ_7mW2ID_9DvSmG2tnYHjMBMN1zQFAGWte0u17bvDLStA?e=kjjWcy**
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
   
 
 ## Step 1: Start Metro
+
+**TO RUN THIS PROJECT, YOU MUST HAVE THE ANDROID EMULATOR ON YOUR COMPUTER OR ANDROID DEVICE CONNECTED TO THE COMPUTER**
+
 First, open up your project folder in shell/cmd. 
 
 Use this line to install all dependency packages.
@@ -68,14 +72,8 @@ yarn  start
 
 With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
 
-  **You need to connect you android/iOS Device to the computer, or your computer must have android/iOS emulator to run the following commands.** 
+**You need to connect you android/iOS Device to the computer, or your computer must have android/iOS emulator to run the following commands.** 
   
-**If you don't want to compile and run, simply download the** 
-
-> just-eat-assessment.apk
-
-**and install it on your phone.**
-
 ***(I do not have a Mac computer to compile the iOS version)***
 
 ### Android
@@ -150,33 +148,42 @@ yarn  ios
 
   
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+
 
   
 
 This is one way to run your app — you can also build it directly from Android Studio or Xcode.
 
 # Application Interface
+
 ## MainPage
-<img src="https://i.postimg.cc/2S4TBgRj/Main-Page-no-input.png" alt="alt text" title="MainPage, LightMode">
-<img src="https://i.postimg.cc/qvfjq4FZ/Main-Page-Dark-Mode-noinput.png" alt="alt text" title="MainPage, DarkMode">
+
+### Light Mode
+<img src="https://i.postimg.cc/vTsCzNKT/Main-Page-Lightmode.png" alt="alt text" title="MainPage, LightMode">
+
+### Dark Mode
+<img src="https://i.postimg.cc/RZZ5y2Zn/Main-Page-Darkmode.png" alt="alt text" title="MainPage, DarkMode">
 
 ## DisplayPage
-<img src="https://i.postimg.cc/43sPvws6/Display-Page-Lightmode.png" alt="alt text" title="DisplayPage, LightMode">
-<img src="https://i.postimg.cc/pX5sPpsF/Display-Page-Darkmode.png" alt="alt text" title="DisplayPage, DarkMode">
 
-# Assumptions
-The definition of “restaurant” is not specified. There are non-restaurants in the “restaurants” list, such as pharmacies and convenience stores. However, since they are in the data, this program assumes that they are “restaurants”.
+### Light Mode
+<img src="https://i.postimg.cc/3JW0rY7F/Display-Page-Lightmode.png" alt="alt text" title="DisplayPage, LightMode">
 
-The definition of cuisine is not specified. There are names such as "Local Legends" "Deals" "Freebies" in the cuisine list. Since they are in the data, this program assumes that they are “cuisines”.
+### Dark Mode
+<img src="https://i.postimg.cc/wvVRMB70/Display-Page-Darkmode.png" alt="alt text" title="DisplayPage, DarkMode">
+
+# Assumptions & Things not clear
+The definition of "restaurant" is not specified. There are non-restaurants in the “restaurants” list, such as pharmacies and convenience stores. I assume that all entries are "restaurant" by definition.
+
+The definition of "cuisine" is not specified. There are names such as "Local Legends" "Deals" "Freebies" in the cuisine list. By observation, in most scenarios the first two names in "cuisines" are truly cuisines.
 
 # Potential Improvements
 
-1. Better Displaying of Cuisine Items & Better Categorization of Restaurants / Non-Restaurants.
+1. Better Displaying of Cuisine Items & Better Distinguishability of Restaurants / Non-Restaurants.
 2. More components for each part of the **\<View>** to increase modularity.
 3. Better StyleSheet Design.
 4. Restaurant Details in a full page when each restaurant card is clicked.
-
+5. Tests for checking the returned data and the correct rendering of elements.
 
 
 
