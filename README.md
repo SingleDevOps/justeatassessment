@@ -25,6 +25,9 @@ Besides, this application has dark mode design, for the night usage.
 
 # Getting Started
 
+If you do not want to set up the project by yourself, you can download the **just-eat-assessment.apk** file from this link and install it on your phone.
+File URL: **https://1drv.ms/u/c/bd222029f4f1d186/EbpmCEIQJodClYBfCwtU_pgBO2IgNR7k8wyzWFzr7sHVkA?e=mHF5c2**
+
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
   
