@@ -155,11 +155,12 @@ This is one way to run your app — you can also build it directly from Android 
 
 # Application Interface
 ## MainPage
-![image](interface_showcases\MainPage_no_input.png)
-![image](interface_showcases\MainPage_Darkmode_noinput.png)
+<img src="https://i.postimg.cc/2S4TBgRj/Main-Page-no-input.png" alt="alt text" title="MainPage, LightMode">
+<img src="https://i.postimg.cc/qvfjq4FZ/Main-Page-Dark-Mode-noinput.png" alt="alt text" title="MainPage, DarkMode">
+
 ## DisplayPage
-![image](interface_showcases\DisplayPage_Lightmode.png)
-![image](interface_showcases\DisplayPage_Darkmode.png)
+<img src="https://i.postimg.cc/43sPvws6/Display-Page-Lightmode.png" alt="alt text" title="DisplayPage, LightMode">
+<img src="https://i.postimg.cc/pX5sPpsF/Display-Page-Darkmode.png" alt="alt text" title="DisplayPage, DarkMode">
 
 # Assumptions
 The definition of “restaurant” is not specified. There are non-restaurants in the “restaurants” list, such as pharmacies and convenience stores. However, since they are in the data, this program assumes that they are “restaurants”.
