@@ -12,7 +12,7 @@ This application includes two pages:
 
 This application does two things:
 
->  1. On **MainPage**, it validates the postcode, searches it and returns the first 10 restaurants for any valid UK postcode. This is done through two APIs: 
+>  1. On **MainPage**, it validates the postcode, searches it and returns the first 10 restaurants for any valid UK postcode, with error handling (e.g. Validation API Fails, Request Timeout). This is done through two APIs: 
 
  - postcode.io validation api: https://postcodes.io/postcodes/${postcode}/validate
  
@@ -22,6 +22,40 @@ This application does two things:
 > 2. On **DisplayPage**, it can display the restaurant in the order of the returning data, or it can display the same restaurants by the sorting order of their ratings, from high to low, and from low to high.
 
 Besides, this application has dark mode design, for the night usage.
+
+## Code Structure
+App.tsx
+├── Navigation Setup
+│   ├── MainPage
+│   └── DisplayPage
+│
+pages/
+├── MainPage.tsx
+│   ├── Imports
+│   │   ├── stylesheets/MainPage_StyleSheet.tsx
+│   │   └── functions/API_Functions/apiRequest.ts (handleSearch)
+│   └── Features
+│       ├── Postcode Search
+│       ├── Dark/Light Mode
+│       └── Keyboard Handling
+│
+├── DisplayPage.tsx
+│   ├── Imports
+│   │   ├── stylesheets/DisplayPage_StyleSheet.tsx
+│   │   ├── functions/Sorting_Functions/sortRestaurantData.ts
+│   │   └── functions/Filtering_Functions/filter.ts
+│   └── Features
+│       ├── Restaurant List Display
+│       ├── Sorting Functionality
+│       └── Cuisine Filtering
+│
+functions/
+├── API_Functions/
+│   └── apiRequest.ts (handles restaurant data fetching)
+├── Sorting_Functions/
+│   └── sortRestaurantData.ts (handles restaurant sorting)
+└── Filtering_Functions/
+    └── filter.ts (handles cuisine filtering)
 
 # Getting Started
 
@@ -167,10 +201,14 @@ This is one way to run your app — you can also build it directly from Android 
 ## DisplayPage
 
 ### Light Mode
+
+Four data points are shown: name and rating on the top, laying horizontally. cuisines and address on the bottom, laying vertically.
 <img src="https://i.postimg.cc/3JW0rY7F/Display-Page-Lightmode.png" alt="alt text" title="DisplayPage, LightMode">
 
 ### Dark Mode
 <img src="https://i.postimg.cc/wvVRMB70/Display-Page-Darkmode.png" alt="alt text" title="DisplayPage, DarkMode">
+
+# Testing Procedure
 
 # Assumptions & Things not clear
 The definition of "restaurant" is not specified. There are non-restaurants in the “restaurants” list, such as pharmacies and convenience stores. I assume that all entries are "restaurant" by definition.
@@ -184,7 +222,8 @@ The definition of "cuisine" is not specified. There are names such as "Local Leg
 3. Better StyleSheet Design.
 4. Restaurant Details in a full page when each restaurant card is clicked.
 5. Tests for checking the returned data and the correct rendering of elements.
-
+(Can be done by *Jest* and *@testing-library/react-native*: Restaurant card components with various data inputs, Search input component behavior, Sorting controls and their state changes, Navigation between MainPage and DisplayPage, Data passing between screens, Dark/light mode toggle behavior)
+6. GeoPoint + Map Integration for navigation to the restaurant.
 
 
   
