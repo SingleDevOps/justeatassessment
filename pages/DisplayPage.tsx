@@ -123,9 +123,12 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
                     <Text style={[displayPageStyles.cuisine, isDarkMode && displayPageStyles.darkcuisine]}>{cuisines}</Text>
                     {/* The address container, with pin icon and address text */}
                     <View style={displayPageStyles.addressContainer}>
-                      <Text style={[displayPageStyles.pinIcon, isDarkMode && displayPageStyles.darkaddress]}>{'📍'}</Text>
+                      <Text style={[displayPageStyles.pinIcon]}>{'📍'}</Text>
                       <View style={displayPageStyles.addressTextContainer}>
-                        <Text style={[displayPageStyles.address, isDarkMode && displayPageStyles.darkaddress]}>{item.address.firstLine + ', ' + item.address.city}</Text>
+                        <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={[displayPageStyles.address, isDarkMode && displayPageStyles.darkaddress]}>{item.address.firstLine + ', ' + item.address.city}</Text>
                       </View>
                     </View>
                   </View>

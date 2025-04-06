@@ -70,9 +70,9 @@ functions/
 
 ## Getting Started
 
-**If you do not want to set up the project by yourself, you can download the "just-eat-assessment.apk" file from this link and install it on your Android devices.**
+**If you do not want to set up the project by yourself, you can download the "just-eat.apk" file from this link and install it on your Android devices.**
 
-File URL: **https://1drv.ms/u/c/bd222029f4f1d186/EW7Dsus6IP9GoEl6OTqNcQwBfZCNtZq7gpMBjTHw5krYEg?e=1EiUmy**
+File URL: **https://1drv.ms/u/c/bd222029f4f1d186/EUPkLPd8Q-ZNqaW8XTnULhwBCbrbjPvSQs-ixPe5nOElzg?e=xAweIz**
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
@@ -148,23 +148,25 @@ This is one way to run your app — you can also build it directly from Android 
 
 ## Visuals
 
+![Alt Text](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDMweTVhdzg1MzMzYjQ5MGYxaWpxeHgyaG0zOG1zZnFiYTJxYTA5dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BCDnVJWGJzx31YjlLz/giphy.gif)
+
 ### MainPage
 
 #### Light Mode
-<img src="https://i.postimg.cc/28L79Dzc/Main-Page-Lightmode.png" alt="alt text" title="MainPage, LightMode">
+<img src="https://i.postimg.cc/02Xv0hky/Mainpage-Lightmode.png" alt="alt text" title="MainPage, LightMode">
 
 #### Dark Mode
-<img src="https://i.postimg.cc/kMpyy4dR/Main-Page-Darkmode.png" alt="alt text" title="MainPage, DarkMode">
+<img src="https://i.postimg.cc/Hx0H0xxq/Mainpage-Darkmode.png" alt="alt text" title="MainPage, DarkMode">
 
 ### Display Page
 
 Four data points are shown: name and rating on the top, laying horizontally with the logo. cuisines and address on the bottom, laying vertically.
 
 #### Light Mode
-<img src="https://i.postimg.cc/90RZkdjR/Display-Page-Lightmode.png" alt="alt text" title="DisplayPage, LightMode">
+<img src="https://i.postimg.cc/XJrdXRYB/Display-Page-Lightmode.png" alt="alt text" title="DisplayPage, LightMode">
 
 #### Dark Mode
-<img src="https://i.postimg.cc/3NsmQkKL/Display-Page-Darkmode.png" alt="alt text" title="DisplayPage, DarkMode">
+<img src="https://i.postimg.cc/MTgRB9nP/Display-Page-Darkmode.png" alt="alt text" title="DisplayPage, DarkMode">
 
 ## Assumptions & Things not clear
 The definition of "restaurant" is not specified. There are non-restaurants in the "restaurants" list, such as pharmacies and convenience stores. I assume that all entries are "restaurant" by definition.
@@ -175,7 +177,7 @@ The definition of "cuisine" is not specified. There are names such as "Local Leg
 
 1. Better Displaying of Cuisine Items & Better Distinguishability of Restaurants / Non-Restaurants.
 2. More custom components to increase modularity.
-3. Better StyleSheet Design.
+3. Better StyleSheet Design with more dynamic settings.
 4. Restaurant Details in a full page when each restaurant card is clicked.
 5. Tests for checking the returned data and the correct rendering of elements.
 (Can be done by *Jest* and *@testing-library/react-native*: Restaurant card components with various data inputs, Search input component behavior, Sorting controls and their state changes, Navigation between MainPage and DisplayPage, Data passing between screens, Dark/light mode toggle behavior)

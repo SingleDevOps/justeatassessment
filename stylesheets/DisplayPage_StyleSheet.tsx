@@ -191,7 +191,7 @@ export const displayPageStyles = StyleSheet.create({
     // Arranges address elements with appropriate spacing
     addressContainer: {
         marginTop: 10, // Space between cuisines and address
-        flexDirection: 'row',
+        flexDirection:'row',
         right: 5,
         marginRight: 10,
         paddingRight: 15, // Add some padding for longer addresses
@@ -219,10 +219,11 @@ export const displayPageStyles = StyleSheet.create({
         lineHeight: 20, // Match with the address line height
     },
 
-
     // Container for address text with left padding
     addressTextContainer: {
+        flex: 1,
         paddingLeft: 4,
+        overflow:'hidden',
     },
 
 
@@ -231,7 +232,7 @@ export const displayPageStyles = StyleSheet.create({
     address: {
         fontFamily: 'OpenSans-LightItalic',
         fontSize: 13,
-        color: 'black',
+
         flex: 1, // Allow text to take remaining space
         lineHeight: 20, // Consistent line height for multi-line text
     },
