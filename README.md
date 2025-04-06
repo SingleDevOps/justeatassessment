@@ -2,7 +2,7 @@
 
 This project is made for just eat takeaway take-home assignment for the role of Early Career Program - Software Engineer. 
 
-Its purpose is to search the restaurants by given UK postcodes and display the first ten restaurants from the searching result.
+Its purpose is to search the restaurants by given UK postcodes and display the first ten restaurants from the searching result in a user-friendly format.
 
 It is a mobile application for Android system, and potentially for iOS system for that it is built with React Native.
 
@@ -70,9 +70,9 @@ functions/
 
 ## Getting Started
 
-**If you do not want to set up the project by yourself, you can download the "just-eat-assessment.apk" file from this link and install it on your phone.**
+**If you do not want to set up the project by yourself, you can download the "just-eat-assessment.apk" file from this link and install it on your Android devices.**
 
-File URL: **https://1drv.ms/u/c/bd222029f4f1d186/EZ_7mW2ID_9DvSmG2tnYHjMBMN1zQFAGWte0u17bvDLStA?e=kjjWcy**
+File URL: **https://1drv.ms/u/c/bd222029f4f1d186/EW7Dsus6IP9GoEl6OTqNcQwBfZCNtZq7gpMBjTHw5krYEg?e=1EiUmy**
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
@@ -151,20 +151,20 @@ This is one way to run your app — you can also build it directly from Android 
 ### MainPage
 
 #### Light Mode
-<img src="https://i.postimg.cc/vTsCzNKT/Main-Page-Lightmode.png" alt="alt text" title="MainPage, LightMode">
+<img src="https://i.postimg.cc/28L79Dzc/Main-Page-Lightmode.png" alt="alt text" title="MainPage, LightMode">
 
 #### Dark Mode
-<img src="https://i.postimg.cc/RZZ5y2Zn/Main-Page-Darkmode.png" alt="alt text" title="MainPage, DarkMode">
+<img src="https://i.postimg.cc/kMpyy4dR/Main-Page-Darkmode.png" alt="alt text" title="MainPage, DarkMode">
 
 ### Display Page
 
 Four data points are shown: name and rating on the top, laying horizontally with the logo. cuisines and address on the bottom, laying vertically.
 
 #### Light Mode
-<img src="https://i.postimg.cc/3JW0rY7F/Display-Page-Lightmode.png" alt="alt text" title="DisplayPage, LightMode">
+<img src="https://i.postimg.cc/90RZkdjR/Display-Page-Lightmode.png" alt="alt text" title="DisplayPage, LightMode">
 
 #### Dark Mode
-<img src="https://i.postimg.cc/wvVRMB70/Display-Page-Darkmode.png" alt="alt text" title="DisplayPage, DarkMode">
+<img src="https://i.postimg.cc/3NsmQkKL/Display-Page-Darkmode.png" alt="alt text" title="DisplayPage, DarkMode">
 
 ## Assumptions & Things not clear
 The definition of "restaurant" is not specified. There are non-restaurants in the "restaurants" list, such as pharmacies and convenience stores. I assume that all entries are "restaurant" by definition.

@@ -92,7 +92,7 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
             </View>
             {/***************** The search bar ****************/}
             <SearchBar
-              placeholder="Enter an UK Postcode"
+              placeholder="Enter a UK Postcode"
               onChangeText={((text: string) => setPostcode(text))}
               value={postcode}
               onSubmitEditing={() => onSubmit(postcode)} // submission handeling
