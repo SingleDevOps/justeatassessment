@@ -63,6 +63,11 @@ functions/
     └── filter.ts (handles cuisine filtering)
 ```
 
+![UML-Diagram.png](https://i.postimg.cc/t4d8sPVH/UML-Diagram.png)
+
+### Programming Interface
+![Programming-Interface.png](https://i.postimg.cc/mrfM5zdh/Programming-Interface.png)
+
 ## Getting Started
 
 **If you do not want to set up the project by yourself, you can download the "just-eat-assessment.apk" file from this link and install it on your phone.**
@@ -141,7 +146,7 @@ yarn ios
 
 This is one way to run your app — you can also build it directly from Android Studio or Xcode.
 
-## Application Interface
+## Visuals
 
 ### MainPage
 
@@ -153,7 +158,7 @@ This is one way to run your app — you can also build it directly from Android 
 
 ### Display Page
 
-Four data points are shown: name and rating on the top, laying horizontally. cuisines and address on the bottom, laying vertically.
+Four data points are shown: name and rating on the top, laying horizontally with the logo. cuisines and address on the bottom, laying vertically.
 
 #### Light Mode
 <img src="https://i.postimg.cc/3JW0rY7F/Display-Page-Lightmode.png" alt="alt text" title="DisplayPage, LightMode">

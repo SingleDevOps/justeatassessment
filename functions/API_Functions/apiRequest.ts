@@ -75,7 +75,7 @@ export async function fetchRestaurantsFromJustEat(text: string): Promise<object[
  * attempts to fetch restaurants from Just Eat API.
  *
  * @param {string} text - The postcode to search with.
- * @returns {Promise<any[] | null>} A promise that resolves to an array of restaurant 
+ * @returns {Promise<any[] | null>} A promise that resolves to an array of restaurant
  *                                  objects or null if the search was unsuccessful.
  */
 export async function handleSearch(text: string): Promise<any[] | null> {
