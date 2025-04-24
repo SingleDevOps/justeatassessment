@@ -35,7 +35,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
       headerStyle: {
         backgroundColor: isDarkMode ? '#1A1A18' : '#F8F9FA',
       },
-      headerTintColor: '#FF8000', // Just Eat Orange, for the return arrow's color.
+      headerTintColor: '#FF8000', // Just Eat Orange, the return arrow's color.
       headerTitleStyle: {
         fontWeight: 'bold',
         fontSize: 20,
@@ -66,7 +66,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
     <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
       <SelectList //The selectlist displays sorting options.
         arrowicon={<Image source={require('../images/downarrow.png')} tintColor={isDarkMode ? 'white' : 'black'} style={[displayPageStyles.downarrow, isDarkMode && displayPageStyles.darkdownarrow]} />}
-        setSelected={(value) => setSelected(value)}
+        setSelected={(value:string) => setSelected(value)}
         data={selectListOptions}
         save="value"
         placeholder="Sort By"

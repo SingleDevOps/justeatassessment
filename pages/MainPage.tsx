@@ -4,19 +4,19 @@ import { SearchBar } from 'react-native-elements';
 import { handleSearch } from '../functions/API_Functions/apiRequest';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 import { mainpageStyles } from '../stylesheets/MainPage_StyleSheet';
-
+import { useNetInfo } from '@react-native-community/netinfo';
 
 const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
 
   const [postcode, setPostcode] = React.useState('');
   const [loading, setLoading] = React.useState(false); // State for showing loading activity
   const [keyboardVisible, setKeyboardVisible] = React.useState(false); //State for keyboard visibility, to adjust the position of the search bar, so it won't be covered by the keyboard.
+  const hasInternet = useNetInfo().isConnected;
   const colorScheme = useColorScheme(); // Get the current color scheme (light or dark mode).
-  const isDarkMode = colorScheme === 'dark'; // Check if the current color scheme is dark mode.
+  const isDarkMode = colorScheme === 'dark';
   useEffect(() => {
     SystemNavigationBar.setNavigationColor(isDarkMode ? '#262626' : 'gray'); //Set the color of the system navigation bar to match the theme.
-    //Show page title, and header style setting.
-    navigation.setOptions({
+    navigation.setOptions({ //Show page title, and header style setting.
       headerShow: false,
       title: '', //Empty String for no title
       headerTitleAlign: 'center',
@@ -38,24 +38,28 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
       }
     );
 
-    // Clean up listeners
     return () => {
       keyboardDidShowListener.remove(); // Remove the keyboard show listener when the component unmounts.
-      keyboardDidHideListener.remove(); // Remove the keyboard hide listener when the component unmounts.
+      keyboardDidHideListener.remove();
     };
   }, [navigation, route, isDarkMode]);
 
-  const onSubmit = async (text: string) => {    //The "handleSearch" function is imported from 'functions/API_Functions/apiRequest.ts'
+  const onSubmit = async (text: string):Promise<any | null> => {    //The "handleSearch" function is imported from 'functions/API_Functions/apiRequest.ts'
     if (!text) { return null; } //If the user submits empty string, return null.
-    text = text.replace(/\s/g, '').toUpperCase(); //Strip all spaces for API Calls.
     setLoading(true); // Set loading to true for the activity indicator
-    const ten_restaurants = await handleSearch(text); //Ten Restaurants waiting to be returned.
+    const ten_restaurants:any = await handleSearch(text); //Ten Restaurants waiting to be returned.
     setLoading(false); // Set loading to false when the loding is finished.
-    if (ten_restaurants) {
+    if (ten_restaurants !== false) {
       navigation.navigate('DisplayPage', { postcode: text, restaurants: ten_restaurants }); //When the ten restaurants data is received, navigate to the DisplayPage and send parameters to the page.
     } else {
-      Alert.alert('Invalid postcode', 'This postcode is not a valid UK postcode.');  //If not received, alert the user.
-      console.log('Invalid postcode, this postcode is not a valid UK postcode.');
+      if (!hasInternet){
+        Alert.alert('No Internet Connection', 'Please check your internet.');
+        console.log('No Internet Connection.');
+      }
+      else{
+        Alert.alert('Invalid Postcode','You may have entered the wrong postal code, or it has been terminated.'); //If there is Internet, the issue lies on the postal code itself.
+        console.log('Postal Code Validation Error');
+      }
     }
   };
 

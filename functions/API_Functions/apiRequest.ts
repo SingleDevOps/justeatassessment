@@ -16,7 +16,9 @@
  */
 
 export async function validatePostcode(text: string): Promise<boolean> {
+  text = text.toUpperCase();
   const validationUrl = `https://postcodes.io/postcodes/${text}/validate`;
+
   try {
     //Call validation API to check the postcode.
     const response = await fetch(validationUrl, { method: 'GET' });
@@ -47,7 +49,7 @@ export async function fetchRestaurantsFromJustEat(text: string): Promise<object[
     const response = await fetch(justeatUrl, { method: 'GET' }); // Just Eat Endpoint for fetching restaurant data.
     const apiData = await response.json();
     const restaurants = apiData.restaurants;
-    if (restaurants && restaurants.length) {
+    if (restaurants) {
       if (restaurants.length >= 10) { // Fault tolerance, if there are ten or more restaurants, do regularly.
         const tenRestaurants = restaurants.slice(0, 10);
         console.log('First 10 restaurants:', tenRestaurants);
@@ -56,13 +58,11 @@ export async function fetchRestaurantsFromJustEat(text: string): Promise<object[
         console.log('Restaurants:', restaurants);
         return restaurants;
       }
-    } else {
-      return null;
     }
   } catch (error) {
     console.error('Error fetching restaurants:', error);
-    return null;
   }
+  return null;
 }
 
 
@@ -78,9 +78,9 @@ export async function fetchRestaurantsFromJustEat(text: string): Promise<object[
  * @returns {Promise<any[] | null>} A promise that resolves to an array of restaurant
  *                                  objects or null if the search was unsuccessful.
  */
-export async function handleSearch(text: string): Promise<any[] | null> {
-  // Create a timeout promise that resolves to "TIMEOUT" after 3000ms
-  const timeoutPromise = new Promise<string>((resolve) =>
+export async function handleSearch(text: string): Promise<any[] | boolean | null> {
+
+  const timeoutPromise = new Promise<string>((resolve) =>   // Create a timeout promise that resolves to "TIMEOUT" after 3000ms
     setTimeout(() => resolve('TIMEOUT'), 3000)
   );
 
@@ -92,8 +92,12 @@ export async function handleSearch(text: string): Promise<any[] | null> {
 
   if (validationResult === 'TIMEOUT') {
     console.log('Validation API request timed out. Sending postcode directly to Just Eat API.');
-  } else {
-    console.log('Postcode validated successfully. Fetching restaurants from Just Eat API.');
+    return await fetchRestaurantsFromJustEat(text);
   }
-  return await fetchRestaurantsFromJustEat(text); // In case the validation fails, it will still try to fetch restaurants from Just Eat API.
+  else if(validationResult === true){
+    return await fetchRestaurantsFromJustEat(text);
+  }
+  else{
+    return false;
+  }
 }

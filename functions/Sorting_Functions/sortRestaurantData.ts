@@ -5,7 +5,7 @@
  * @param {string} order - 'asc' or 'dsc' for different sorting order.
  * @returns {Array} - A new sorted array.
  */
-export function sortResData(restaurants, order: string) {
+export function sortResData(restaurants:any[], order: string) {
     const sortedRestaurants = [...restaurants];
     sortedRestaurants.sort((resA, resB) => {
         const resArating = resA.rating.starRating;

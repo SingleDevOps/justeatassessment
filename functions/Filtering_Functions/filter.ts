@@ -5,11 +5,11 @@
  */
 
 
-export function filterCuisines(item) {
+export function filterCuisines(item:any) {
 
     const cuisinesString = item.cuisines
         .slice(0, 2) // Only the first two cuisines are needed
-        .map((cuisine) => {
+        .map((cuisine:any) => {
             const name = cuisine.name;
             const lower = name.toLowerCase();
             switch (true) {
