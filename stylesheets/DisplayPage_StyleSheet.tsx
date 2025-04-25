@@ -194,17 +194,6 @@ export const displayPageStyles = StyleSheet.create({
     },
 
 
-    // Style for location icon in address section
-    // Defines positioning and size
-    locationIcon: {
-        marginLeft: 2,
-        marginRight: 2.5,
-        marginTop: 3,
-        width: 12,
-        height: 12,
-    },
-
-
     // Style for pin icon (emoji) in address section
     // Defines font and spacing
     pinIcon: {
@@ -274,7 +263,7 @@ export const displayPageStyles = StyleSheet.create({
     // Style for dropdown list when expanded
     // Defines width, background, and positioning
     dropdown: {
-        width: 379,
+        width: '92%',
         paddingBottom: 1,
         borderColor: '#F8F9FA',
         backgroundColor: 'white',
@@ -318,7 +307,7 @@ export const displayPageStyles = StyleSheet.create({
     darkDropdown: {
         borderColor: '#1A1A18',
         backgroundColor: '#262626',
-        width: 379,
+        width: '92%',
         paddingBottom: 1,
         alignSelf: 'center',
         marginTop: 5,

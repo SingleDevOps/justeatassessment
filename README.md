@@ -21,6 +21,7 @@ This application does two things:
    
    - Just Eat Takeaway Endpoint API: 
    https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/${postcode}
+   
 
 2. On **DisplayPage**, it can display the restaurant in the order of the returning data, or it can display the same restaurants by the sorting order of their ratings, from high to low, and from low to high.
 
@@ -39,6 +40,7 @@ pages/
 │   ├── Imports
 │   │   ├── stylesheets/MainPage_StyleSheet.tsx
 │   │   └── functions/API_Functions/apiRequest.ts (handleSearch)
+│   │   └── L40TH.json (sample restaurant data for offline display)
 │   └── Features
 │       ├── Postcode Search
 │       ├── Dark/Light Mode
@@ -72,7 +74,7 @@ functions/
 ## Getting Started
 
 **If you do not want to set up the project by yourself, you can download the "just-eat.apk" file from this link and install it on your Android devices.**
-
+**(I do not have a Mac computer to compile the iOS version)**
 File URL: **https://1drv.ms/u/c/bd222029f4f1d186/ESkjzbkV2OdBuQD3RLVppp8BNXYnzvh9zIL88ckqvyx86w?e=UNjDo6**
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
@@ -102,10 +104,8 @@ yarn start
 ### Step 2: Build and run your app
 
 With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-**You need to connect you android/iOS Device to the computer, or your computer must have android/iOS emulator to run the following commands.**
   
-***(I do not have a Mac computer to compile the iOS version)***
+
 
 #### Android
 
@@ -147,8 +147,6 @@ This is one way to run your app — you can also build it directly from Android 
 
 ## Visuals
 
-![Alt Text](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDMweTVhdzg1MzMzYjQ5MGYxaWpxeHgyaG0zOG1zZnFiYTJxYTA5dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BCDnVJWGJzx31YjlLz/giphy.gif)
-
 ### MainPage
 
 #### Light Mode
@@ -159,7 +157,7 @@ This is one way to run your app — you can also build it directly from Android 
 
 ### Display Page
 
-Four data points are shown: name and rating on the top, laying horizontally with the logo. cuisines and address on the bottom, laying vertically.
+Four data points are shown: name and rating on the top, lying horizontally with the logo. cuisines and address on the bottom, lying vertically.
 
 #### Light Mode
 <img src="https://i.postimg.cc/XJrdXRYB/Display-Page-Lightmode.png" alt="alt text" title="DisplayPage, LightMode">

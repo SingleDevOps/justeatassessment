@@ -15,6 +15,10 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
   const selectListOptions = [ //Options for the sorting dropdown list.
     { key: '1', value: 'Rating (High to Low)' },
     { key: '2', value: 'Rating (Low to High)' },
+    { key: '3', value: 'Reviews (More to Less)' },
+    { key: '4', value: 'Reviews (Less to More)' },
+    { key: '5', value: 'Name (A-Z)' },
+    { key: '6', value: 'Name (Z-A)' },
   ];
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
@@ -45,31 +49,48 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
 
   useEffect(() => { //When the selected sorting option changes, sort the restaurant data accordingly.
     if (selected) {
-      if (selected === 'Rating (High to Low)') { // "Rating(High to Low)" = descending order.
-        setSortedRestaurants(sortResData(restaurants, 'desc'));
-      }
+      switch(selected){
+        case 'Rating (High to Low)':
+          setSortedRestaurants(sortResData(restaurants, 'desc'));
+          break;
 
-      else if (selected === 'Rating (Low to High)') { // "Rating(Low to High)" = ascending order.
-        setSortedRestaurants(sortResData(restaurants, 'asc'));
+        case 'Rating (Low to High)':
+          setSortedRestaurants(sortResData(restaurants, 'asc'));
+          break;
+
+        case 'Reviews (More to Less)':
+          setSortedRestaurants(sortResData(restaurants, 'moreToLessReviews'));
+          break;
+
+        case 'Reviews (Less to More)':
+          setSortedRestaurants(sortResData(restaurants, 'lessToMoreReviews'));
+          break;
+
+        case 'Name (A-Z)':
+          setSortedRestaurants(sortResData(restaurants, 'A-Z'));
+          break;
+
+        case 'Name (Z-A)':
+          setSortedRestaurants(sortResData(restaurants, 'Z-A'));
+          break;
       }
     } else {
-      // If no selection yet, show unsorted data.
-      setSortedRestaurants(restaurants);
+      setSortedRestaurants(restaurants); // If no selection yet, show unsorted data.
     }
   }, [selected, restaurants]);
 
 
 
-  return ( // The display page of the app, displaying the restaurant data.
+  return (
     <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
       <SelectList //The selectlist displays sorting options.
-        arrowicon={<Image source={require('../images/downarrow.png')} tintColor={isDarkMode ? 'white' : 'black'} style={[displayPageStyles.downarrow, isDarkMode && displayPageStyles.darkdownarrow]} />}
+        arrowicon={<Image source={require('../images/downarrow.png')} tintColor={isDarkMode ? 'white' : 'black'} style={displayPageStyles.downarrow} />}
         setSelected={(value:string) => setSelected(value)}
         data={selectListOptions}
         save="value"
         placeholder="Sort By"
         // eslint-disable-next-line react-native/no-inline-styles
-        inputStyles={isDarkMode ? { color: 'white' } : { color: 'black' }} //The placeholder text color based on light mode / dark mode
+        inputStyles={isDarkMode ? { color: 'white' } : { color: 'black' }}
         search={false}
         boxStyles={isDarkMode ? displayPageStyles.darkDropdownBox : displayPageStyles.dropdownBox}
         dropdownStyles={isDarkMode ? displayPageStyles.darkDropdown : displayPageStyles.dropdown}
@@ -79,8 +100,8 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
       <View style={displayPageStyles.container}>
         {/* The FlatList for showing each restaurant */}
         <FlatList
-          showsVerticalScrollIndicator={false} //Hide Vertical Scrollbar
-          showsHorizontalScrollIndicator={false} //Hide Horizontal Scrollbar
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           data={sortedRestaurants}
           renderItem={({ item }) => {
             const cuisines = filterCuisines(item);
@@ -113,10 +134,8 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
 
                   {/*********** lowerPart Starts *********/}
                   <View style={displayPageStyles.lowerPart}>
-                    {/* The cuisine is separated from the address text */}
                     <Text style={[displayPageStyles.cuisine, isDarkMode && displayPageStyles.darkcuisine]}>{cuisines}</Text>
-                    {/* The address container, with pin icon and address text */}
-                    <View style={displayPageStyles.addressContainer}>
+                    <View style={displayPageStyles.addressContainer}> {/* The address container, with pin icon and address text */}
                       <Text style={[displayPageStyles.pinIcon]}>{'📍'}</Text>
                       <View style={displayPageStyles.addressTextContainer}>
                         <Text

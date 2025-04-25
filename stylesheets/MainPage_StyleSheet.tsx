@@ -133,6 +133,7 @@ export const mainpageStyles = StyleSheet.create({
         paddingHorizontal: 1, // Remove extra padding
         marginLeft: 20,
         marginRight: 20,
+        textAlign: 'center',
         width: '70.5%',
     },
 

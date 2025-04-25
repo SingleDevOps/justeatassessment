@@ -5,6 +5,8 @@ import { handleSearch } from '../functions/API_Functions/apiRequest';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 import { mainpageStyles } from '../stylesheets/MainPage_StyleSheet';
 import { useNetInfo } from '@react-native-community/netinfo';
+import * as sampleData from './L40TH.json'; //Sample data for display if users cannot use the API
+
 
 const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
 
@@ -16,7 +18,8 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
   const isDarkMode = colorScheme === 'dark';
 
   useEffect(() => {
-    SystemNavigationBar.setNavigationColor(isDarkMode ? '#262626' : 'gray'); //Set the color of the system navigation bar to match the theme.
+    SystemNavigationBar.setNavigationColor(isDarkMode ? '#262626' : 'gray');
+
     navigation.setOptions({ //Show page title, and header style setting.
       title: '', //Empty String for no title
       headerTitleAlign: 'center',
@@ -45,8 +48,16 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
   }, [navigation, route, isDarkMode]);
 
   const onSubmit = async (text: string):Promise<any | null> => {    //The "handleSearch" function is imported from 'functions/API_Functions/apiRequest.ts'
-    if (!text) { return null; } //If the user submits empty string, return null and do nothing.
+
     text = text.replaceAll(' ','').toUpperCase();
+
+    if (!text || text === 'L40TH') {  // Using sample data for users having trouble with the API.
+      const ten_restaurants = sampleData.restaurants.slice(0, 10);
+      navigation.navigate('DisplayPage', {postcode: 'L40TH', restaurants: ten_restaurants});
+      console.log('Using Sample Data from L40TH.json');
+      return null;
+    }
+
     setLoading(true); // Loading Activity Indicator is shown
     const ten_restaurants:any = await handleSearch(text);
     setLoading(false); // Loading Activity Indicator is removed when the loding is finished.
@@ -77,13 +88,13 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
       <KeyboardAvoidingView
         style={mainpageStyles.keyboardAvoidingView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={keyboardVisible ? 30 : 0} // Adjust the offset based on keyboard visibility
+        keyboardVerticalOffset={keyboardVisible ? 30 : 0}
       >
         {/* The MainPage has two parts: the brand logo and the search bar */}
         <View style={[mainpageStyles.container, isDarkMode && mainpageStyles.darkcontainer]}>
           <View>
             <Image //************** The logo of Just Eat ***************/
-              source={require('../images/just-eat-logo.png')} //Self-made Logo of Just Eat Takeaway.com
+              source={require('../images/just-eat-logo.png')}
               style={mainpageStyles.logo}
             />
           </View>

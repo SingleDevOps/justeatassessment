@@ -1,5 +1,4 @@
 //Functions for API Requests.
-
 /**
  * Validates if a string is a valid UK postcode using the postcodes.io API.
  *
@@ -20,7 +19,7 @@ export async function validatePostcode(text: string): Promise<boolean> {
     const response = await fetch(validationUrl, { method: 'GET' });
     const data = await response.json();
     console.log('Validation response:', data);
-    return data.result === true; // return the validation result of the postcode being valid or not.
+    return data.result === true;
   } catch (error) {
     console.error('Error during postcode validation:', error);
     return false;
