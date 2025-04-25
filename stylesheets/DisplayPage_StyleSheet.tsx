@@ -347,11 +347,5 @@ export const displayPageStyles = StyleSheet.create({
         width: 8,
         height: 8,
     },
-
-
-    // Dark mode override for dropdown arrow (unused in this code)
-    darkdownarrow: {
-    },
-
 }
 );

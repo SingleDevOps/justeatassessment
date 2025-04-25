@@ -12,7 +12,7 @@
  */
 
 export async function validatePostcode(text: string): Promise<boolean> {
-  text = text.toUpperCase();
+
   const validationUrl = `https://postcodes.io/postcodes/${text}/validate`;
 
   try {
@@ -50,7 +50,7 @@ export async function fetchRestaurantsFromJustEat(text: string): Promise<object[
         const tenRestaurants = restaurants.slice(0, 10);
         console.log('First 10 restaurants:', tenRestaurants);
         return tenRestaurants;
-      } else { // If not then return whatever number of restaurant in the returned data.
+      } else { // If not then return whatever number of restaurant in the returned data. This may happen for postcal codes of Wales.
         console.log('Restaurants:', restaurants);
         return restaurants;
       }
@@ -80,9 +80,8 @@ export async function handleSearch(text: string): Promise<any[] | boolean | null
     setTimeout(() => resolve('TIMEOUT'), 3000)
   );
 
-  // Race the validation promise against the timeout promise
-  const validationResult = await Promise.race([
-    validatePostcode(text),
+  const validationResult = await Promise.race([ // Race the validation promise against the timeout promise
+    validatePostcode(text), //Returns true or false
     timeoutPromise,
   ]);
 
@@ -93,7 +92,7 @@ export async function handleSearch(text: string): Promise<any[] | boolean | null
   else if(validationResult === true){
     return await fetchRestaurantsFromJustEat(text);
   }
-  else{
+  else{ // validationResult === false
     return false;
   }
 }

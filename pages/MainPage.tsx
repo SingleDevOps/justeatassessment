@@ -12,16 +12,16 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
   const [loading, setLoading] = React.useState(false); // State for showing loading activity
   const [keyboardVisible, setKeyboardVisible] = React.useState(false); //State for keyboard visibility, to adjust the position of the search bar, so it won't be covered by the keyboard.
   const hasInternet = useNetInfo().isConnected;
-  const colorScheme = useColorScheme(); // Get the current color scheme (light or dark mode).
+  const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
+
   useEffect(() => {
     SystemNavigationBar.setNavigationColor(isDarkMode ? '#262626' : 'gray'); //Set the color of the system navigation bar to match the theme.
     navigation.setOptions({ //Show page title, and header style setting.
-      headerShow: false,
       title: '', //Empty String for no title
       headerTitleAlign: 'center',
       headerStyle: {
-        backgroundColor: isDarkMode ? '#1A1A18' : '#F8F9FA', // Header color based on light mode and dark mode
+        backgroundColor: isDarkMode ? '#1A1A18' : '#F8F9FA',
       },
     });
 
@@ -45,10 +45,11 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
   }, [navigation, route, isDarkMode]);
 
   const onSubmit = async (text: string):Promise<any | null> => {    //The "handleSearch" function is imported from 'functions/API_Functions/apiRequest.ts'
-    if (!text) { return null; } //If the user submits empty string, return null.
-    setLoading(true); // Set loading to true for the activity indicator
+    if (!text) { return null; } //If the user submits empty string, return null and do nothing.
+    text = text.replaceAll(' ','').toUpperCase();
+    setLoading(true); // Loading Activity Indicator is shown
     const ten_restaurants:any = await handleSearch(text);
-    setLoading(false); // Set loading to false when the loding is finished.
+    setLoading(false); // Loading Activity Indicator is removed when the loding is finished.
     if (ten_restaurants !== false) {
       navigation.navigate('DisplayPage', { postcode: text, restaurants: ten_restaurants }); //When the ten restaurants data is received, navigate to the DisplayPage and send parameters to the page.
     } else {

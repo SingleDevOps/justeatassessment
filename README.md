@@ -167,6 +167,12 @@ Four data points are shown: name and rating on the top, laying horizontally with
 #### Dark Mode
 <img src="https://i.postimg.cc/MTgRB9nP/Display-Page-Darkmode.png" alt="alt text" title="DisplayPage, DarkMode">
 
+#### Postcode Validation
+<img src="https://i.postimg.cc/MZnVCXwS/Main-Page-Invalid-Postcode.png" alt="alt text" title="MainPage, Invalid Postcode">
+
+#### No Internet Notification
+<img src="https://i.postimg.cc/Pf0YThf8/Main-Page-No-Internet.png" alt="alt text" title="MainPage, No Internet">
+
 ## Assumptions & Things not clear
 The definition of "restaurant" is not specified. There are non-restaurants in the "restaurants" list, such as pharmacies and convenience stores. I assume that all entries are "restaurant" by definition.
 
