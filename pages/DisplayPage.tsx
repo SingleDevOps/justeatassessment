@@ -7,8 +7,8 @@ import { filterCuisines } from '../functions/Filtering_Functions/filter';
 
 
 const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => {
-  const { restaurants } = route.params; //Get the restaurant data from the previous page.
-  const [postcode, setPostcode] = useState(''); //State for postcode, to show at the page title.
+  const { restaurants } = route.params; //Get the restaurant data from MainPage.
+  const [postcode, setPostcode] = useState('');
   const [selected, setSelected] = React.useState(''); //State for the selected sorting option.
   const [sortedRestaurants, setSortedRestaurants] = useState(restaurants); //State for the sorted restaurant data.
 
@@ -16,8 +16,8 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
     { key: '1', value: 'Rating (High to Low)' },
     { key: '2', value: 'Rating (Low to High)' },
   ];
-  const colorScheme = useColorScheme(); // Get the current color scheme (light or dark mode).
-  const isDarkMode = colorScheme === 'dark'; // Check if the current color scheme is dark mode.
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
 
 
   useEffect(() => {   // Prevents infinite postcode rendering on the header
@@ -26,8 +26,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
     }
   }, [route.params.postcode, postcode]);
 
-  useEffect(() => {
-    //Show page title, and its style setting
+  useEffect(() => {    //Show page title, and its style setting
     navigation.setOptions({
       title: `Restaurants at ${postcode}`,
       fontsize: 20,
@@ -46,12 +45,11 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
 
   useEffect(() => { //When the selected sorting option changes, sort the restaurant data accordingly.
     if (selected) {
-      // "Rating(High to Low)" = descending order.
-      if (selected === 'Rating (High to Low)') {
+      if (selected === 'Rating (High to Low)') { // "Rating(High to Low)" = descending order.
         setSortedRestaurants(sortResData(restaurants, 'desc'));
       }
-      // "Rating(Low to High)" = ascending order.
-      else if (selected === 'Rating (Low to High)') {
+
+      else if (selected === 'Rating (Low to High)') { // "Rating(Low to High)" = ascending order.
         setSortedRestaurants(sortResData(restaurants, 'asc'));
       }
     } else {
@@ -73,12 +71,9 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
         // eslint-disable-next-line react-native/no-inline-styles
         inputStyles={isDarkMode ? { color: 'white' } : { color: 'black' }} //The placeholder text color based on light mode / dark mode
         search={false}
-        // Use placeholderStyle to control the placeholder's text color and size.
-        placeholderStyle={[displayPageStyles.placeholder, isDarkMode && displayPageStyles.darkPlaceholder]}
-        // Three other styles for the selectlist dropdown list design
-        boxStyles={[displayPageStyles.dropdownBox, isDarkMode && displayPageStyles.darkDropdownBox]}
-        dropdownStyles={[displayPageStyles.dropdown, isDarkMode && displayPageStyles.darkDropdown]}
-        dropdownTextStyles={[displayPageStyles.dropdownText, isDarkMode && displayPageStyles.darkDropdownText]}
+        boxStyles={isDarkMode ? displayPageStyles.darkDropdownBox : displayPageStyles.dropdownBox}
+        dropdownStyles={isDarkMode ? displayPageStyles.darkDropdown : displayPageStyles.dropdown}
+        dropdownTextStyles={isDarkMode ? displayPageStyles.darkDropdownText : displayPageStyles.dropdownText}
       />
       {/********************* The container of all restaurant cards *************************/}
       <View style={displayPageStyles.container}>
@@ -99,8 +94,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
                 {/********************* The card has two parts: upperPart & lowerPart ********************/}
                 <View style={[displayPageStyles.card, isDarkMode && displayPageStyles.darkcard]}>
                   <View style={displayPageStyles.upperPart}>
-                    {/******************    The Logo   ******************/}
-                    <Image
+                    <Image //******************    The Restaurant Logo   **********************/
                       source={{ uri: item.logoUrl }}
                       style={displayPageStyles.image}
                     />

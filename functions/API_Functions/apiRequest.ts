@@ -1,9 +1,5 @@
 //Functions for API Requests.
 
-
-
-
-
 /**
  * Validates if a string is a valid UK postcode using the postcodes.io API.
  *

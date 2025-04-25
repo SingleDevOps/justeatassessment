@@ -61,6 +61,7 @@ functions/
 │   └── sortRestaurantData.ts (handles restaurant sorting)
 └── Filtering_Functions/
     └── filter.ts (handles cuisine filtering)
+    └── cuisine-emoji-match.ts (cuisine-emoji match pairs)
 ```
 
 ![UML-Diagram.png](https://i.postimg.cc/t4d8sPVH/UML-Diagram.png)
@@ -72,13 +73,11 @@ functions/
 
 **If you do not want to set up the project by yourself, you can download the "just-eat.apk" file from this link and install it on your Android devices.**
 
-File URL: **https://1drv.ms/u/c/bd222029f4f1d186/EUPkLPd8Q-ZNqaW8XTnULhwBCbrbjPvSQs-ixPe5nOElzg?e=xAweIz**
+File URL: **https://1drv.ms/u/c/bd222029f4f1d186/ESkjzbkV2OdBuQD3RLVppp8BNXYnzvh9zIL88ckqvyx86w?e=UNjDo6**
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
 ### Step 1: Start Metro
-
-**TO RUN THIS PROJECT, YOU MUST HAVE THE ANDROID EMULATOR ON YOUR COMPUTER OR ANDROID DEVICE CONNECTED TO THE COMPUTER**
 
 First, open up your project folder in shell/cmd. 
 

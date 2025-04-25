@@ -32,11 +32,6 @@ export const displayPageStyles = StyleSheet.create({
     },
 
 
-    // Text color for placeholder elements
-    placeholder: {
-        color: 'black',
-    },
-
 
     // Primary restaurant card style
     // Defines appearance with border, background, shadow, and spacing
@@ -258,12 +253,6 @@ export const displayPageStyles = StyleSheet.create({
     },
 
 
-    // Dark mode override for placeholder text
-    darkPlaceholder: {
-        color: 'white',
-        fontSize: 16,
-    },
-
 
     // Style for dropdown selection box
     // Defines appearance with border, background, and spacing
@@ -313,6 +302,14 @@ export const displayPageStyles = StyleSheet.create({
         borderColor: '#858a7e',  // Use a visible border color that matches your theme
         backgroundColor: '#1A1A18', // Change from 'white' to '#1A1A18'
         borderWidth: 1,  // Increase border width for better visibility
+        fontFamily: 'OpenSans-Regular',
+        top: 5,
+        marginHorizontal: 17,
+        marginVertical: 10,
+        borderRadius: 8,
+        paddingVertical: 6,
+        paddingHorizontal: 15,
+        marginBottom: 10,
     },
 
 
@@ -321,6 +318,10 @@ export const displayPageStyles = StyleSheet.create({
     darkDropdown: {
         borderColor: '#1A1A18',
         backgroundColor: '#262626',
+        width: 379,
+        paddingBottom: 1,
+        alignSelf: 'center',
+        marginTop: 5,
     },
 
 
@@ -329,6 +330,11 @@ export const displayPageStyles = StyleSheet.create({
     darkDropdownText: {
         textAlign: 'left',
         color: 'white',
+        right: 6,
+        fontFamily: 'OpenSans-Regular',
+        fontSize: 14,
+        marginHorizontal: 2.2,
+        flexWrap: 'wrap',
     },
 
 

@@ -39,7 +39,7 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
     );
 
     return () => {
-      keyboardDidShowListener.remove(); // Remove the keyboard show listener when the component unmounts.
+      keyboardDidShowListener.remove(); // Remove the keyboard listeners when the component unmounts.
       keyboardDidHideListener.remove();
     };
   }, [navigation, route, isDarkMode]);
@@ -47,7 +47,7 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
   const onSubmit = async (text: string):Promise<any | null> => {    //The "handleSearch" function is imported from 'functions/API_Functions/apiRequest.ts'
     if (!text) { return null; } //If the user submits empty string, return null.
     setLoading(true); // Set loading to true for the activity indicator
-    const ten_restaurants:any = await handleSearch(text); //Ten Restaurants waiting to be returned.
+    const ten_restaurants:any = await handleSearch(text);
     setLoading(false); // Set loading to false when the loding is finished.
     if (ten_restaurants !== false) {
       navigation.navigate('DisplayPage', { postcode: text, restaurants: ten_restaurants }); //When the ten restaurants data is received, navigate to the DisplayPage and send parameters to the page.
@@ -73,7 +73,6 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
     // The page is styled based on the current color scheme (light or dark mode).
 
     <View style={[mainpageStyles.overAll, isDarkMode && mainpageStyles.darkOverAll]}>
-      {/*The keyboardAvoidingView to avoid blockage of the searchbar by the keyboard*/}
       <KeyboardAvoidingView
         style={mainpageStyles.keyboardAvoidingView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -81,9 +80,8 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
       >
         {/* The MainPage has two parts: the brand logo and the search bar */}
         <View style={[mainpageStyles.container, isDarkMode && mainpageStyles.darkcontainer]}>
-          {/************** The logo of Just Eat ***************/}
           <View>
-            <Image
+            <Image //************** The logo of Just Eat ***************/
               source={require('../images/just-eat-logo.png')} //Self-made Logo of Just Eat Takeaway.com
               style={mainpageStyles.logo}
             />
@@ -94,21 +92,17 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
               <Text style={[mainpageStyles.titleFirstpart, isDarkMode && mainpageStyles.titleFirstpart]}>Find Restaurants </Text>
               <Text style={[mainpageStyles.titleSecondpart, isDarkMode && mainpageStyles.darktitleSecondpart]}>Near You</Text>
             </View>
-            {/***************** The search bar ****************/}
             <SearchBar
               placeholder="Enter a UK Postcode"
               onChangeText={((text: string) => setPostcode(text))}
               value={postcode}
-              onSubmitEditing={() => onSubmit(postcode)} // submission handeling
-
-              /* Three mainpageStyles for adjusting how the searchBar looks*/
-              containerStyle={[mainpageStyles.searchBarContainer, isDarkMode && mainpageStyles.darksearchBarContainer]}
+              onSubmitEditing={() => onSubmit(postcode)}
+              containerStyle={[mainpageStyles.searchBarContainer, isDarkMode && mainpageStyles.darksearchBarContainer]} /* Three Styles for adjusting how the searchBar looks*/
               inputContainerStyle={[mainpageStyles.searchInputContainer, isDarkMode && mainpageStyles.darksearchInputContainer]}
               inputStyle={[mainpageStyles.searchInput, isDarkMode && mainpageStyles.darksearchInput]}
-
-              placeholderTextColor="#888" // Subtle placeholder color
-              searchIcon={null} //Hide searchIcon
-              clearIcon={null} //Hide clearIcon
+              placeholderTextColor="#888"
+              searchIcon={null}
+              clearIcon={null}
               showLoading={loading} // ActivityIndicator for showing loading status.
               loadingProps={{ color: '#FF8000', size: 'small' }} // Style of loading indicator
             />
