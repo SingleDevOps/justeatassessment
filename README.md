@@ -76,7 +76,7 @@ functions/
 
 **If you do not want to set up the project by yourself, you can download the "just-eat.apk" file from this link and install it on your Android devices.**
 **(I do not have a Mac computer to compile the iOS version)**
-File URL: **https://1drv.ms/u/c/bd222029f4f1d186/ESkjzbkV2OdBuQD3RLVppp8BNXYnzvh9zIL88ckqvyx86w?e=UNjDo6**
+File URL: **https://1drv.ms/u/c/bd222029f4f1d186/EeWZzdzs1EtEr0NS6LRLRb4BY_ikHVSK7n7PF2tskCyB0w?e=vYEHDc**
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 

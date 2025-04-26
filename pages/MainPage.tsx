@@ -56,8 +56,8 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
       setLoading(true);
       setTimeout(() => { //Pretend to load for one second.
         setLoading(false);
+        navigation.navigate('DisplayPage', {postcode: 'L40TH', restaurants: ten_restaurants});
       },1000);
-      navigation.navigate('DisplayPage', {postcode: 'L40TH', restaurants: ten_restaurants});
       console.log('Using Sample Data from L40TH.json');
       return null;
     }
