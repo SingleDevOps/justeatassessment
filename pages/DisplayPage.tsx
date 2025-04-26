@@ -4,22 +4,13 @@ import { sortResData } from '../functions/Sorting_Functions/sortRestaurantData';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { displayPageStyles } from '../stylesheets/DisplayPage_StyleSheet';
 import { filterCuisines } from '../functions/Filtering_Functions/filter';
-
+import { selectListOptions } from '../functions/Sorting_Functions/sortingOptions';
 
 const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => {
   const { restaurants } = route.params; //Get the restaurant data from MainPage.
   const [postcode, setPostcode] = useState('');
   const [selected, setSelected] = React.useState(''); //State for the selected sorting option.
   const [sortedRestaurants, setSortedRestaurants] = useState(restaurants); //State for the sorted restaurant data.
-
-  const selectListOptions = [ //Options for the sorting dropdown list.
-    { key: '1', value: 'Rating (High to Low)' },
-    { key: '2', value: 'Rating (Low to High)' },
-    { key: '3', value: 'Rating Count (More to Less)' },
-    { key: '4', value: 'Rating Count (Less to More)' },
-    { key: '5', value: 'Name (A-Z)' },
-    { key: '6', value: 'Name (Z-A)' },
-  ];
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
 

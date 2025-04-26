@@ -5,8 +5,6 @@
  * @param {string} order
  * @returns {Array} - A new sorted array.
  */
-
-
 export function sortResData(restaurants:any[], order: string) {
     const sortedRestaurants = [...restaurants];
 

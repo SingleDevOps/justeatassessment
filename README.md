@@ -62,6 +62,7 @@ functions/
 │   └── apiRequest.ts (handles restaurant data fetching)
 ├── Sorting_Functions/
 │   └── sortRestaurantData.ts (handles restaurant sorting)
+│   └── sortingOptions.ts (sorting options for SelecList component)
 └── Filtering_Functions/
     └── filter.ts (handles cuisine filtering)
     └── cuisine-emoji-match.ts (cuisine-emoji match pairs)
