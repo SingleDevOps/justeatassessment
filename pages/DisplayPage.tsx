@@ -15,8 +15,8 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
   const selectListOptions = [ //Options for the sorting dropdown list.
     { key: '1', value: 'Rating (High to Low)' },
     { key: '2', value: 'Rating (Low to High)' },
-    { key: '3', value: 'Reviews (More to Less)' },
-    { key: '4', value: 'Reviews (Less to More)' },
+    { key: '3', value: 'Rating Count (More to Less)' },
+    { key: '4', value: 'Rating Count (Less to More)' },
     { key: '5', value: 'Name (A-Z)' },
     { key: '6', value: 'Name (Z-A)' },
   ];
@@ -58,12 +58,12 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
           setSortedRestaurants(sortResData(restaurants, 'asc'));
           break;
 
-        case 'Reviews (More to Less)':
-          setSortedRestaurants(sortResData(restaurants, 'moreToLessReviews'));
+        case 'Rating Count (More to Less)':
+          setSortedRestaurants(sortResData(restaurants, 'moreToLessRatingCount'));
           break;
 
-        case 'Reviews (Less to More)':
-          setSortedRestaurants(sortResData(restaurants, 'lessToMoreReviews'));
+        case 'Rating Count (Less to More)':
+          setSortedRestaurants(sortResData(restaurants, 'lessToMoreRatingCount'));
           break;
 
         case 'Name (A-Z)':

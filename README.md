@@ -21,9 +21,10 @@ This application does two things:
    
    - Just Eat Takeaway Endpoint API: 
    https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/${postcode}
-   
 
-2. On **DisplayPage**, it can display the restaurant in the order of the returning data, or it can display the same restaurants by the sorting order of their ratings, from high to low, and from low to high.
+    ***If searching L4 0TH, or empty string, the local sample data will be used for display purpose***
+
+2. On **DisplayPage**, it can display the restaurant in the order of the returning data, or it can display the same restaurants by multiple sorting options: ***Rating***, ***RatingCount***, ***Alphabetical Order of Restaurant Names***.
 
 Besides, this application has dark mode design, for the night usage.
 
@@ -166,10 +167,10 @@ Four data points are shown: name and rating on the top, lying horizontally with 
 <img src="https://i.postimg.cc/MTgRB9nP/Display-Page-Darkmode.png" alt="alt text" title="DisplayPage, DarkMode">
 
 #### Postcode Validation
-<img src="https://i.postimg.cc/MZnVCXwS/Main-Page-Invalid-Postcode.png" alt="alt text" title="MainPage, Invalid Postcode">
+<img src="https://i.postimg.cc/MXkz81kS/Main-Page-Invalid-Postcode.png" alt="alt text" title="MainPage, Invalid Postcode">
 
 #### No Internet Notification
-<img src="https://i.postimg.cc/Pf0YThf8/Main-Page-No-Internet.png" alt="alt text" title="MainPage, No Internet">
+<img src="https://i.postimg.cc/Kc1LxFXq/Main-Page-No-Internet.png" alt="alt text" title="MainPage, No Internet">
 
 ## Assumptions & Things not clear
 The definition of "restaurant" is not specified. There are non-restaurants in the "restaurants" list, such as pharmacies and convenience stores. I assume that all entries are "restaurant" by definition.

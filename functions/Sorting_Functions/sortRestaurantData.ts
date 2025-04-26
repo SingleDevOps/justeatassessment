@@ -22,15 +22,15 @@ export function sortResData(restaurants:any[], order: string) {
         sortedRestaurants.sort((resA, resB)=>{
             const resAName = resA.name.toLowerCase();
             const resBName = resB.name.toLowerCase();
-            return order === 'A-Z' ? resAName.localeCompare(resBName) : resBName.localeCompare(resAName)
+            return order === 'A-Z' ? resAName.localeCompare(resBName) : resBName.localeCompare(resAName);
         });
     }
 
-    else if (order === 'moreToLessReviews' || order === 'lessToMoreReviews'){
+    else if (order === 'moreToLessRatingCount' || order === 'lessToMoreRatingCount'){
         sortedRestaurants.sort((resA, resB) => {
-            const resAReviewCount = resA.rating.count;
-            const resBReviewCount = resB.rating.count;
-            return order === 'lessToMoreReviews' ? resAReviewCount - resBReviewCount : resBReviewCount - resAReviewCount;
+            const resARatingCount = resA.rating.count;
+            const resBRatingCount = resB.rating.count;
+            return order === 'lessToMoreRatingCount' ? resARatingCount - resBRatingCount : resBRatingCount - resARatingCount;
         });
     }
 
