@@ -41,11 +41,11 @@ export async function validatePostcode(text: string): Promise<boolean> {
 export async function fetchRestaurantsFromJustEat(text: string): Promise<object[] | null> {
   const justeatUrl = `https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/${text}`;
   try {
-    const response = await fetch(justeatUrl, { method: 'GET' }); // Just Eat Endpoint for fetching restaurant data.
+    const response = await fetch(justeatUrl, { method: 'GET' });
     const apiData = await response.json();
     const restaurants = apiData.restaurants;
     if (restaurants) {
-      if (restaurants.length >= 10) { // Fault tolerance, if there are ten or more restaurants, do regularly.
+      if (restaurants.length >= 10) { // Fault tolerance, if there are ten or more restaurants, take the first ten restaurants.
         const tenRestaurants = restaurants.slice(0, 10);
         console.log('First 10 restaurants:', tenRestaurants);
         return tenRestaurants;
@@ -75,7 +75,7 @@ export async function fetchRestaurantsFromJustEat(text: string): Promise<object[
  */
 export async function handleSearch(text: string): Promise<any[] | boolean | null> {
 
-  const timeoutPromise = new Promise<string>((resolve) =>   // Create a timeout promise that resolves to "TIMEOUT" after 3000ms
+  const timeoutPromise = new Promise<string>((resolve) =>
     setTimeout(() => resolve('TIMEOUT'), 3000)
   );
 

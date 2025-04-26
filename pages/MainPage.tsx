@@ -53,6 +53,10 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
 
     if (!text || text === 'L40TH') {  // Using sample data for users having trouble with the API.
       const ten_restaurants = sampleData.restaurants.slice(0, 10);
+      setLoading(true);
+      setTimeout(() => { //Pretend to load for one second.
+        setLoading(false);
+      },1000);
       navigation.navigate('DisplayPage', {postcode: 'L40TH', restaurants: ten_restaurants});
       console.log('Using Sample Data from L40TH.json');
       return null;
@@ -79,10 +83,9 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
 
   return (
     // The main page of the app, which contains the search bar and logo.
-    // The search bar allows users to enter a UK postcode to find restaurants near this postcode.
+    // The search bar allows users to enter a UK postcode to find restaurants at this postcode.
     // The logo is displayed at the top of the page.
     // The page also handles keyboard visibility to adjust the layout accordingly.
-    // The page is styled based on the current color scheme (light or dark mode).
 
     <View style={[mainpageStyles.overAll, isDarkMode && mainpageStyles.darkOverAll]}>
       <KeyboardAvoidingView
