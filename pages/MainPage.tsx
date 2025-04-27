@@ -58,7 +58,7 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
         setLoading(false);
         navigation.navigate('DisplayPage', {postcode: 'L40TH', restaurants: ten_restaurants});
       },1000);
-      console.log('Using Sample Data from L40TH.json');
+      // console.log('Using Sample Data from L40TH.json');
       return null;
     }
 
@@ -70,11 +70,11 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
     } else {
       if (!hasInternet){
         Alert.alert('No Internet Connection', 'Please check your internet.');
-        console.log('No Internet Connection.');
+        // console.log('No Internet Connection.');
       }
       else{
         Alert.alert('Invalid Postcode','You may have entered the wrong postal code, or it has been terminated.'); //If there is Internet, the issue lies on the postal code itself.
-        console.log('Postal Code Validation Error');
+        // console.log('Postal Code Validation Error');
       }
     }
   };

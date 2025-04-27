@@ -18,7 +18,7 @@ export async function validatePostcode(text: string): Promise<boolean> {
     //Call validation API to check the postcode.
     const response = await fetch(validationUrl, { method: 'GET' });
     const data = await response.json();
-    console.log('Validation response:', data);
+    // console.log('Validation response:', data);
     return data.result === true;
   } catch (error) {
     console.error('Error during postcode validation:', error);
@@ -47,10 +47,10 @@ export async function fetchRestaurantsFromJustEat(text: string): Promise<object[
     if (restaurants) {
       if (restaurants.length >= 10) { // Fault tolerance, if there are ten or more restaurants, take the first ten restaurants.
         const tenRestaurants = restaurants.slice(0, 10);
-        console.log('First 10 restaurants:', tenRestaurants);
+        // console.log('First 10 restaurants:', tenRestaurants);
         return tenRestaurants;
       } else { // If not then return whatever number of restaurant in the returned data. This may happen for postcal codes of Wales.
-        console.log('Restaurants:', restaurants);
+        // console.log('Restaurants:', restaurants);
         return restaurants;
       }
     }
@@ -85,7 +85,7 @@ export async function handleSearch(text: string): Promise<any[] | boolean | null
   ]);
 
   if (validationResult === 'TIMEOUT') {
-    console.log('Validation API request timed out. Sending postcode directly to Just Eat API.');
+    // console.log('Validation API request timed out. Sending postcode directly to Just Eat API.');
     return await fetchRestaurantsFromJustEat(text);
   }
   else if(validationResult === true){
