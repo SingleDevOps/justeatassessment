@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useColorScheme, View, Text, Image, FlatList, TouchableHighlight } from 'react-native';
+import { useColorScheme, View, Image, FlatList } from 'react-native';
 import { sortResData } from '../functions/Sorting_Functions/sortRestaurantData';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { displayPageStyles } from '../stylesheets/DisplayPage_StyleSheet';
 import { filterCuisines } from '../functions/Filtering_Functions/filter';
 import { selectListOptions } from '../functions/Sorting_Functions/sortingOptions';
+import { RestaurantCard } from '../components/restaurantCard';
 
 const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => {
   const { restaurants } = route.params; //Get the restaurant data from MainPage.
@@ -13,13 +14,6 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
   const [sortedRestaurants, setSortedRestaurants] = useState(restaurants); //State for the sorted restaurant data.
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
-
-
-  useEffect(() => {   // Prevents infinite postcode rendering on the header
-    if (route.params.postcode && route.params.postcode !== postcode) {
-      setPostcode(route.params.postcode);
-    }
-  }, [route.params.postcode, postcode]);
 
   useEffect(() => {    //Show page title, and its style setting
     navigation.setOptions({
@@ -36,6 +30,10 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
         color: '#FF8000',
       },
     },);
+
+    if (route.params.postcode && route.params.postcode !== postcode) { // Prevents infinite postcode rendering on the header
+      setPostcode(route.params.postcode);
+    }
   }, [navigation, route, postcode, route.params.postcode, isDarkMode]);
 
   useEffect(() => { //When the selected sorting option changes, sort the restaurant data accordingly.
@@ -97,47 +95,11 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
           renderItem={({ item }) => {
             const cuisines = filterCuisines(item);
             return (
-              // Each restaurant card
-              <TouchableHighlight
-                underlayColor={isDarkMode ? '#1A1A18' : '#F8F9FA'}
-                onPress={() => { }}
-                style={displayPageStyles.touchableHighlight}
-              >
-                {/********************* The card has two parts: upperPart & lowerPart ********************/}
-                <View style={[displayPageStyles.card, isDarkMode && displayPageStyles.darkcard]}>
-                  <View style={displayPageStyles.upperPart}>
-                    <Image //******************    The Restaurant Logo   **********************/
-                      source={{ uri: item.logoUrl }}
-                      style={displayPageStyles.image}
-                    />
-                    <View style={displayPageStyles.textContainer}>
-                      <Text style={[displayPageStyles.name, isDarkMode && displayPageStyles.darkname]}>{item.name}</Text>
-                      <View style={displayPageStyles.ratingContainer}>
-                        <Image style={displayPageStyles.ratingImage} source={require('../images/Just-Eat-Star.png')} />
-                        <Text style={displayPageStyles.rating}>{item.rating.starRating}</Text>
-                        <Text style={[displayPageStyles.ratingNumbers, isDarkMode && displayPageStyles.darkratingNumbers]}> ({item.rating.count})</Text>
-                      </View>
-                    </View>
-                  </View>
-                  {/*********** upperPart Ends ***********/}
-
-                  <View style={displayPageStyles.separator} />
-
-                  {/*********** lowerPart Starts *********/}
-                  <View style={displayPageStyles.lowerPart}>
-                    <Text style={[displayPageStyles.cuisine, isDarkMode && displayPageStyles.darkcuisine]}>{cuisines}</Text>
-                    <View style={displayPageStyles.addressContainer}> {/* The address container, with pin icon and address text */}
-                      <Text style={[displayPageStyles.pinIcon]}>{'📍'}</Text>
-                      <View style={displayPageStyles.addressTextContainer}>
-                        <Text
-                        numberOfLines={2}
-                        ellipsizeMode="tail"
-                        style={[displayPageStyles.address, isDarkMode && displayPageStyles.darkaddress]}>{item.address.firstLine + ', ' + item.address.city}</Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              </TouchableHighlight>
+              <RestaurantCard
+              style={displayPageStyles}
+              item={item}
+              isDarkMode={isDarkMode}
+              cuisines={cuisines} />
             );
           }}
           keyExtractor={(item) => item.id.toString()}
