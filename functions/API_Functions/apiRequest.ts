@@ -55,7 +55,7 @@ export async function fetchRestaurantsFromJustEat(text: string): Promise<object[
       }
     }
   } catch (error) {
-    console.error('Error fetching restaurants:', error);
+    return null;
   }
   return null;
 }

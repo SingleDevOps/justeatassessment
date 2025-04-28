@@ -65,9 +65,14 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
     setLoading(true); // Loading Activity Indicator is shown
     const ten_restaurants:any = await handleSearch(text);
     setLoading(false); // Loading Activity Indicator is removed when the loding is finished.
+    if (ten_restaurants === null) { //If the Just Eat API Endpoint is down, show an alert message.
+      Alert.alert('Errors Fetching Restaurant Data', 'The Just Eat API Endpoint is down, or your IP address is not European.');
+      return null;
+    }
     if (ten_restaurants !== false) {
       navigation.navigate('DisplayPage', { postcode: text, restaurants: ten_restaurants }); //When the ten restaurants data is received, navigate to the DisplayPage and send parameters to the page.
-    } else {
+    }
+    else {
       if (!hasInternet){
         Alert.alert('No Internet Connection', 'Please check your internet.');
         // console.log('No Internet Connection.');

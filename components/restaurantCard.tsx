@@ -44,7 +44,7 @@ export const RestaurantCard = ({style, item, isDarkMode, cuisines}:RestaurantCar
                                 <Text
                                 numberOfLines={2}
                                 ellipsizeMode="tail"
-                                style={[style.address, isDarkMode && style.darkaddress]}>{item.address.firstLine + ', ' + item.address.city}</Text>
+                                style={[style.address, isDarkMode && style.darkaddress]}>{item.address.firstLine}, {item.address.city}</Text>
                               </View>
                             </View>
                           </View>

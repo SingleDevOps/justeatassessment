@@ -67,11 +67,15 @@ Besides, this application has dark mode design, for the night usage.
 ### Programming Interface
 ![Programming-Interface.png](https://i.postimg.cc/3JJ9CpzP/program-architecture.png)
 
+
+### Program Flow Chart
+[![Program-Flow-Chart.png](https://i.postimg.cc/DyrJ2yQw/Program-Flow-Chart.png)
+
 ## Getting Started
 
 **If you do not want to set up the project by yourself, you can download the "just-eat.apk" file from this link and install it on your Android devices.**
 **(I do not have a Mac computer to compile the iOS version)**
-File URL: **https://1drv.ms/u/c/bd222029f4f1d186/EeWZzdzs1EtEr0NS6LRLRb4BY_ikHVSK7n7PF2tskCyB0w?e=vYEHDc**
+File URL: **https://1drv.ms/u/c/bd222029f4f1d186/EcehXXOV6YVIl9Ngu4wVxIYBvRUyztZHjEooXoAs1zM4bA?e=wej2lW**
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
@@ -162,11 +166,15 @@ Four data points are shown: name and rating on the top, lying horizontally with 
 #### Dark Mode
 <img src="https://i.postimg.cc/MTgRB9nP/Display-Page-Darkmode.png" alt="alt text" title="DisplayPage, DarkMode">
 
-#### Postcode Validation
+#### Postcode Validation Failure Alert
 <img src="https://i.postimg.cc/MXkz81kS/Main-Page-Invalid-Postcode.png" alt="alt text" title="MainPage, Invalid Postcode">
+
+#### Just Eat API Failure Alert
+<img src="https://i.postimg.cc/yNtsVV7v/Alert-Just-Eat-APIFailure.png" alt="alt text" title="MainPage, Just Eat API Failure">
 
 #### No Internet Notification
 <img src="https://i.postimg.cc/Kc1LxFXq/Main-Page-No-Internet.png" alt="alt text" title="MainPage, No Internet">
+
 
 ## Assumptions & Things not clear
 The definition of "restaurant" is not specified. There are non-restaurants in the "restaurants" list, such as pharmacies and convenience stores. I assume that all entries are "restaurant" by definition.

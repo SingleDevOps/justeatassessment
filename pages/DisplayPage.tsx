@@ -11,7 +11,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
   const { restaurants } = route.params; //Get the restaurant data from MainPage.
   const [postcode, setPostcode] = useState('');
   const [selected, setSelected] = React.useState(''); //State for the selected sorting option.
-  const [sortedRestaurants, setSortedRestaurants] = useState(restaurants); //State for the sorted restaurant data.
+  const [selectedRestaurants, setSelectedRestaurants] = useState(restaurants); //State for the sorted restaurant data.
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
 
@@ -40,32 +40,33 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
     if (selected) {
       switch(selected){
         case 'Rating (High to Low)':
-          setSortedRestaurants(sortResData(restaurants, 'desc'));
+          setSelectedRestaurants(sortResData(restaurants, 'desc'));
           break;
 
         case 'Rating (Low to High)':
-          setSortedRestaurants(sortResData(restaurants, 'asc'));
+          setSelectedRestaurants(sortResData(restaurants, 'asc'));
           break;
 
         case 'Rating Count (More to Less)':
-          setSortedRestaurants(sortResData(restaurants, 'moreToLessRatingCount'));
+          setSelectedRestaurants(sortResData(restaurants, 'moreToLessRatingCount'));
           break;
 
         case 'Rating Count (Less to More)':
-          setSortedRestaurants(sortResData(restaurants, 'lessToMoreRatingCount'));
+          setSelectedRestaurants(sortResData(restaurants, 'lessToMoreRatingCount'));
           break;
 
         case 'Name (A-Z)':
-          setSortedRestaurants(sortResData(restaurants, 'A-Z'));
+          setSelectedRestaurants(sortResData(restaurants, 'A-Z'));
           break;
 
         case 'Name (Z-A)':
-          setSortedRestaurants(sortResData(restaurants, 'Z-A'));
+          setSelectedRestaurants(sortResData(restaurants, 'Z-A'));
           break;
       }
-    } else {
-      setSortedRestaurants(restaurants); // If no selection yet, show unsorted data.
     }
+    // else {
+    //   setSelectedRestaurants(restaurants); // If no selection yet, show unsorted data.
+    // }
   }, [selected, restaurants]);
 
 
@@ -91,7 +92,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
         <FlatList
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          data={sortedRestaurants}
+          data={selectedRestaurants}
           renderItem={({ item }) => {
             const cuisines = filterCuisines(item);
             return (
