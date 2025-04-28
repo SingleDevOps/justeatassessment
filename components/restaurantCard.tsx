@@ -39,7 +39,7 @@ export const RestaurantCard = ({style, item, isDarkMode, cuisines}:RestaurantCar
                           <View style={style.lowerPart}>
                             <Text style={[style.cuisine, isDarkMode && style.darkcuisine]}>{cuisines}</Text>
                             <View style={style.addressContainer}> {/* The address container, with pin icon and address text */}
-                              <Text style={[style.pinIcon]}>{'📍'}</Text>
+                              <Text style={style.pinIcon}>📍</Text>
                               <View style={style.addressTextContainer}>
                                 <Text
                                 numberOfLines={2}
