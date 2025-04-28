@@ -11,17 +11,15 @@
  */
 
 export async function validatePostcode(text: string): Promise<boolean> {
-
   const validationUrl = `https://postcodes.io/postcodes/${text}/validate`;
 
   try {
-    //Call validation API to check the postcode.
     const response = await fetch(validationUrl, { method: 'GET' });
     const data = await response.json();
     // console.log('Validation response:', data);
     return data.result === true;
   } catch (error) {
-    console.error('Error during postcode validation:', error);
+    // console.error('Error during postcode validation:', error);
     return false;
   }
 }
@@ -49,7 +47,7 @@ export async function fetchRestaurantsFromJustEat(text: string): Promise<object[
         const tenRestaurants = restaurants.slice(0, 10);
         // console.log('First 10 restaurants:', tenRestaurants);
         return tenRestaurants;
-      } else { // If not then return whatever number of restaurant in the returned data. This may happen for postcal codes of Wales.
+      } else { // If not then return whatever number of restaurant in the returned data. This may happen for postcal codes of Wales, e.g. SA44 4PD
         // console.log('Restaurants:', restaurants);
         return restaurants;
       }

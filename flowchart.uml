@@ -1,0 +1,45 @@
+@startuml
+:User enters postcode;
+
+if (Postcode is empty or 'L40TH') then (true)
+  :Load sample data (L40TH.json);
+  :Show loading indicator;
+  :Navigate to DisplayPage with sample data;
+  stop
+else (false: API Flow)
+  :Show loading indicator;
+  :Format postcode (remove spaces, uppercase);
+
+  fork
+    :Call validatePostcode API;
+    -->[API result] ValidationResult
+  fork again
+    :Timeout after 3s;
+    -->[Timeout] ValidationResult
+  end fork
+
+  if (ValidationResult is TIMEOUT) then (Timeout: Skip Validation)
+    :Call fetchRestaurantsFromJustEat;
+  else if (ValidationResult is API result) then (true: Valid Postcode)
+    :Call fetchRestaurantsFromJustEat;
+  else (false: Invalid Postcode)
+    if (Internet Connection) then (No)
+      :Show Alert 'No Internet Connection';
+      stop
+    else (Yes)
+      :Show Alert 'Invalid Postcode';
+      stop
+    endif
+  endif
+
+  if (fetchRestaurantsFromJustEat) then (API Error)
+    :Show Alert 'Just Eat API Down or IP not European';
+    stop
+  else (Success)
+    :Navigate to DisplayPage;
+    :Display Retrieved Restaurant Data;
+  endif
+endif
+
+stop
+@enduml
