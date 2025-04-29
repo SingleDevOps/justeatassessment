@@ -22,7 +22,7 @@ else (false: API Flow)
     :Call fetchRestaurantsFromJustEat;
   else if (ValidationResult is API result) then (true: Valid Postcode)
     :Call fetchRestaurantsFromJustEat;
-  else (false: Invalid Postcode)
+  else (false: Invalid Postcode, or API Error(No Internet))
     if (Internet Connection) then (No)
       :Show Alert 'No Internet Connection';
       stop

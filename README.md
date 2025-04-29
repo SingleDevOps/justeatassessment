@@ -69,7 +69,7 @@ Besides, this application has dark mode design, for the night usage.
 
 
 ### Program Flow Chart
-![Program-Flow-Chart.png](https://i.postimg.cc/JhtxGdQ0/Program-Flow-Chart.png)
+![Program-Flow-Chart.png](https://i.postimg.cc/L6qMn014/Flow-Chart.png)
 
 ## Getting Started
 
