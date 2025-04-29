@@ -65,7 +65,7 @@ Besides, this application has dark mode design, for the night usage.
 ```
 
 ### Programming Interface
-![Programming-Interface.png](https://i.postimg.cc/3JJ9CpzP/program-architecture.png)
+![Programming-Interface.png](https://i.postimg.cc/4ZpMGQPN/program-architecture.png)
 
 
 ### Program Flow Chart
