@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Keyboard, useColorScheme, Text, View, Alert, Image, KeyboardAvoidingView, Platform } from 'react-native';
-import { SearchBar } from 'react-native-elements';
 import { handleSearch } from '../functions/API_Functions/apiRequest';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 import { mainpageStyles } from '../stylesheets/MainPage_StyleSheet';
 import { useNetInfo } from '@react-native-community/netinfo';
+import { SearchBarComponent } from '../components/serachBar';
 import * as sampleData from './L40TH.json'; //Sample data for display if users cannot use the API
 
 
@@ -106,26 +106,21 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
               style={mainpageStyles.logo}
             />
           </View>
-          {/* The search bar contains a title and the search bar */}
+          {/* The full search bar contains a title and the search bar */}
           <View style={mainpageStyles.searchContainer}>
             <View style={mainpageStyles.twoTexts}>
               <Text style={[mainpageStyles.titleFirstpart, isDarkMode && mainpageStyles.titleFirstpart]}>Find Restaurants </Text>
               <Text style={[mainpageStyles.titleSecondpart, isDarkMode && mainpageStyles.darktitleSecondpart]}>Near You</Text>
             </View>
-            <SearchBar
-              placeholder="Enter a UK Postcode"
-              onChangeText={((text: string) => setPostcode(text))}
-              value={postcode}
-              onSubmitEditing={() => onSubmit(postcode)}
-              containerStyle={[mainpageStyles.searchBarContainer, isDarkMode && mainpageStyles.darksearchBarContainer]} /* Three Styles for adjusting how the searchBar looks*/
-              inputContainerStyle={[mainpageStyles.searchInputContainer, isDarkMode && mainpageStyles.darksearchInputContainer]}
-              inputStyle={[mainpageStyles.searchInput, isDarkMode && mainpageStyles.darksearchInput]}
-              placeholderTextColor="#888"
-              searchIcon={null}
-              clearIcon={null}
-              showLoading={loading} // ActivityIndicator for showing loading status.
-              loadingProps={{ color: '#FF8000', size: 'small' }} // Style of loading indicator
+            <SearchBarComponent
+              style={mainpageStyles}
+              setPostcode={setPostcode}
+              loading={loading}
+              onSubmit={onSubmit}
+              isDarkMode={isDarkMode}
+              postcode={postcode}
             />
+
           </View>
         </View>
       </KeyboardAvoidingView>

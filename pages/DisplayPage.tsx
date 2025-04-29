@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useColorScheme, View, Image, FlatList } from 'react-native';
+import { useColorScheme, View, FlatList } from 'react-native';
 import { sortResData } from '../functions/Sorting_Functions/sortRestaurantData';
-import { SelectList } from 'react-native-dropdown-select-list';
 import { displayPageStyles } from '../stylesheets/DisplayPage_StyleSheet';
 import { filterCuisines } from '../functions/Filtering_Functions/filter';
 import { selectListOptions } from '../functions/Sorting_Functions/sortingOptions';
 import { RestaurantCard } from '../components/restaurantCard';
+import { SelectListComponent } from '../components/selectList';
+
 
 const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => {
   const { restaurants } = route.params; //Get the restaurant data from MainPage.
   const [postcode, setPostcode] = useState('');
-  const [selected, setSelected] = React.useState(''); //State for the selected sorting option.
+  const [selectedOptions, setselectedOptions] = React.useState(''); //State for the selected sorting option.
   const [selectedRestaurants, setSelectedRestaurants] = useState(restaurants); //State for the sorted restaurant data.
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
@@ -37,8 +38,8 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
   }, [navigation, route, postcode, route.params.postcode, isDarkMode]);
 
   useEffect(() => { //When the selected sorting option changes, sort the restaurant data accordingly.
-    if (selected) {
-      switch(selected){
+    if (selectedOptions) {
+      switch(selectedOptions){
         case 'Rating (High to Low)':
           setSelectedRestaurants(sortResData(restaurants, 'desc'));
           break;
@@ -67,24 +68,17 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
     // else {
     //   setSelectedRestaurants(restaurants); // If no selection yet, show unsorted data.
     // }
-  }, [selected, restaurants]);
+  }, [selectedOptions, restaurants]);
 
 
 
   return (
     <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
-      <SelectList //The selectlist displays sorting options.
-        arrowicon={<Image source={require('../images/downarrow.png')} tintColor={isDarkMode ? 'white' : 'black'} style={displayPageStyles.downarrow} />}
-        setSelected={(value:string) => setSelected(value)}
-        data={selectListOptions}
-        save="value"
-        placeholder="Sort By"
-        // eslint-disable-next-line react-native/no-inline-styles
-        inputStyles={isDarkMode ? { color: 'white' } : { color: 'black' }}
-        search={false}
-        boxStyles={isDarkMode ? displayPageStyles.darkDropdownBox : displayPageStyles.dropdownBox}
-        dropdownStyles={isDarkMode ? displayPageStyles.darkDropdown : displayPageStyles.dropdown}
-        dropdownTextStyles={isDarkMode ? displayPageStyles.darkDropdownText : displayPageStyles.dropdownText}
+      <SelectListComponent //The selectlist displays sorting options.
+        style={displayPageStyles}
+        setSelected={(value:string) => setselectedOptions(value)}
+        selectListOptions={selectListOptions}
+        isDarkMode={isDarkMode}
       />
       {/********************* The container of all restaurant cards *************************/}
       <View style={displayPageStyles.container}>

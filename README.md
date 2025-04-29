@@ -1,4 +1,3 @@
-@ -1,189 +1,30 @@
 # Just Eat Takeaway Takehome Assignment
 
 This project is made for just eat takeaway take-home assignment for the role of Early Career Program - Software Engineer. 
@@ -40,7 +39,9 @@ Besides, this application has dark mode design, for the night usage.
     │   └── L40TH.json          # Sample restaurant data for display purpose (imported by MainPage)
     │
     ├── components/             # Reusable UI components
-    │   └── RestaurantCard.tsx  # Card component to display a single restaurant's details
+    │   └── restaurantCard.tsx  # Card component to display a single restaurant's details
+    |   └── selectList.tsx      # Dropdown component for sorting options
+    │   └── searchBar.tsx       # Search bar component for postcode input
     │
     ├── functions/              # Utility and logic functions
     │   ├── API_Functions/
@@ -65,7 +66,7 @@ Besides, this application has dark mode design, for the night usage.
 ```
 
 ### Programming Interface
-![Programming-Interface.png](https://i.postimg.cc/4ZpMGQPN/program-architecture.png)
+![Programming-Interface.png](https://i.postimg.cc/HpW6Mpfc/Programming-Interface.png)
 
 
 ### Program Flow Chart
