@@ -1,28 +1,28 @@
 import { SelectList } from 'react-native-dropdown-select-list';
 import { Image } from 'react-native';
+import { selectListStyles } from '../stylesheets/Props/selectList_StyleSheet';
 
 type SelectListProps = {
-    style: any;
     setSelected: (text: string) => void;
-    selectListOptions:any;
+    selectListOptions: any;
     isDarkMode: boolean;
 }
 
-export const SelectListComponent = ({style, setSelected, selectListOptions, isDarkMode}: SelectListProps) => {
-    return(
+export const SelectListComponent = ({setSelected, selectListOptions, isDarkMode }: SelectListProps) => {
+    return (
 
-<SelectList //The selectlist displays sorting options.
-        arrowicon={<Image source={require('../images/downarrow.png')} tintColor={isDarkMode ? 'white' : 'black'} style={style.downarrow} />}
-        setSelected={(value:string) => setSelected(value)}
-        data={selectListOptions}
-        save="value"
-        placeholder="Sort By"
-        // eslint-disable-next-line react-native/no-inline-styles
-        inputStyles={isDarkMode ? { color: 'white' } : { color: 'black' }}
-        search={false}
-        boxStyles={isDarkMode ? style.darkDropdownBox : style.dropdownBox}
-        dropdownStyles={isDarkMode ? style.darkDropdown : style.dropdown}
-        dropdownTextStyles={isDarkMode ? style.darkDropdownText : style.dropdownText}
-      />
+        <SelectList //The selectlist displays sorting options.
+            arrowicon={<Image source={require('../images/downarrow.png')} tintColor={isDarkMode ? 'white' : 'black'} style={selectListStyles.downarrow} />}
+            setSelected={(value: string) => setSelected(value)}
+            data={selectListOptions}
+            save="value"
+            placeholder="Sort By"
+            // eslint-disable-next-line react-native/no-inline-styles
+            inputStyles={isDarkMode ? { color: 'white' } : { color: 'black' }}
+            search={false}
+            boxStyles={isDarkMode ? selectListStyles.darkDropdownBox : selectListStyles.dropdownBox}
+            dropdownStyles={isDarkMode ? selectListStyles.darkDropdown : selectListStyles.dropdown}
+            dropdownTextStyles={isDarkMode ? selectListStyles.darkDropdownText : selectListStyles.dropdownText}
+        />
     );
 };

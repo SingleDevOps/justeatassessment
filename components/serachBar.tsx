@@ -1,8 +1,7 @@
 import { SearchBar } from 'react-native-elements';
-
+import {searchBarStyles} from '../stylesheets/Props/searchBar_StyleSheet';
 
 type SearchBarProp = {
-    style:any;
     setPostcode: (text: string) => void;
     loading: boolean;
     onSubmit: (text: string) => Promise<any | null>;
@@ -11,16 +10,16 @@ type SearchBarProp = {
 }
 
 
-export const SearchBarComponent = ({ style, setPostcode, loading, onSubmit, isDarkMode, postcode }: SearchBarProp) => {
+export const SearchBarComponent = ({ setPostcode, loading, onSubmit, isDarkMode, postcode }: SearchBarProp) => {
     return (
         <SearchBar
             placeholder="Enter a UK Postcode"
             onChangeText={((text: string) => setPostcode(text))}
             value={postcode}
             onSubmitEditing={() => onSubmit(postcode)}
-            containerStyle={[style.searchBarContainer, isDarkMode && style.darksearchBarContainer]} /* Three Styles for adjusting how the searchBar looks*/
-            inputContainerStyle={[style.searchInputContainer, isDarkMode && style.darksearchInputContainer]}
-            inputStyle={[style.searchInput, isDarkMode && style.darksearchInput]}
+            containerStyle={[searchBarStyles.searchBarContainer, isDarkMode && searchBarStyles.darksearchBarContainer]} /* Three Styles for adjusting how the searchBar looks*/
+            inputContainerStyle={[searchBarStyles.searchInputContainer, isDarkMode && searchBarStyles.darksearchInputContainer]}
+            inputStyle={[searchBarStyles.searchInput, isDarkMode && searchBarStyles.darksearchInput]}
             placeholderTextColor="#888"
             searchIcon={null}
             clearIcon={null}

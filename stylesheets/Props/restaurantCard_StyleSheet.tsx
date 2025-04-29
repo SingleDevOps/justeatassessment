@@ -1,37 +1,14 @@
+// Style for touchable elements (restaurant cards)
+// Ensures rounded corners and prevents content overflow
+
 import { StyleSheet } from 'react-native';
-
-export const displayPageStyles = StyleSheet.create({
-    // Main container style for the entire screen
-    // Takes up full available space with a light background color
-    fullview: {
-        flex: 1,
-        backgroundColor: '#F8F9FA',
-    },
-
-
-    // Dark mode override for the main container
-    // Changes background to dark color when dark mode is active
-    darkfullview: {
-        backgroundColor: '#1A1A18',
-    },
-
-
+export const restaurantCardStyles = StyleSheet.create({
     // Style for touchable elements (restaurant cards)
     // Ensures rounded corners and prevents content overflow
     touchableHighlight: {
         borderRadius: 12,
         overflow: 'hidden',
     },
-
-
-    // Main content container with horizontal padding
-    // Ensures content fills available space
-    container: {
-        flex: 1,
-        paddingHorizontal: 16,
-    },
-
-
 
     // Primary restaurant card style
     // Defines appearance with border, background, shadow, and spacing
@@ -51,7 +28,6 @@ export const displayPageStyles = StyleSheet.create({
         elevation: 1,
     },
 
-
     // Dark mode override for restaurant cards
     // Applies darker colors and subtle border
     darkcard: {
@@ -59,7 +35,6 @@ export const displayPageStyles = StyleSheet.create({
         borderWidth: 0.1,
         backgroundColor: '#272724',
     },
-
 
     // Style for the top section of restaurant cards
     // Arranges logo and restaurant info side by side
@@ -70,7 +45,6 @@ export const displayPageStyles = StyleSheet.create({
         paddingVertical: 12,
     },
 
-
     // Style for restaurant logo images
     image: {
         width: 60,
@@ -79,14 +53,12 @@ export const displayPageStyles = StyleSheet.create({
         backgroundColor: '#F5F5F5', // Placeholder background color
     },
 
-
     // Container for text content next to restaurant logo
     // Uses flex to take available space with appropriate spacing
     textContainer: {
         flex: 1,
         marginLeft: 16, // Space between image and text
     },
-
 
     // Style for restaurant name text
     // Makes name prominent with bold font and appropriate size
@@ -97,12 +69,10 @@ export const displayPageStyles = StyleSheet.create({
         marginBottom: 4,
     },
 
-
     // Dark mode override for restaurant name
     darkname: {
         color: 'white',
     },
-
 
     // Container for rating elements
     // Arranges star icon and rating info horizontally
@@ -110,7 +80,6 @@ export const displayPageStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-
 
     // Style for star rating icon
     // Defines size and spacing
@@ -120,7 +89,6 @@ export const displayPageStyles = StyleSheet.create({
         marginRight: 4, // Space between star icon and rating text
     },
 
-
     // Style for the rating value text
     // Uses Just Eat brand orange to highlight ratings
     rating: {
@@ -128,7 +96,6 @@ export const displayPageStyles = StyleSheet.create({
         fontSize: 14,
         color: '#FF8000', // Just Eat orange for ratings
     },
-
 
     // Style for the rating count text
     // Uses standard color and font weight
@@ -138,12 +105,10 @@ export const displayPageStyles = StyleSheet.create({
         color: '#333333',
     },
 
-
     // Dark mode override for rating count text
     darkratingNumbers: {
         color: 'white',
     },
-
 
     // Style for the divider between upper and lower card sections
     // Creates subtle visual separation with partially transparent line
@@ -156,13 +121,11 @@ export const displayPageStyles = StyleSheet.create({
         opacity: 0.3,
     },
 
-
     // Container for the bottom section of restaurant cards
     // Provides consistent horizontal padding
     lowerPart: {
         paddingHorizontal: 16,
     },
-
 
     // Style for restaurant cuisine text
     // Defines appearance and positioning of cuisine information
@@ -181,12 +144,11 @@ export const displayPageStyles = StyleSheet.create({
         color: '#e6e6e6',
     },
 
-
     // Container for restaurant address section
     // Arranges address elements with appropriate spacing
     addressContainer: {
         marginTop: 10, // Space between cuisines and address
-        flexDirection:'row',
+        flexDirection: 'row',
         right: 5,
         marginRight: 10,
         paddingRight: 15, // Add some padding for longer addresses
@@ -207,9 +169,8 @@ export const displayPageStyles = StyleSheet.create({
     addressTextContainer: {
         flex: 1,
         paddingLeft: 4,
-        overflow:'hidden',
+        overflow: 'hidden',
     },
-
 
     // Style for restaurant address text
     // Defines appearance with italic font and appropriate line height
@@ -221,120 +182,8 @@ export const displayPageStyles = StyleSheet.create({
         lineHeight: 20, // Consistent line height for multi-line text
     },
 
-
     // Dark mode override for address text
     darkaddress: {
         color: '#e6e6e6',
     },
-
-
-    // Style for list footer component
-    // Adds space at bottom of list to prevent content being hidden
-    listfooterComponent: {
-        height: 50,
-    },
-
-
-    // Style for placeholder text
-    Placeholder: {
-        color: 'black',
-        fontSize: 16,
-    },
-
-
-
-    // Style for dropdown selection box
-    // Defines appearance with border, background, and spacing
-    dropdownBox: {
-        fontFamily: 'OpenSans-Regular',
-        top: 5,
-        marginHorizontal: 17,
-        marginVertical: 10,
-        borderWidth: 0.5,
-        borderColor: '#ccc',
-        borderRadius: 8,
-        backgroundColor: 'white',
-        paddingVertical: 6,
-        paddingHorizontal: 15,
-        marginBottom: 10,
-    },
-
-
-    // Style for dropdown list when expanded
-    // Defines width, background, and positioning
-    dropdown: {
-        width: '92%',
-        paddingBottom: 1,
-        borderColor: '#F8F9FA',
-        backgroundColor: 'white',
-        alignSelf: 'center',
-        marginTop: 5,
-    },
-
-
-    // Style for text within dropdown options
-    // Defines alignment, font, and color
-    dropdownText: {
-        right: 6,
-        fontFamily: 'OpenSans-Regular',
-        textAlign: 'left',
-        fontSize: 14,
-        color: 'black',
-        marginHorizontal: 2.2,
-        flexWrap: 'wrap',
-    },
-
-
-    // Dark mode override for dropdown box
-    // Changes colors to match dark theme
-    darkDropdownBox: {
-        borderColor: '#858a7e',  // Use a visible border color that matches your theme
-        backgroundColor: '#1A1A18', // Change from 'white' to '#1A1A18'
-        borderWidth: 1,  // Increase border width for better visibility
-        fontFamily: 'OpenSans-Regular',
-        top: 5,
-        marginHorizontal: 17,
-        marginVertical: 10,
-        borderRadius: 8,
-        paddingVertical: 6,
-        paddingHorizontal: 15,
-        marginBottom: 10,
-    },
-
-
-    // Dark mode override for expanded dropdown
-    // Changes background and border colors for dark theme
-    darkDropdown: {
-        borderColor: '#1A1A18',
-        backgroundColor: '#262626',
-        width: '92%',
-        paddingBottom: 1,
-        alignSelf: 'center',
-        marginTop: 5,
-    },
-
-
-    // Dark mode override for dropdown text
-    // Changes text color for dark theme
-    darkDropdownText: {
-        textAlign: 'left',
-        color: 'white',
-        right: 6,
-        fontFamily: 'OpenSans-Regular',
-        fontSize: 14,
-        marginHorizontal: 2.2,
-        flexWrap: 'wrap',
-    },
-
-
-    // Style for dropdown arrow icon
-    // Defines size, positioning, and alignment
-    downarrow: {
-        marginRight: 10,
-        marginLeft: 5,
-        alignSelf: 'center',
-        width: 8,
-        height: 8,
-    },
-}
-);
+});

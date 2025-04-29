@@ -15,7 +15,7 @@ This application includes two pages:
 
 This application does two things:
 
-1. On **MainPage**, it validates the postcode, searches it and returns the first 10 restaurants for any valid UK postcode, with error handling (e.g. Validation API Fails, Request Timeout). This is done through two APIs: 
+1. On **MainPage**, it validates the postcode, searches it and returns the first 10 restaurants for any valid UK postcode, with error handling (Validation API Fails, Request Timeout, No Internet, Just Eat API Fails). This is done through two APIs: 
 
    - postcode.io validation api: https://postcodes.io/postcodes/${postcode}/validate
    
@@ -56,8 +56,13 @@ Besides, this application has dark mode design, for the night usage.
     │   │   └── sortingOptions.ts     # Data defining the options for the sorting dropdown
     │  
     ├── stylesheets/            # Style definitions
-    │   ├── MainPage_StyleSheet.ts   # Styles used by MainPage.tsx
-    │   └── DisplayPage_StyleSheet.ts # Styles used by DisplayPage.tsx and passed to RestaurantCard.tsx
+    │   ├── Pages/
+    │   │   ├── MainPage_StyleSheet.ts   # Styles used by MainPage.tsx
+    │   │   └── DisplayPage_StyleSheet.ts # Styles used by DisplayPage.tsx and passed to RestaurantCard.tsx
+    │   └── Props/
+    │       ├── restaurantCard_StyleSheet.tsx # StyleSheet for restaurantCard component
+    │       ├── searchBar_StyleSheet.tsx # StyleSheet for searchBar component
+    │       └──selectList_StyleSheet.tsx # StyleSheet for selectList component
     │
     └── images/                 # Static image assets
         ├── just-eat-logo.png
@@ -66,7 +71,7 @@ Besides, this application has dark mode design, for the night usage.
 ```
 
 ### Programming Interface
-![Programming-Interface.png](https://i.postimg.cc/HpW6Mpfc/Programming-Interface.png)
+![Programming-Interface.png](https://i.postimg.cc/fwpCqxV2/Programming-Interface.png)
 
 
 ### Program Flow Chart

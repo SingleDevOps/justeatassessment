@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Keyboard, useColorScheme, Text, View, Alert, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { handleSearch } from '../functions/API_Functions/apiRequest';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
-import { mainpageStyles } from '../stylesheets/MainPage_StyleSheet';
+import { mainpageStyles } from '../stylesheets/Pages/MainPage_StyleSheet';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { SearchBarComponent } from '../components/serachBar';
 import * as sampleData from './L40TH.json'; //Sample data for display if users cannot use the API
@@ -113,7 +113,6 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
               <Text style={[mainpageStyles.titleSecondpart, isDarkMode && mainpageStyles.darktitleSecondpart]}>Near You</Text>
             </View>
             <SearchBarComponent
-              style={mainpageStyles}
               setPostcode={setPostcode}
               loading={loading}
               onSubmit={onSubmit}
