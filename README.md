@@ -58,11 +58,11 @@ Besides, this application has dark mode design, for the night usage.
     ├── stylesheets/            # Style definitions
     │   ├── Pages/
     │   │   ├── MainPage_StyleSheet.ts   # Styles used by MainPage.tsx
-    │   │   └── DisplayPage_StyleSheet.ts # Styles used by DisplayPage.tsx and passed to RestaurantCard.tsx
+    │   │   └── DisplayPage_StyleSheet.ts # Styles used by DisplayPage.tsx
     │   └── Props/
     │       ├── restaurantCard_StyleSheet.tsx # StyleSheet for restaurantCard component
     │       ├── searchBar_StyleSheet.tsx # StyleSheet for searchBar component
-    │       └──selectList_StyleSheet.tsx # StyleSheet for selectList component
+    │       └── selectList_StyleSheet.tsx # StyleSheet for selectList component
     │
     └── images/                 # Static image assets
         ├── just-eat-logo.png

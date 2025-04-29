@@ -1,0 +1,149 @@
+@startuml
+allowmixing
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam defaultFontName Arial
+
+
+skinparam class {
+    BackgroundColor LightGray
+    ArrowColor Black
+    BorderColor Black
+}
+skinparam note {
+    BackgroundColor LightYellow
+    BorderColor Black
+}
+
+
+package "Pages" {
+    class MainPage {
+        + navigation: any
+        + route: any
+        ~ postcode: string
+        ~ loading: boolean
+        ~ keyboardVisible: boolean
+        + isDarkMode: boolean
+        + onSubmit(text: string): Promise<any | null>
+    }
+
+    class DisplayPage {
+        + navigation: any
+        + route: any
+        ~ restaurants: any[]
+        ~ postcode: string
+        ~ selected: string
+        ~ sortedRestaurants: any[]
+        + isDarkMode: boolean
+    }
+}
+package "Stylesheets" {
+    package "Pages" {
+        class MainPage_StyleSheet {
+            + mainpageStyles: StyleSheet
+        }
+
+        class DisplayPage_StyleSheet {
+            + displayPageStyles: StyleSheet
+        }
+    }
+
+    package "Props" {
+        class searchBar_StyleSheet {
+            + searchBarStyles: StyleSheet
+        }
+
+        class restaurantCard_StyleSheet {
+            + restaurantCardStyles: StyleSheet
+        }
+
+        class selectList_StyleSheet {
+            + selectListStyles: StyleSheet
+        }
+    }
+}
+
+package "Props" {
+    class searchBar {
+        + setPostcode: (text: string) => void
+        + loading: boolean
+        + onSubmit: (text: string) => Promise<any | null>
+        + isDarkMode: boolean
+        + postcode: string
+    }
+
+    class restaurantCard {
+        + item: any
+        + isDarkMode: boolean
+        + cuisines: string
+    }
+
+    note right of restaurantCard::item
+        item is passed from DisplayPage
+    end note
+
+    class selectList {
+        + setSelected: (text: string) => void
+        + selectListOptions: any
+        + isDarkMode: boolean
+    }
+
+    note right of selectList::data
+        data is passed from DisplayPage
+    end note
+}
+
+
+package "API Functions" {
+    class apiRequest {
+        + validatePostcode(text: string): Promise<boolean>
+        + fetchRestaurantsFromJustEat(text: string): Promise<object[] | null>
+        + handleSearch(text: string): Promise<any[] | boolean | null>
+    }
+
+    note right of apiRequest::handleSearch
+        handleSearch calls
+        validatePostcode and
+        fetchRestaurantsFromJustEat
+    end note
+}
+
+
+package "Utility Functions" {
+    class filter {
+        + filterCuisines(item: any): string
+    }
+
+    class sortRestaurantData {
+        + sortResData(restaurants: any[], order: string): any[]
+    }
+
+    artifact cuisineEmojiMatch <<data>>
+    artifact selectListOptions <<data>>
+}
+
+
+
+
+note "Entry point" as EntryPoint
+EntryPoint -down-> MainPage
+
+
+MainPage -right-> apiRequest : uses handleSearch()
+MainPage -down-> searchBar : uses / renders
+MainPage -right-> MainPage_StyleSheet : uses styles
+MainPage --> DisplayPage : navigates with data
+
+DisplayPage -down-> restaurantCard : uses / renders
+DisplayPage -down-> selectList : uses / renders
+DisplayPage -down-> selectListOptions : uses data
+DisplayPage -right-> sortRestaurantData : uses sortResData()
+DisplayPage -down-> filter : uses filterCuisines()
+DisplayPage -right-> DisplayPage_StyleSheet : uses styles
+
+searchBar -down-> searchBar_StyleSheet : receives styles via props
+selectList -down-> selectList_StyleSheet : receives styles via props
+restaurantCard -down-> restaurantCard_StyleSheet : receives styles via props
+filter -down-> cuisineEmojiMatch : uses data
+
+@enduml
