@@ -11,6 +11,7 @@ type RestaurantCardProp = {
 export const RestaurantCard = ({item, isDarkMode, cuisines}:RestaurantCardProp) => {
     return (
         <TouchableHighlight
+                        testID={`restaurant-card-${item.id}`}
                         underlayColor={isDarkMode ? '#1A1A18' : '#F8F9FA'}
                         onPress={() => { }}
                         style={restaurantCardStyles.touchableHighlight}
@@ -23,10 +24,10 @@ export const RestaurantCard = ({item, isDarkMode, cuisines}:RestaurantCardProp) 
                               style={restaurantCardStyles.image}
                             />
                             <View style={restaurantCardStyles.textContainer}>
-                              <Text style={[restaurantCardStyles.name, isDarkMode && restaurantCardStyles.darkname]}>{item.name}</Text>
+                            <Text testID="restaurant-name" style={[restaurantCardStyles.name, isDarkMode && restaurantCardStyles.darkname]}>{item.name}</Text>
                               <View style={restaurantCardStyles.ratingContainer}>
                                 <Image style={restaurantCardStyles.ratingImage} source={require('../images/Just-Eat-Star.png')} />
-                                <Text style={restaurantCardStyles.rating}>{item.rating.starRating}</Text>
+                                <Text testID="restaurant-rating" style={restaurantCardStyles.rating}>{item.rating.starRating}</Text>
                                 <Text style={[restaurantCardStyles.ratingNumbers, isDarkMode && restaurantCardStyles.darkratingNumbers]}> ({item.rating.count})</Text>
                               </View>
                             </View>
@@ -37,7 +38,7 @@ export const RestaurantCard = ({item, isDarkMode, cuisines}:RestaurantCardProp) 
 
                           {/*********** lowerPart Starts *********/}
                           <View style={restaurantCardStyles.lowerPart}>
-                            <Text style={[restaurantCardStyles.cuisine, isDarkMode && restaurantCardStyles.darkcuisine]}>{cuisines}</Text>
+                          <Text testID="restaurant-cuisine" style={[restaurantCardStyles.cuisine, isDarkMode && restaurantCardStyles.darkcuisine]}>{cuisines}</Text>
                             <View style={restaurantCardStyles.addressContainer}> {/* The address container, with pin icon and address text */}
                               <Text style={restaurantCardStyles.pinIcon}>📍</Text>
                               <View style={restaurantCardStyles.addressTextContainer}>

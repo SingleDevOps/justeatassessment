@@ -64,10 +64,15 @@ Besides, this application has dark mode design, for the night usage.
     │       ├── searchBar_StyleSheet.tsx # StyleSheet for searchBar component
     │       └── selectList_StyleSheet.tsx # StyleSheet for selectList component
     │
-    └── images/                 # Static image assets
-        ├── just-eat-logo.png
-        ├── Just-Eat-Star.png
-        └── downarrow.png
+    ├── images/                 # Static image assets
+    │    ├── just-eat-logo.png
+    │    ├── Just-Eat-Star.png
+    │    └── downarrow.png
+    │
+    ├── __tests__/              # test files
+    │   ├── MainPage.test.tsx
+    │   └── CustomSorting.test.tsx
+
 ```
 
 ### Programming Interface
@@ -191,9 +196,9 @@ The definition of "cuisine" is not specified. There are names such as "Local Leg
 
 1. Better Displaying of Cuisine Items & Better Distinguishability of Restaurants / Non-Restaurants.
 2. More custom components to increase modularity. ✅
-3. Better StyleSheet Design with more dynamic settings.
+3. Better StyleSheet Design with more dynamic settings. ✅
 4. Restaurant Details in a full page when each restaurant card is clicked.
 5. Tests for checking the returned data and the correct rendering of elements.
-(Can be done by *Jest* and *@testing-library/react-native*: Restaurant card components with various data inputs, Search input component behavior, Sorting controls and their state changes, Navigation between MainPage and DisplayPage, Data passing between screens, Dark/light mode toggle behavior)
+(Can be done by *Jest* and *@testing-library/react-native*: e.g. Restaurant card components with various data inputs, Search input component behavior, Sorting controls and their state changes, Navigation between MainPage and DisplayPage, Data passing between screens, Dark/light mode toggle behavior)✅
 6. GeoPoint + Map Integration for navigation to the restaurant.
 7. More Restaurant Sorting Options. ✅
