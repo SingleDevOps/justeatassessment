@@ -40,8 +40,14 @@ Besides, this application has dark mode design, for the night usage.
     │
     ├── components/             # Reusable UI components
     │   └── restaurantCard.tsx  # Card component to display a single restaurant's details
-    |   └── selectList.tsx      # Dropdown component for sorting options
+    │   └── selectList.tsx      # Dropdown component for sorting options
     │   └── searchBar.tsx       # Search bar component for postcode input
+    │
+    ├── types/                  # Types for component props and data structures
+    │   └── restaurant_type.d.ts 
+    │   └── searchBar_type.d.ts
+    │   └── selectList_type.d.ts
+    │   └── selectListOptions_type.d.ts
     │
     ├── functions/              # Utility and logic functions
     │   ├── API_Functions/
@@ -76,7 +82,7 @@ Besides, this application has dark mode design, for the night usage.
 ```
 
 ### Programming Interface
-![Programming-Interface.png](https://i.postimg.cc/fwpCqxV2/Programming-Interface.png)
+![Programming-Interface.png](https://i.postimg.cc/TTVRkfKZ/Programming-Interface.png)
 
 
 ### Program Flow Chart

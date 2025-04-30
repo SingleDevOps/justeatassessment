@@ -86,10 +86,10 @@ export async function handleSearch(text: string): Promise<any[] | boolean | null
     // console.log('Validation API request timed out. Sending postcode directly to Just Eat API.');
     return await fetchRestaurantsFromJustEat(text);
   }
-  else if(validationResult === true){
+  else if (validationResult === true) {
     return await fetchRestaurantsFromJustEat(text);
   }
-  else{ // validationResult === false
+  else { // validationResult === false
     return false;
   }
 }

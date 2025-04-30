@@ -6,7 +6,7 @@ import { mainpageStyles } from '../stylesheets/Pages/MainPage_StyleSheet';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { SearchBarComponent } from '../components/serachBar';
 import * as sampleData from './L40TH.json'; //Sample data for display if users cannot use the API
-
+import { RestaurantType } from '../types/restaurant_type';
 
 const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
 
@@ -47,23 +47,23 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
     };
   }, [navigation, route, isDarkMode]);
 
-  const onSubmit = async (text: string):Promise<any | null> => {    //The "handleSearch" function is imported from 'functions/API_Functions/apiRequest.ts'
+  const onSubmit = async (text: string): Promise<null> => {    //The "handleSearch" function is imported from 'functions/API_Functions/apiRequest.ts'
 
-    text = text.replaceAll(' ','').toUpperCase();
+    text = text.replaceAll(' ', '').toUpperCase();
 
     if (!text || text === 'L40TH') {  // Using sample data for users having trouble with the API.
       const ten_restaurants = sampleData.restaurants.slice(0, 10);
       setLoading(true);
       setTimeout(() => { //Pretend to load for one second.
         setLoading(false);
-        navigation.navigate('DisplayPage', {postcode: 'L40TH', restaurants: ten_restaurants});
-      },1000);
+        navigation.navigate('DisplayPage', { postcode: 'L40TH', restaurants: ten_restaurants });
+      }, 1000);
       // console.log('Using Sample Data from L40TH.json');
       return null;
     }
 
     setLoading(true); // Loading Activity Indicator is shown
-    const ten_restaurants:any = await handleSearch(text);
+    const ten_restaurants: (RestaurantType[] | null | boolean) = await handleSearch(text);
     setLoading(false); // Loading Activity Indicator is removed when the loding is finished.
     if (ten_restaurants === null) { //If the Just Eat API Endpoint is down, show an alert message.
       Alert.alert('Errors Fetching Restaurant Data', 'The Just Eat API Endpoint is down, or your IP address is not European.');
@@ -73,15 +73,16 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
       navigation.navigate('DisplayPage', { postcode: text, restaurants: ten_restaurants }); //When the ten restaurants data is received, navigate to the DisplayPage and send parameters to the page.
     }
     else {
-      if (!hasInternet){
+      if (!hasInternet) {
         Alert.alert('No Internet Connection', 'Please check your internet.');
         // console.log('No Internet Connection.');
       }
-      else{
-        Alert.alert('Invalid Postcode','You may have entered the wrong postal code, or it has been terminated.'); //If there is Internet, the issue lies on the postal code itself.
+      else {
+        Alert.alert('Invalid Postcode', 'You may have entered the wrong postal code, or it has been terminated.'); //If there is Internet, the issue lies on the postal code itself.
         // console.log('Postal Code Validation Error');
       }
     }
+    return null;
   };
 
 

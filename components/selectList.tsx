@@ -1,14 +1,10 @@
 import { SelectList } from 'react-native-dropdown-select-list';
 import { Image } from 'react-native';
 import { selectListStyles } from '../stylesheets/Props/selectList_StyleSheet';
+import { SelectListPropType } from '../types/selectList_type';
 
-type SelectListProps = {
-    setSelected: (text: string) => void;
-    selectListOptions: any;
-    isDarkMode: boolean;
-}
 
-export const SelectListComponent = ({setSelected, selectListOptions, isDarkMode }: SelectListProps) => {
+export const SelectListComponent = ({ setSelected, selectListOptions, isDarkMode }: SelectListPropType) => {
     return (
 
         <SelectList //The selectlist displays sorting options.

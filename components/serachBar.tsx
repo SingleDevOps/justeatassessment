@@ -1,16 +1,10 @@
 import { SearchBar } from 'react-native-elements';
-import {searchBarStyles} from '../stylesheets/Props/searchBar_StyleSheet';
-
-type SearchBarProp = {
-    setPostcode: (text: string) => void;
-    loading: boolean;
-    onSubmit: (text: string) => Promise<any | null>;
-    isDarkMode: boolean;
-    postcode: string;
-}
+import { searchBarStyles } from '../stylesheets/Props/searchBar_StyleSheet';
+import { SearchBarPropType } from '../types/searchBar_type';
 
 
-export const SearchBarComponent = ({ setPostcode, loading, onSubmit, isDarkMode, postcode }: SearchBarProp) => {
+
+export const SearchBarComponent = ({ setPostcode, loading, onSubmit, isDarkMode, postcode }: SearchBarPropType) => {
     return (
         <SearchBar
             placeholder="Enter a UK Postcode"

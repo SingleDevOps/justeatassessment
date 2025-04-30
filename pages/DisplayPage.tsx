@@ -39,7 +39,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
 
   useEffect(() => { //When the selected sorting option changes, sort the restaurant data accordingly.
     if (selectedOptions) {
-      switch(selectedOptions){
+      switch (selectedOptions) {
         case 'Rating (High to Low)':
           setSelectedRestaurants(sortResData(restaurants, 'desc'));
           break;
@@ -75,7 +75,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
   return (
     <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
       <SelectListComponent //The selectlist displays sorting options.
-        setSelected={(value:string) => setselectedOptions(value)}
+        setSelected={(value: string) => setselectedOptions(value)}
         selectListOptions={selectListOptions}
         isDarkMode={isDarkMode}
       />
@@ -90,9 +90,9 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
             const cuisines = filterCuisines(item);
             return (
               <RestaurantCard
-              item={item}
-              isDarkMode={isDarkMode}
-              cuisines={cuisines} />
+                item={item}
+                isDarkMode={isDarkMode}
+                cuisines={cuisines} />
             );
           }}
           keyExtractor={(item) => item.id.toString()}
