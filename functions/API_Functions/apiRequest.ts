@@ -1,3 +1,5 @@
+import * as sampleData from '../../assets/data/L40TH.json';
+import { RestaurantType } from '../../types/restaurant_type'; // Import RestaurantType
 //Functions for API Requests.
 /**
  * Validates if a string is a valid UK postcode using the postcodes.io API.
@@ -12,14 +14,14 @@
 
 export async function validatePostcode(text: string): Promise<boolean> {
   const validationUrl = `https://postcodes.io/postcodes/${text}/validate`;
-
   try {
     const response = await fetch(validationUrl, { method: 'GET' });
     const data = await response.json();
     // console.log('Validation response:', data);
+
     return data.result === true;
   } catch (error) {
-    // console.error('Error during postcode validation:', error);
+    // console.error(error);
     return false;
   }
 }
@@ -68,11 +70,17 @@ export async function fetchRestaurantsFromJustEat(text: string): Promise<object[
  * attempts to fetch restaurants from Just Eat API.
  *
  * @param {string} text - The postcode to search with.
- * @returns {Promise<any[] | null>} A promise that resolves to an array of restaurant
+ * @returns {Promise<any[] | boolean | null>} A promise that resolves to an array of restaurant
  *                                  objects or null if the search was unsuccessful.
  */
-export async function handleSearch(text: string): Promise<any[] | boolean | null> {
-
+export async function handleSearch(text: string): Promise<RestaurantType[] | boolean | null> {
+  if (!text || text === 'L40TH') {  // Using sample data for users having trouble with the API.
+    return new Promise((resolve) => { // Return a promise that resolves after the delay
+      setTimeout(() => {
+        resolve(sampleData.restaurants.slice(0, 10) as RestaurantType[]);
+      }, 1000); // Simulate loading for 1 second.
+    });
+  }
   const timeoutPromise = new Promise<string>((resolve) =>
     setTimeout(() => resolve('TIMEOUT'), 3000)
   );
@@ -82,14 +90,14 @@ export async function handleSearch(text: string): Promise<any[] | boolean | null
     timeoutPromise,
   ]);
 
-  if (validationResult === 'TIMEOUT') {
-    // console.log('Validation API request timed out. Sending postcode directly to Just Eat API.');
-    return await fetchRestaurantsFromJustEat(text);
-  }
-  else if (validationResult === true) {
-    return await fetchRestaurantsFromJustEat(text);
-  }
-  else { // validationResult === false
+  if (validationResult === 'TIMEOUT' || validationResult === true) {
+    const restaurants = await fetchRestaurantsFromJustEat(text);
+
+    if (restaurants === null){
+        return null;
+    }
+    return restaurants as RestaurantType[];
+  } else { // validationResult === false
     return false;
   }
 }

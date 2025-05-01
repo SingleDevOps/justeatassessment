@@ -129,7 +129,14 @@ package "Utility Functions" {
     artifact selectListOptions <<data>>
 }
 
-
+package "Hooks" {
+    class useKeyboardVisible {
+        + useKeyboardVisible(): boolean
+    }
+    class useRestaurantSorting {
+        + useRestaurantSorting(initialRestaurants: RestaurantType[]): { sortedRestaurants, selectedSortOption, setSelectedSortOption }
+    }
+}
 
 
 note "Entry point" as EntryPoint
@@ -138,12 +145,14 @@ EntryPoint -down-> MainPage
 
 MainPage -right-> apiRequest : uses handleSearch()
 MainPage -down-> searchBar : uses / renders
+MainPage .up.> useKeyboardVisible : uses hook
 MainPage -right-> MainPage_StyleSheet : uses styles
 MainPage --> DisplayPage : navigates with data
 
 DisplayPage -down-> restaurantCard : uses / renders
 DisplayPage -down-> selectList : uses / renders
 DisplayPage -down-> selectListOptions : uses data
+DisplayPage .up.> useRestaurantSorting : uses hook
 DisplayPage -right-> sortRestaurantData : uses sortResData()
 DisplayPage -down-> filter : uses filterCuisines()
 DisplayPage -right-> DisplayPage_StyleSheet : uses styles

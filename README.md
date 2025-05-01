@@ -70,6 +70,10 @@ Besides, this application has dark mode design, for the night usage.
     │       ├── searchBar_StyleSheet.tsx # StyleSheet for searchBar component
     │       └── selectList_StyleSheet.tsx # StyleSheet for selectList component
     │
+    ├── hooks/   
+    │   ├── useKeyboardVisible.ts   # Hook to track keyboard visibility
+    │   └── useRestaurantSorting.ts # Hook to track selected sorting options and to sort restaurants based on those options
+    │
     ├── images/                 # Static image assets
     │    ├── just-eat-logo.png
     │    ├── Just-Eat-Star.png
@@ -77,12 +81,13 @@ Besides, this application has dark mode design, for the night usage.
     │
     ├── __tests__/              # test files
     │   ├── MainPage.test.tsx
-    │   └── CustomSorting.test.tsx
+    │   ├── CustomSorting.test.tsx
+    │   └── apiRequest.test.ts
 
 ```
 
 ### Programming Interface
-![Programming-Interface.png](https://i.postimg.cc/TTVRkfKZ/Programming-Interface.png)
+![Programming-Interface.png](https://i.postimg.cc/MWp8cxBd/Programming-Interface.png)
 
 
 ### Program Flow Chart

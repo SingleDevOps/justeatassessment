@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useColorScheme, View, FlatList } from 'react-native';
-import { sortResData } from '../functions/Sorting_Functions/sortRestaurantData';
 import { displayPageStyles } from '../stylesheets/Pages/DisplayPage_StyleSheet';
 import { filterCuisines } from '../functions/Filtering_Functions/filter';
 import { selectListOptions } from '../functions/Sorting_Functions/sortingOptions';
 import { RestaurantCard } from '../components/restaurantCard';
 import { SelectListComponent } from '../components/selectList';
-
+import { useRestaurantSorting } from '../hooks/useRestaurantSorting';
 
 const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => {
   const { restaurants } = route.params; //Get the restaurant data from MainPage.
   const [postcode, setPostcode] = useState('');
-  const [selectedOptions, setselectedOptions] = React.useState(''); //State for the selected sorting option.
-  const [selectedRestaurants, setSelectedRestaurants] = useState(restaurants); //State for the sorted restaurant data.
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
 
@@ -37,45 +34,13 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
     }
   }, [navigation, route, postcode, route.params.postcode, isDarkMode]);
 
-  useEffect(() => { //When the selected sorting option changes, sort the restaurant data accordingly.
-    if (selectedOptions) {
-      switch (selectedOptions) {
-        case 'Rating (High to Low)':
-          setSelectedRestaurants(sortResData(restaurants, 'desc'));
-          break;
 
-        case 'Rating (Low to High)':
-          setSelectedRestaurants(sortResData(restaurants, 'asc'));
-          break;
-
-        case 'Rating Count (More to Less)':
-          setSelectedRestaurants(sortResData(restaurants, 'moreToLessRatingCount'));
-          break;
-
-        case 'Rating Count (Less to More)':
-          setSelectedRestaurants(sortResData(restaurants, 'lessToMoreRatingCount'));
-          break;
-
-        case 'Name (A-Z)':
-          setSelectedRestaurants(sortResData(restaurants, 'A-Z'));
-          break;
-
-        case 'Name (Z-A)':
-          setSelectedRestaurants(sortResData(restaurants, 'Z-A'));
-          break;
-      }
-    }
-    // else {
-    //   setSelectedRestaurants(restaurants); // If no selection yet, show unsorted data.
-    // }
-  }, [selectedOptions, restaurants]);
-
-
+  const {sortedRestaurants, setSelectedSortOption} = useRestaurantSorting(restaurants);
 
   return (
     <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
       <SelectListComponent //The selectlist displays sorting options.
-        setSelected={(value: string) => setselectedOptions(value)}
+        setSelected={(value: string) => setSelectedSortOption(value)}
         selectListOptions={selectListOptions}
         isDarkMode={isDarkMode}
       />
@@ -85,7 +50,7 @@ const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => 
         <FlatList
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          data={selectedRestaurants}
+          data={sortedRestaurants}
           renderItem={({ item }) => {
             const cuisines = filterCuisines(item);
             return (
