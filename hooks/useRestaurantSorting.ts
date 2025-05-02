@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { RestaurantType } from '../types/restaurant_type';
 import { sortResData } from '../functions/Sorting_Functions/sortRestaurantData';
-
+import { SortOptionValue, SortOrder } from '../functions/Sorting_Functions/sortingOptions';
 /**
  * Custom hook to manage sorting of restaurant data.
  * @param restaurants The initial unsorted array of restaurants.
@@ -19,23 +19,23 @@ export const useRestaurantSorting = (restaurants: RestaurantType[]) => {
     if (selectedSortOption) {
       let sortedData: RestaurantType[];
       switch (selectedSortOption) {
-        case 'Rating (High to Low)':
-          sortedData = sortResData(restaurants, 'desc');
+        case SortOptionValue.RATING_HIGH_LOW:
+          sortedData = sortResData(restaurants, SortOrder.DESC);
           break;
-        case 'Rating (Low to High)':
-          sortedData = sortResData(restaurants, 'asc');
+        case SortOptionValue.RATING_LOW_HIGH:
+          sortedData = sortResData(restaurants, SortOrder.ASC);
           break;
-        case 'Rating Count (More to Less)':
-          sortedData = sortResData(restaurants, 'moreToLessRatingCount');
+        case SortOptionValue.COUNT_MORE_LESS:
+          sortedData = sortResData(restaurants, SortOrder.MORE_TO_LESS_COUNT);
           break;
-        case 'Rating Count (Less to More)':
-          sortedData = sortResData(restaurants, 'lessToMoreRatingCount');
+        case SortOptionValue.COUNT_LESS_MORE:
+          sortedData = sortResData(restaurants, SortOrder.LESS_TO_MORE_COUNT);
           break;
-        case 'Name (A-Z)':
-          sortedData = sortResData(restaurants, 'A-Z');
+        case SortOptionValue.NAME_A_Z:
+          sortedData = sortResData(restaurants, SortOrder.A_Z);
           break;
-        case 'Name (Z-A)':
-          sortedData = sortResData(restaurants, 'Z-A');
+        case SortOptionValue.NAME_Z_A:
+          sortedData = sortResData(restaurants, SortOrder.Z_A);
           break;
         default:
           sortedData = [...restaurants]; // original order if no option selected

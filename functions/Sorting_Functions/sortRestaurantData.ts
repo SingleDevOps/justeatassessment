@@ -1,5 +1,5 @@
 import { RestaurantType } from '../../types/restaurant_type';
-
+import { SortOrder } from './sortingOptions';
 
 /**
  * Sort an array of restaurants by their nested rating.starRating.
@@ -11,27 +11,27 @@ import { RestaurantType } from '../../types/restaurant_type';
 export function sortResData(restaurants: RestaurantType[], order: string): RestaurantType[] {
     const sortedRestaurants = [...restaurants];
 
-    if (order === 'asc' || order === 'desc') {
+    if (order === SortOrder.ASC || order === SortOrder.DESC) {
         sortedRestaurants.sort((resA, resB) => {
             const resArating = resA.rating.starRating;
             const resBrating = resB.rating.starRating;
-            return order === 'asc' ? resArating - resBrating : resBrating - resArating;
+            return order === SortOrder.ASC ? resArating - resBrating : resBrating - resArating;
         });
     }
 
-    else if (order === 'A-Z' || order === 'Z-A') {
+    else if (order === SortOrder.A_Z || order === SortOrder.Z_A) {
         sortedRestaurants.sort((resA, resB) => {
             const resAName = resA.name.toLowerCase();
             const resBName = resB.name.toLowerCase();
-            return order === 'A-Z' ? resAName.localeCompare(resBName) : resBName.localeCompare(resAName);
+            return order === SortOrder.A_Z ? resAName.localeCompare(resBName) : resBName.localeCompare(resAName);
         });
     }
 
-    else if (order === 'moreToLessRatingCount' || order === 'lessToMoreRatingCount') {
+    else if (order === SortOrder.MORE_TO_LESS_COUNT || order === SortOrder.LESS_TO_MORE_COUNT) {
         sortedRestaurants.sort((resA, resB) => {
             const resARatingCount = resA.rating.count;
             const resBRatingCount = resB.rating.count;
-            return order === 'lessToMoreRatingCount' ? resARatingCount - resBRatingCount : resBRatingCount - resARatingCount;
+            return order === SortOrder.LESS_TO_MORE_COUNT ? resARatingCount - resBRatingCount : resBRatingCount - resARatingCount;
         });
     }
 

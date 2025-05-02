@@ -10,9 +10,11 @@ import { useRestaurantSorting } from '../hooks/useRestaurantSorting';
 
 const DisplayPage = ({ navigation, route }: { navigation:any, route:any }) => {
   const { restaurants } = route.params; //Get the restaurant data from MainPage.
-  const [postcode, setPostcode] = useState('');
+  const [postcode, setPostcode] = useState('L40TH'); // Default Value for sample data
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
+  const {sortedRestaurants, setSelectedSortOption} = useRestaurantSorting(restaurants);
+
 
   useEffect(() => {    //Show page title, and its style setting
     navigation.setOptions({
@@ -36,7 +38,6 @@ const DisplayPage = ({ navigation, route }: { navigation:any, route:any }) => {
   }, [navigation, route, postcode, route.params.postcode, isDarkMode]);
 
 
-  const {sortedRestaurants, setSelectedSortOption} = useRestaurantSorting(restaurants);
 
   return (
     <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>

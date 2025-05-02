@@ -74,6 +74,9 @@ Besides, this application has dark mode design, for the night usage.
     │   ├── useKeyboardVisible.ts   # Hook to track keyboard visibility
     │   └── useRestaurantSorting.ts # Hook to track selected sorting options and to sort restaurants based on those options
     │
+    ├── config/
+    │   ├── api.ts # URL Constants
+    │
     ├── images/                 # Static image assets
     │    ├── just-eat-logo.png
     │    ├── Just-Eat-Star.png
