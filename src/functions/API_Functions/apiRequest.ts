@@ -2,17 +2,16 @@ import * as sampleData from '../../assets/data/L40TH.json';
 import { RestaurantType } from '../../types/restaurant_type'; // Import RestaurantType
 import { API_URLS } from '../../configs/api';
 //Functions for API Requests.
+
 /**
  * Validates if a string is a valid UK postcode using the postcodes.io API.
  *
  * Makes a GET request to the postcodes.io validation endpoint and checks
  * if the provided postcode exists in the UK postal system.
- *
- * @param {string} text - The postcode to validate (should be pre-formatted without spaces).
+ * @param {string} postcode - The postcode to validate (should be pre-formatted without spaces).
  * @returns {Promise<boolean>} A promise that resolves to true if the postcode is valid,
- *                             or false if invalid or if an error occurs during validation.
+or false if invalid or if an error occurs during validation.
  */
-
 export async function validatePostcode(postcode: string): Promise<boolean> {
 
   try {
@@ -33,11 +32,10 @@ export async function validatePostcode(postcode: string): Promise<boolean> {
  *
  * Makes a GET request to Just Eat's discovery endpoint and processes the response,
  * limiting results to a maximum of 10 restaurants if more are available.
- *
- * @param {string} text - The validated postcode to search with.
+ * @param {string} postcode - The validated postcode to search with.
  * @returns {Promise<object[] | null>} A promise that resolves to an array of restaurant
- *                                     objects (limited to 10) or null if no restaurants
- *                                     are found or if an error occurs.
+objects (limited to 10) or null if no restaurants
+are found or if an error occurs.
  */
 export async function fetchRestaurantsFromJustEat(postcode: string): Promise<object[] | null> {
 
@@ -70,13 +68,13 @@ export async function fetchRestaurantsFromJustEat(postcode: string): Promise<obj
  * If validation times out after 3 seconds, bypasses validation and directly
  * attempts to fetch restaurants from Just Eat API.
  *
- * @param {string} text - The postcode to search with.
+ * @param {string} postcode - The postcode to search with.
  * @returns {Promise<any[] | boolean | null>} A promise that resolves to an array of restaurant
  *                                  objects or null if the search was unsuccessful.
  */
-export async function handleSearch(text: string): Promise<RestaurantType[] | boolean | null> {
+export async function handleSearch(postcode: string): Promise<RestaurantType[] | boolean | null> {
 
-  if (!text || text === 'L40TH') {  // Using sample data for users having trouble with the API.
+  if (!postcode || postcode === 'L40TH') {  // Using sample data for users having trouble with the API.
     const restaurants = await new Promise((resolve) => { // Return a promise that resolves after the delay
       setTimeout(() => {
         resolve(sampleData.restaurants.slice(0, 10) as RestaurantType[]);
@@ -92,13 +90,13 @@ export async function handleSearch(text: string): Promise<RestaurantType[] | boo
 
 
   const validationResult = await Promise.race([ // Race the validation promise against the timeout promise
-    validatePostcode(text), //Returns true or false
+    validatePostcode(postcode), //Returns true or false
     POSTCODE_VALIDATION_TIMEOUT,
   ]);
 
 
   if (validationResult === 'TIMEOUT' || validationResult === true) {
-    const restaurants = await fetchRestaurantsFromJustEat(text);
+    const restaurants = await fetchRestaurantsFromJustEat(postcode);
     // console.log('Restaurants:', restaurants);
     if (restaurants === null) {
       return null;
