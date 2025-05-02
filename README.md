@@ -70,7 +70,7 @@ Besides, this application has dark mode design, for the night usage.
     │       └── selectList_StyleSheet.tsx # StyleSheet for selectList component
     │
     ├── hooks/   
-    │    useKeyboardVisible.ts  # Hook to track keyboard visibility
+    │   ├── useKeyboardVisible.ts  # Hook to track keyboard visibility
     │   └── useRestaurantSorting.ts # Hook to track selected sorting options and to sort restaurants based on those options
     │
     ├── config/                 # Static data files for configuration
