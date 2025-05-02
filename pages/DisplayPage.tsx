@@ -3,11 +3,12 @@ import { useColorScheme, View, FlatList } from 'react-native';
 import { displayPageStyles } from '../stylesheets/Pages/DisplayPage_StyleSheet';
 import { filterCuisines } from '../functions/Filtering_Functions/filter';
 import { selectListOptions } from '../functions/Sorting_Functions/sortingOptions';
-import { RestaurantCard } from '../components/restaurantCard';
-import { SelectListComponent } from '../components/selectList';
+import { RestaurantCard } from '../components/restaurantCardComponent';
+import { SelectListComponent } from '../components/selectListComponent';
 import { useRestaurantSorting } from '../hooks/useRestaurantSorting';
 
-const DisplayPage = ({ navigation, route }: { navigation: any, route: any }) => {
+
+const DisplayPage = ({ navigation, route }: { navigation:any, route:any }) => {
   const { restaurants } = route.params; //Get the restaurant data from MainPage.
   const [postcode, setPostcode] = useState('');
   const colorScheme = useColorScheme();

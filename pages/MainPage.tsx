@@ -4,11 +4,12 @@ import { useColorScheme, Text, View, Alert, Image, KeyboardAvoidingView, Platfor
 import { handleSearch } from '../functions/API_Functions/apiRequest';
 import { mainpageStyles } from '../stylesheets/Pages/MainPage_StyleSheet';
 import { useNetInfo } from '@react-native-community/netinfo';
-import { SearchBarComponent } from '../components/serachBar';
+import { SearchBarComponent } from '../components/serachBarComponent';
 import { RestaurantType } from '../types/restaurant_type';
 import { useKeyboardVisible } from '../hooks/useKeyboardVisible';
 
-const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
+
+const MainPage = ({ navigation, route }: { navigation:any, route:any }) => {
 
   const [postcode, setPostcode] = React.useState('');
   const [loading, setLoading] = React.useState(false); // State for showing loading activity
