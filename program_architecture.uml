@@ -1,167 +1,74 @@
 @startuml
-allowmixing
-skinparam classAttributeIconSize 0
-skinparam packageStyle rectangle
-skinparam defaultFontName Arial
-
-
-skinparam class {
-    BackgroundColor LightGray
-    ArrowColor Black
-    BorderColor Black
-}
-skinparam note {
-    BackgroundColor LightYellow
-    BorderColor Black
+' Components
+class RestaurantCard {
+  + item: RestaurantType
+  + isDarkMode: boolean
+  + cuisines: string
+  + render()
 }
 
-
-package "Pages" {
-    class MainPage {
-        + navigation: any
-        + route: any
-        ~ postcode: string
-        ~ loading: boolean
-        ~ keyboardVisible: boolean
-        + isDarkMode: boolean
-        + onSubmit(text: string): Promise<any | null>
-    }
-
-    class DisplayPage {
-        + navigation: any
-        + route: any
-        ~ restaurants: any[]
-        ~ postcode: string
-        ~ selected: string
-        ~ sortedRestaurants: any[]
-        + isDarkMode: boolean
-    }
+class SelectListComponent {
+  + setSelected: function
+  + isDarkMode: boolean
+  + render()
 }
 
-package "Stylesheets" {
-    package "Pages" {
-        class MainPage_StyleSheet {
-            + mainpageStyles: StyleSheet
-        }
-
-        class DisplayPage_StyleSheet {
-            + displayPageStyles: StyleSheet
-        }
-    }
-
-    package "Props" {
-        class searchBar_StyleSheet {
-            + searchBarStyles: StyleSheet
-        }
-
-        class restaurantCard_StyleSheet {
-            + restaurantCardStyles: StyleSheet
-        }
-
-        class selectList_StyleSheet {
-            + selectListStyles: StyleSheet
-        }
-    }
+class SearchBarComponent {
+  + setPostcode: function
+  + loading: boolean
+  + onSubmit: function
+  + isDarkMode: boolean
+  + postcode: string
+  + render()
 }
 
-package "Props" {
-    class searchBar {
-        + setPostcode: (text: string) => void
-        + loading: boolean
-        + onSubmit: (text: string) => Promise<any | null>
-        + isDarkMode: boolean
-        + postcode: string
-    }
-
-    class restaurantCard {
-        + item: any
-        + isDarkMode: boolean
-        + cuisines: string
-    }
-
-    note right of restaurantCard::item
-        item is passed from DisplayPage
-    end note
-
-    class selectList {
-        + setSelected: (text: string) => void
-        + isDarkMode: boolean
-    }
-
-    note right of selectList::data
-        data is passed from DisplayPage
-    end note
+class MainPage {
+  + navigation
+  + route
+  + state: postcode, loading
+  + render()
 }
 
-package "Types" {
-    class restaurant_type
-    class searchBar_type
-    class selectList_type
-    class selectListOption_type
+class DisplayPage {
+  + navigation
+  + route
+  + state: postcode
+  + render()
 }
 
-package "API Functions" {
-    class apiRequest {
-        + validatePostcode(text: string): Promise<boolean>
-        + fetchRestaurantsFromJustEat(text: string): Promise<object[] | null>
-        + handleSearch(text: string): Promise<any[] | boolean | null>
-    }
+' API & Functions
+class API_Functions {
+  + validatePostcode()
+  + fetchRestaurantsFromJustEat()
+  + handleSearch()
+}
 
-    note right of apiRequest::handleSearch
-        handleSearch calls
-        validatePostcode and
-        fetchRestaurantsFromJustEat
-    end note
+class Sorting_Functions {
+  + sortResData()
+}
+
+class Filter_Functions {
+  + filterCuisines()
+}
+
+' Hooks
+class Hooks {
+  + useKeyboardVisible()
+  + useRestaurantSorting()
 }
 
 
-package "Utility Functions" {
-    class filter {
-        + filterCuisines(item: any): string
-    }
+' Relationships
+MainPage --> SearchBarComponent
+MainPage --> API_Functions
+MainPage --> Hooks
 
-    class sortRestaurantData {
-        + sortResData(restaurants: any[], order: string): any[]
-    }
-}
-
-package "Hooks" {
-    class useKeyboardVisible {
-        + useKeyboardVisible(): boolean
-    }
-    class useRestaurantSorting {
-        + useRestaurantSorting(initialRestaurants: RestaurantType[]): { sortedRestaurants, selectedSortOption, setSelectedSortOption }
-    }
-}
-
-package "configs" {
-    artifact cuisineEmojiMatch <<data>>
-    artifact selectListOptions <<data>>
-    artifact api <<data>> 
-}
-
-note "Entry point" as EntryPoint
-EntryPoint -down-> MainPage
+DisplayPage --> RestaurantCard
+DisplayPage --> SelectListComponent
+DisplayPage --> Hooks
+DisplayPage --> Sorting_Functions
 
 
-MainPage -right-> apiRequest : uses handleSearch()
-MainPage -down-> searchBar : uses / renders
-MainPage .up.> useKeyboardVisible : uses hook
-MainPage -right-> MainPage_StyleSheet : uses styles
-MainPage --> DisplayPage : navigates with data
-
-DisplayPage -down-> restaurantCard : uses / renders
-DisplayPage -down-> selectList : uses / renders
-DisplayPage .up.> useRestaurantSorting : uses hook
-DisplayPage -right-> sortRestaurantData : uses sortResData()
-DisplayPage -down-> filter : uses filterCuisines()
-DisplayPage -right-> DisplayPage_StyleSheet : uses styles
-
-selectList -down-> selectListOptions : uses data
-searchBar -down-> searchBar_StyleSheet : receives styles via props
-selectList -down-> selectList_StyleSheet : receives styles via props
-restaurantCard -down-> restaurantCard_StyleSheet : receives styles via props
-filter -down-> cuisineEmojiMatch : uses data
-apiRequest -down-> api : uses data
+RestaurantCard --> Filter_Functions
 
 @enduml
