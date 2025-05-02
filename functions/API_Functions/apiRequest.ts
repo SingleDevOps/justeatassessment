@@ -1,6 +1,6 @@
 import * as sampleData from '../../assets/data/L40TH.json';
 import { RestaurantType } from '../../types/restaurant_type'; // Import RestaurantType
-import { API_URLS } from '../../config/api';
+import { API_URLS } from '../../configs/api';
 //Functions for API Requests.
 /**
  * Validates if a string is a valid UK postcode using the postcodes.io API.

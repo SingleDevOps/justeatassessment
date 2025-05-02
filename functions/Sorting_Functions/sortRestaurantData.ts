@@ -1,5 +1,5 @@
 import { RestaurantType } from '../../types/restaurant_type';
-import { SortOrder } from './sortingOptions';
+import { SortOrder } from '../../configs/sortingOptions';
 
 /**
  * Sort an array of restaurants by their nested rating.starRating.

@@ -1,4 +1,4 @@
-import { cuisineEmojiMatch } from './cuisine-emoji-match';
+import { cuisineEmojiMatch } from '../../configs/cuisine-emoji-match';
 import { RestaurantType, CuisineType } from '../../types/restaurant_type';
 
 /**

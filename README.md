@@ -39,14 +39,14 @@ Besides, this application has dark mode design, for the night usage.
     │   └── L40TH.json          # Sample restaurant data for display purpose (imported by MainPage)
     │
     ├── components/             # Reusable UI components
-    │   └── restaurantCard.tsx  # Card component to display a single restaurant's details
-    │   └── selectList.tsx      # Dropdown component for sorting options
+    │   ├── restaurantCard.tsx  # Card component to display a single restaurant's details
+    │   ├── selectList.tsx      # Dropdown component for sorting options
     │   └── searchBar.tsx       # Search bar component for postcode input
     │
     ├── types/                  # Types for component props and data structures
-    │   └── restaurant_type.d.ts 
-    │   └── searchBar_type.d.ts
-    │   └── selectList_type.d.ts
+    │   ├── restaurant_type.d.ts 
+    │   ├── searchBar_type.d.ts
+    │   ├── selectList_type.d.ts
     │   └── selectListOptions_type.d.ts
     │
     ├── functions/              # Utility and logic functions
@@ -59,7 +59,6 @@ Besides, this application has dark mode design, for the night usage.
     │   │
     │   ├── Sorting_Functions/
     │   │   ├── sortRestaurantData.ts # Function to sort restaurant data based on selected options
-    │   │   └── sortingOptions.ts     # Data defining the options for the sorting dropdown
     │  
     ├── stylesheets/            # Style definitions
     │   ├── Pages/
@@ -71,11 +70,13 @@ Besides, this application has dark mode design, for the night usage.
     │       └── selectList_StyleSheet.tsx # StyleSheet for selectList component
     │
     ├── hooks/   
-    │   ├── useKeyboardVisible.ts   # Hook to track keyboard visibility
+    │    useKeyboardVisible.ts  # Hook to track keyboard visibility
     │   └── useRestaurantSorting.ts # Hook to track selected sorting options and to sort restaurants based on those options
     │
-    ├── config/
-    │   ├── api.ts # URL Constants
+    ├── config/                 # Static data files for configuration
+    │   ├── api.ts  # URL Constants
+    │   ├── sortingOptions.ts  # The sorting options for the sorting dropdown
+    │   └── cuisine-emoji-match.ts # Data mapping cuisine keywords/names to emoji strings
     │
     ├── images/                 # Static image assets
     │    ├── just-eat-logo.png
@@ -90,7 +91,7 @@ Besides, this application has dark mode design, for the night usage.
 ```
 
 ### Programming Interface
-![Programming-Interface.png](https://i.postimg.cc/MWp8cxBd/Programming-Interface.png)
+![Programming-Interface.png](https://i.postimg.cc/xYkgMfNx/Programming-Interface.png)
 
 
 ### Program Flow Chart

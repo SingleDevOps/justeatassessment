@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useColorScheme, View, FlatList } from 'react-native';
 import { displayPageStyles } from '../stylesheets/Pages/DisplayPage_StyleSheet';
 import { filterCuisines } from '../functions/Filtering_Functions/filter';
-import { selectListOptions } from '../functions/Sorting_Functions/sortingOptions';
 import { RestaurantCard } from '../components/restaurantCardComponent';
 import { SelectListComponent } from '../components/selectListComponent';
 import { useRestaurantSorting } from '../hooks/useRestaurantSorting';
@@ -43,7 +42,6 @@ const DisplayPage = ({ navigation, route }: { navigation:any, route:any }) => {
     <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
       <SelectListComponent //The selectlist displays sorting options.
         setSelected={(value: string) => setSelectedSortOption(value)}
-        selectListOptions={selectListOptions}
         isDarkMode={isDarkMode}
       />
       {/********************* The container of all restaurant cards *************************/}

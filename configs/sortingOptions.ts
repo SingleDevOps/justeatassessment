@@ -1,4 +1,4 @@
-import { OptionType } from '../../types/selectListOption_type';
+import { OptionType } from '../types/selectListOption_type';
 
 export const selectListOptions: OptionType[] = [ //Options for the sorting dropdown list.
     { key: '1', value: 'Rating (High to Low)' },

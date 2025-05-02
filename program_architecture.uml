@@ -85,7 +85,6 @@ package "Props" {
 
     class selectList {
         + setSelected: (text: string) => void
-        + selectListOptions: any
         + isDarkMode: boolean
     }
 
@@ -124,9 +123,6 @@ package "Utility Functions" {
     class sortRestaurantData {
         + sortResData(restaurants: any[], order: string): any[]
     }
-
-    artifact cuisineEmojiMatch <<data>>
-    artifact selectListOptions <<data>>
 }
 
 package "Hooks" {
@@ -138,6 +134,11 @@ package "Hooks" {
     }
 }
 
+package "configs" {
+    artifact cuisineEmojiMatch <<data>>
+    artifact selectListOptions <<data>>
+    artifact api <<data>> 
+}
 
 note "Entry point" as EntryPoint
 EntryPoint -down-> MainPage
@@ -151,15 +152,16 @@ MainPage --> DisplayPage : navigates with data
 
 DisplayPage -down-> restaurantCard : uses / renders
 DisplayPage -down-> selectList : uses / renders
-DisplayPage -down-> selectListOptions : uses data
 DisplayPage .up.> useRestaurantSorting : uses hook
 DisplayPage -right-> sortRestaurantData : uses sortResData()
 DisplayPage -down-> filter : uses filterCuisines()
 DisplayPage -right-> DisplayPage_StyleSheet : uses styles
 
+selectList -down-> selectListOptions : uses data
 searchBar -down-> searchBar_StyleSheet : receives styles via props
 selectList -down-> selectList_StyleSheet : receives styles via props
 restaurantCard -down-> restaurantCard_StyleSheet : receives styles via props
 filter -down-> cuisineEmojiMatch : uses data
+apiRequest -down-> api : uses data
 
 @enduml
