@@ -22,8 +22,3 @@ export type RestaurantType = {
     address: AddressType;
 };
 
-export type RestaurantCardPropType = {
-    item: RestaurantType; // Each restaurant object
-    isDarkMode: boolean;
-    cuisines: string;
-};

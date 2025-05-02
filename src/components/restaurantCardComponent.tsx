@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableHighlight } from 'react-native';
 import { restaurantCardStyles } from '../stylesheets/Props/restaurantCard_StyleSheet';
-import { RestaurantCardPropType } from '../types/restaurant_type';
+import { RestaurantCardPropType } from '../types/restaurantCard_type_d';
 
 
 export const RestaurantCard = ({ item, isDarkMode, cuisines }: RestaurantCardPropType) => {

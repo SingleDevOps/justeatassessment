@@ -45,6 +45,7 @@ Besides, this application has dark mode design, for the night usage.
     │
     ├── types/                  # Types for component props and data structures
     │   ├── restaurant_type.d.ts 
+    │   ├── restaurantCard_type.d.ts
     │   ├── searchBar_type.d.ts
     │   ├── selectList_type.d.ts
     │   └── selectListOptions_type.d.ts
