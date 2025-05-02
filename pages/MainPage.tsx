@@ -36,6 +36,11 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
     const ten_restaurants: (RestaurantType[] | null | boolean) = await handleSearch(text);
     setLoading(false); // Loading Activity Indicator is removed when the loding is finished.
 
+    if (ten_restaurants === null){
+      Alert.alert('Error fetching restaurant data', 'The Just Eat API Endpoint is down, or your IP address is not European.');
+      return null;
+    }
+
     if (ten_restaurants !== false) {
       navigation.navigate('DisplayPage', { postcode: text, restaurants: ten_restaurants }); //When the ten restaurants data is received, navigate to the DisplayPage and send parameters to the page.
     }

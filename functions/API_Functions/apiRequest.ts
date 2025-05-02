@@ -75,11 +75,12 @@ export async function fetchRestaurantsFromJustEat(text: string): Promise<object[
  */
 export async function handleSearch(text: string): Promise<RestaurantType[] | boolean | null> {
   if (!text || text === 'L40TH') {  // Using sample data for users having trouble with the API.
-    return new Promise((resolve) => { // Return a promise that resolves after the delay
+    const restaurants = await new Promise((resolve) => { // Return a promise that resolves after the delay
       setTimeout(() => {
         resolve(sampleData.restaurants.slice(0, 10) as RestaurantType[]);
       }, 1000); // Simulate loading for 1 second.
     });
+    return restaurants as RestaurantType[];
   }
   const timeoutPromise = new Promise<string>((resolve) =>
     setTimeout(() => resolve('TIMEOUT'), 3000)
@@ -92,7 +93,7 @@ export async function handleSearch(text: string): Promise<RestaurantType[] | boo
 
   if (validationResult === 'TIMEOUT' || validationResult === true) {
     const restaurants = await fetchRestaurantsFromJustEat(text);
-
+    // console.log('Restaurants:', restaurants);
     if (restaurants === null){
         return null;
     }
