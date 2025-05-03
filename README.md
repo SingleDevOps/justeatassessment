@@ -255,39 +255,22 @@ You can modify key settings without changing the code logic, which improves flex
 
 ### Focus on User Experience (UX) and Error Handeling
 
-  
-
-  
 
 This app handles problems gracefully.
 
-  
-
-  
-
 -  **Postcode Validation**: The `validatePostcode` function checks if the user entered a valid UK postcode before making a request. This prevents unnecessary API calls when the input is invalid.
-
-  
-
-  
 
 -  **Validation Timeout**: The `handleSearch` function has a timeout built-in. If postcode validation takes too long (e.g., due to network issues), the app doesn’t hang; it moves on and tries fetching restaurant data from Just Eat.
 
-  
+-  **Fallback Data**: If no postcode is entered (or if the default `L40TH` postcode is used), the app loads sample data instead of showing an error. The user can explore the app even if the API isn’t available (useful for demos or testing).
 
-  
 
--  **Fallback Data**: If no postcode is entered (or if the default `L40TH` postcode is used), the app loads sample data instead of showing an error. This ensures that the user can still explore the app, even if the API isn’t available (useful for demos or testing).
+- **No Internet Error**: The application shows "No Internet" error when the user searches postcode with no Internet connection.
 
-  
+- **Restaurant API Error**: If the user is not having an European IP address or if the restaurant api endpoint is down.
 
-  
 
 -  **Emoji-Cuisine Match**: The `cuisine-emoji-match.ts` has a mapping of cuisine names to emojis, which makes the restaurant list appealing.
-
-  
-
-  
 
 ---
 
@@ -638,7 +621,9 @@ Four data points are shown: name and rating on the top, lying horizontally with 
 <img  src="https://i.postimg.cc/MTgRB9nP/Display-Page-Darkmode.png"  alt="alt text"  title="DisplayPage, DarkMode">
 
   
+#### Custom Sorting Options
 
+<img src="https://i.postimg.cc/tJn6fkQ9/Custom-Sorting-Options.png" alt="alt text" title="Custom Sorting Options">
   
 
 #### Postcode Validation Failure Alert
