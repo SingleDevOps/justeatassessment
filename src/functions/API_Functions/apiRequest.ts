@@ -46,9 +46,12 @@ export async function fetchRestaurantsFromJustEat(postcode: string): Promise<obj
     if (restaurants) {
       if (restaurants.length >= 10) { // Fault tolerance, if there are ten or more restaurants, take the first ten restaurants.
         const tenRestaurants = restaurants.slice(0, 10);
-        // console.log('First 10 restaurants:', tenRestaurants);
-        return tenRestaurants;
-      } else { // If not then return whatever number of restaurant in the returned data. This may happen for postcal codes of Wales, e.g. SA44 4PD
+        // make it select random 10 restaurants from the list.
+        const shuffled = tenRestaurants.sort(() => 0.5 - Math.random());
+        const randomTenRestaurants = shuffled.slice(0, 10);
+        return randomTenRestaurants;
+      }
+      else { // If not then return whatever number of restaurant in the returned data. This may happen for postcal codes of Wales, e.g. SA44 4PD
         // console.log('Restaurants:', restaurants);
         return restaurants;
       }

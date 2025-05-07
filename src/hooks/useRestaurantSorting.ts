@@ -46,5 +46,5 @@ export const useRestaurantSorting = (restaurants: RestaurantType[]) => {
     }
   }, [selectedSortOption, restaurants]);
 
-  return { sortedRestaurants, selectedSortOption, setSelectedSortOption };
+  return { sortedRestaurants, setSortedRestaurants, selectedSortOption, setSelectedSortOption };
 };
