@@ -79,7 +79,7 @@ https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/${postco
 
   
 
-2. On **DisplayPage**, it can display the restaurant in the order of the returning data, or it can display the same restaurants by multiple sorting options: ***Rating***, ***RatingCount***, ***Alphabetical Order of Restaurant Names***.
+2. On **DisplayPage**, it can display the restaurant in the order of the returning data, or it can display the same restaurants by multiple sorting options: ***Rating***, ***RatingCount***, ***Alphabetical Order of Restaurant Names***. It can refresh the restaurant list by swiping down the screen.
 
   
 
@@ -326,15 +326,12 @@ This app handles problems gracefully.
 
   
 
-**If you do not want to set up the project by yourself, you can download the "just-eat.apk" file from this link and install it on your Android devices.**
+**If you do not want to set up the project by yourself, you can download the "just-eat.apk" file from src/apk folder and install it on your Android devices.**
 
   
 
 **(I do not have a Mac computer to compile the iOS version)**
 
-  
-
-File URL: **https://1drv.ms/u/c/bd222029f4f1d186/EcehXXOV6YVIl9Ngu4wVxIYBvRUyztZHjEooXoAs1zM4bA?e=wej2lW**
 
   
 

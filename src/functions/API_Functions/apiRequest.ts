@@ -45,9 +45,8 @@ export async function fetchRestaurantsFromJustEat(postcode: string): Promise<obj
     const restaurants = apiData.restaurants;
     if (restaurants) {
       if (restaurants.length >= 10) { // Fault tolerance, if there are ten or more restaurants, take the first ten restaurants.
-        const tenRestaurants = restaurants.slice(0, 10);
         // make it select random 10 restaurants from the list.
-        const shuffled = tenRestaurants.sort(() => 0.5 - Math.random());
+        const shuffled = restaurants.sort(() => 0.5 - Math.random());
         const randomTenRestaurants = shuffled.slice(0, 10);
         return randomTenRestaurants;
       }
@@ -80,7 +79,7 @@ export async function handleSearch(postcode: string): Promise<RestaurantType[] |
   if (!postcode || postcode === 'L40TH') {  // Using sample data for users having trouble with the API.
     const restaurants = await new Promise((resolve) => { // Return a promise that resolves after the delay
       setTimeout(() => {
-        resolve(sampleData.restaurants.slice(0, 10) as RestaurantType[]);
+        resolve(sampleData.restaurants.sort(() => 0.5 - Math.random()).slice(0, 10) as RestaurantType[]); // Random 10 restaurants from sampleData.
       }, 1000); // Simulate loading for 1 second.
     });
     return restaurants as RestaurantType[];
