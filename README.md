@@ -559,7 +559,10 @@ This is one way to run your app — you can also build it directly from Android 
 
 ## Visuals
 
-  
+### Video
+https://github.com/user-attachments/assets/54e2edad-2954-4e18-8eb8-d6c278cc23c7
+
+
 
   
 
