@@ -34,7 +34,8 @@ export const RestaurantCard = ({ item, isDarkMode, cuisines }: RestaurantCardPro
         {/*********** lowerPart Starts *********/}
         <View style={restaurantCardStyles.lowerPart}>
           <Text testID="restaurant-cuisine" style={[restaurantCardStyles.cuisine, isDarkMode && restaurantCardStyles.darkcuisine]}>{cuisines}</Text>
-          <View style={restaurantCardStyles.addressContainer}> {/* The address container, with pin icon and address text */}
+          {/* The address container, with pin icon and address text */}
+          <View style={restaurantCardStyles.addressContainer}>
             <Text style={restaurantCardStyles.pinIcon}>📍</Text>
             <View style={restaurantCardStyles.addressTextContainer}>
               <Text
