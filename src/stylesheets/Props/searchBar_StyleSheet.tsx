@@ -35,6 +35,9 @@ export const searchBarStyles = StyleSheet.create({
         shadowRadius: 4, // Smooth shadow blur
         elevation: 1,
         width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 18,
     },
 
     // Dark mode override for search input container
@@ -52,12 +55,23 @@ export const searchBarStyles = StyleSheet.create({
         fontSize: 18,
         color: '#333', // Text color inside the input field
         paddingHorizontal: 0, // Adjust text padding inside input field
+        flex: 1,
     },
 
     // Dark mode override for search input text
     // Changes text color to light gray for visibility on dark background
     darksearchInput: {
         color: '#e0e0e0',
+    },
+
+    actionButton: {
+        marginLeft: 12,
+    },
+
+    actionText: {
+        fontSize: 14,
+        color: '#FF8000',
+        fontWeight: '600',
     },
 
 
