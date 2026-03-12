@@ -25,8 +25,8 @@ export const SearchBarComponent = ({ setPostcode, loading, onSubmit, isDarkMode,
             inputContainerStyle={[searchBarStyles.searchInputContainer, isDarkMode && searchBarStyles.darksearchInputContainer]}
             inputStyle={[searchBarStyles.searchInput, isDarkMode && searchBarStyles.darksearchInput]}
             placeholderTextColor="#888"
-            searchIcon={{ name: 'search', color: 'transparent', size: 0 }}
-            clearIcon={{ name: 'close', color: 'transparent', size: 0 }}
+            searchIcon={{ name: 'search', color: 'transparent', size: 1 }}
+            clearIcon={{ name: 'close', color: 'transparent', size: 1 }}
             showLoading={loading} // ActivityIndicator for showing loading status.
             loadingProps={{ color: '#FF8000', size: 'small' }} // Style of loading indicator
         />
