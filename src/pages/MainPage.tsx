@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
-import { useColorScheme, Text, View, Alert, Image, KeyboardAvoidingView, Platform } from 'react-native';
+import { useColorScheme, Text, View, Alert, Image, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { handleSearch } from '../functions/API_Functions/apiRequest';
 import { mainpageStyles } from '../stylesheets/Pages/MainPage_StyleSheet';
 import { useNetInfo } from '@react-native-community/netinfo';
@@ -65,37 +65,39 @@ const MainPage = ({ navigation, route }: { navigation:any, route:any }) => {
     // The logo is displayed at the top of the page.
     // The page also handles keyboard visibility to adjust the layout accordingly.
 
-    <View style={[mainpageStyles.overAll, isDarkMode && mainpageStyles.darkOverAll]}>
-      <KeyboardAvoidingView
-        style={mainpageStyles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={keyboardVisible ? 30 : 0}
-      >
-        {/* The MainPage has two parts: the brand logo and the search bar */}
-        <View style={[mainpageStyles.container, isDarkMode && mainpageStyles.darkcontainer]}>
-          <View>
-            <Image //************** The logo of Just Eat ***************/
-              source={require('../images/just-eat-logo.png')}
-              style={mainpageStyles.logo}
-            />
-          </View>
-          <View style={mainpageStyles.searchContainer}>
-            <View style={mainpageStyles.twoTexts}>
-              <Text style={[mainpageStyles.titleFirstpart, isDarkMode && mainpageStyles.titleFirstpart]}>Find Restaurants </Text>
-              <Text style={[mainpageStyles.titleSecondpart, isDarkMode && mainpageStyles.darktitleSecondpart]}>Near You</Text>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={[mainpageStyles.overAll, isDarkMode && mainpageStyles.darkOverAll]}>
+        <KeyboardAvoidingView
+          style={mainpageStyles.keyboardAvoidingView}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={keyboardVisible ? 30 : 0}
+        >
+          {/* The MainPage has two parts: the brand logo and the search bar */}
+          <View style={[mainpageStyles.container, isDarkMode && mainpageStyles.darkcontainer]}>
+            <View>
+              <Image //************** The logo of Just Eat ***************/
+                source={require('../images/just-eat-logo.png')}
+                style={mainpageStyles.logo}
+              />
             </View>
-            <SearchBarComponent
-              setPostcode={setPostcode}
-              loading={loading}
-              onSubmit={onSubmit}
-              isDarkMode={isDarkMode}
-              postcode={postcode}
-            />
+            <View style={mainpageStyles.searchContainer}>
+              <View style={mainpageStyles.twoTexts}>
+                <Text style={[mainpageStyles.titleFirstpart, isDarkMode && mainpageStyles.titleFirstpart]}>Find Restaurants </Text>
+                <Text style={[mainpageStyles.titleSecondpart, isDarkMode && mainpageStyles.darktitleSecondpart]}>Near You</Text>
+              </View>
+              <SearchBarComponent
+                setPostcode={setPostcode}
+                loading={loading}
+                onSubmit={onSubmit}
+                isDarkMode={isDarkMode}
+                postcode={postcode}
+              />
 
+            </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+        </KeyboardAvoidingView>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
