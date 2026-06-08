@@ -249,7 +249,7 @@ You can modify key settings without changing the code logic, which improves flex
 
 ---
 
-### Error Handellin
+### Error Handling
 
 
 This app handles problems gracefully.
