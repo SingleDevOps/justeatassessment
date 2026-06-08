@@ -74,27 +74,10 @@ export const searchBarStyles = StyleSheet.create({
         marginLeft: 12,
     },
 
-    searchIcon: {
-        width: 16,
-        height: 16,
-        alignItems: 'flex-end',
-    },
-
-    searchIconLens: {
-        width: 11,
-        height: 11,
-        borderRadius: 6,
-        borderWidth: 2,
-        borderColor: 'white',
-    },
-
-    searchIconHandle: {
-        width: 6,
-        height: 2,
-        backgroundColor: 'white',
-        transform: [{ rotate: '45deg' }],
-        marginTop: 1,
-        marginLeft: 10,
+    searchIconImage: {
+        width: 20,
+        height: 20,
+        tintColor: 'white',
     },
 
 
