@@ -32,6 +32,7 @@ export const mainpageStyles = StyleSheet.create({
         backgroundColor: '#F8F9FA', // Light gray background for the main page
         paddingHorizontal: 20, //Padding for the search Bar
         justifyContent: 'center',
+        marginTop: '30%',
     },
 
 
@@ -69,7 +70,7 @@ export const mainpageStyles = StyleSheet.create({
     searchContainer: {
         bottom: 130,
         width: '100%',
-        marginTop: 230,     // Adjust this value based on your layout needs
+        marginTop: '30%',
         alignItems: 'center',
     },
 

@@ -22,11 +22,7 @@ const MainPage = ({ navigation, route }: { navigation:any, route:any }) => {
     SystemNavigationBar.setNavigationColor(isDarkMode ? '#262626' : 'gray');
 
     navigation.setOptions({ //Show page title, and header style setting.
-      title: '', //Empty String for no title
-      headerTitleAlign: 'center',
-      headerStyle: {
-        backgroundColor: isDarkMode ? '#1A1A18' : '#F8F9FA',
-      },
+      headerShown: false,
     });
   }, [navigation, route, isDarkMode]);
 
@@ -70,7 +66,7 @@ const MainPage = ({ navigation, route }: { navigation:any, route:any }) => {
         <KeyboardAvoidingView
           style={mainpageStyles.keyboardAvoidingView}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={keyboardVisible ? 30 : 0}
+          keyboardVerticalOffset={0}
         >
           {/* The MainPage has two parts: the brand logo and the search bar */}
           <View style={[mainpageStyles.container, isDarkMode && mainpageStyles.darkcontainer]}>

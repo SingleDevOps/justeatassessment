@@ -15,7 +15,7 @@ export const searchBarStyles = StyleSheet.create({
         marginLeft: 20,
         marginRight: 20,
         textAlign: 'center',
-        width: '70.5%',
+        width: '77.5%',
     },
 
     // Dark mode override for search bar container
@@ -64,14 +64,37 @@ export const searchBarStyles = StyleSheet.create({
         color: '#e0e0e0',
     },
 
-    actionButton: {
+    searchButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: '#2563EB',
+        alignItems: 'center',
+        justifyContent: 'center',
         marginLeft: 12,
     },
 
-    actionText: {
-        fontSize: 14,
-        color: '#FF8000',
-        fontWeight: '600',
+    searchIcon: {
+        width: 16,
+        height: 16,
+        alignItems: 'flex-end',
+    },
+
+    searchIconLens: {
+        width: 11,
+        height: 11,
+        borderRadius: 6,
+        borderWidth: 2,
+        borderColor: 'white',
+    },
+
+    searchIconHandle: {
+        width: 6,
+        height: 2,
+        backgroundColor: 'white',
+        transform: [{ rotate: '45deg' }],
+        marginTop: 1,
+        marginLeft: 10,
     },
 
 
