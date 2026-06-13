@@ -1,7 +1,7 @@
 export const useNetInfo = () => (
     {
         type: 'wifi',
-        isCOnnected: true,
+        isConnected: true,
         isInternetReachable: true,
     }
 );
