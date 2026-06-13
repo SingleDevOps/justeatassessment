@@ -42,17 +42,6 @@ export const mainpageStyles = StyleSheet.create({
     },
 
 
-    // Container for app logo positioning
-    // Centers logo horizontally and positions it at top 15% of screen
-    logoContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        position: 'absolute',
-        top: '15%',
-    },
-
-
     // Style for the Just Eat logo image
     // Sets proportional dimensions and centers the image
     logo: {
@@ -117,7 +106,7 @@ export const mainpageStyles = StyleSheet.create({
 
 
     // Dark mode override for first part of title
-    // Changes text color to white (unused because it is always having "#FF8000" color)
+    // Changes text color from orange to white for dark mode
     darktitleFirstpart: {
         color: '#FFFFFF',
     },

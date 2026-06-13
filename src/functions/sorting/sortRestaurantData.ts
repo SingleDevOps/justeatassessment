@@ -1,4 +1,4 @@
-import { RestaurantType } from '../../types/restaurant_type';
+import { RestaurantType } from '../../types/restaurant';
 import { SortOrder } from '../../configs/sortingOptions';
 
 /**

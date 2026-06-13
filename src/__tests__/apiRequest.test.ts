@@ -1,7 +1,7 @@
 import {
   validatePostcode,
   handleSearch,
-} from '../functions/API_Functions/apiRequest';
+} from '../functions/api/apiRequest';
 
 
 global.fetch = jest.fn();

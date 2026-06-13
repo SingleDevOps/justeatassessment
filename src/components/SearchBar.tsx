@@ -1,6 +1,6 @@
 import { ActivityIndicator, Image, Pressable, TextInput, View } from 'react-native';
-import { searchBarStyles } from '../stylesheets/Props/searchBar_StyleSheet';
-import { SearchBarPropType } from '../types/searchBar_type';
+import { searchBarStyles } from '../stylesheets/props/searchBar';
+import { SearchBarPropType } from '../types/searchBar';
 
 export const SearchBarComponent = ({ setPostcode, loading, onSubmit, isDarkMode, postcode }: SearchBarPropType) => {
     return (
@@ -18,7 +18,7 @@ export const SearchBarComponent = ({ setPostcode, loading, onSubmit, isDarkMode,
                     returnKeyType="search"
                 />
                 <Pressable onPress={() => onSubmit(postcode)} style={searchBarStyles.searchButton} disabled={loading}>
-                    {loading ? <ActivityIndicator color="white" size="small" /> : <Image source={require('../assets/icon/serach_icon.png')} style={searchBarStyles.searchIconImage} />}
+                    {loading ? <ActivityIndicator color="white" size="small" /> : <Image source={require('../assets/icon/search_icon.png')} style={searchBarStyles.searchIconImage} />}
                 </Pressable>
             </View>
         </View>

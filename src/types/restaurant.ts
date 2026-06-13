@@ -1,10 +1,9 @@
-/* The first three types below define the structure of Restaurant Object */
-type RatingType = {
+export type RatingType = {
     starRating: number;
     count: number;
 };
 
-type AddressType = {
+export type AddressType = {
     firstLine: string;
     city: string;
 };
@@ -21,4 +20,3 @@ export type RestaurantType = {
     rating: RatingType;
     address: AddressType;
 };
-

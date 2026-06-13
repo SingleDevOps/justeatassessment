@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 import { useColorScheme, Text, View, Alert, Image, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import { handleSearch } from '../functions/API_Functions/apiRequest';
-import { mainpageStyles } from '../stylesheets/Pages/MainPage_StyleSheet';
+import { handleSearch } from '../functions/api/apiRequest';
+import { mainpageStyles } from '../stylesheets/pages/mainPage';
 import { useNetInfo } from '@react-native-community/netinfo';
-import { SearchBarComponent } from '../components/serachBarComponent';
-import { RestaurantType } from '../types/restaurant_type';
+import { SearchBarComponent } from '../components/SearchBar';
+import { RestaurantType } from '../types/restaurant';
 import { useKeyboardVisible } from '../hooks/useKeyboardVisible';
+import type { MainPageProps } from '../types/navigation';
 
 
-const MainPage = ({ navigation, route }: { navigation:any, route:any }) => {
+const MainPage = ({ navigation, route }: MainPageProps) => {
 
   const [postcode, setPostcode] = React.useState('');
   const [loading, setLoading] = React.useState(false); // State for showing loading activity
@@ -26,32 +27,29 @@ const MainPage = ({ navigation, route }: { navigation:any, route:any }) => {
     });
   }, [navigation, route, isDarkMode]);
 
-  const onSubmit = async (text: string): Promise<null> => {    //The "handleSearch" function is imported from 'functions/API_Functions/apiRequest.ts'
+  const onSubmit = async (text: string): Promise<void> => {
     text = text.replaceAll(' ', '').toUpperCase();
 
-    setLoading(true); // Loading Activity Indicator is shown
+    setLoading(true);
     const ten_restaurants: (RestaurantType[] | null | boolean) = await handleSearch(text);
-    setLoading(false); // Loading Activity Indicator is removed when the loding is finished.
+    setLoading(false);
 
     if (ten_restaurants === null){
       Alert.alert('Error fetching restaurant data', 'The Just Eat API Endpoint is down, or your IP address is not European.');
-      return null;
+      return;
     }
 
     if (ten_restaurants !== false) {
-      navigation.navigate('DisplayPage', { postcode: text, restaurants: ten_restaurants }); //When the ten restaurants data is received, navigate to the DisplayPage and send parameters to the page.
+      navigation.navigate('DisplayPage', { postcode: text, restaurants: ten_restaurants as RestaurantType[] });
     }
     else {
       if (!hasInternet) {
         Alert.alert('No Internet Connection', 'Please check your internet.');
-        // console.log('No Internet Connection.');
       }
       else {
-        Alert.alert('Invalid Postcode', 'You may have entered the wrong postal code, or it has been terminated.'); //If there is Internet, the issue lies on the postal code itself.
-        // console.log('Postal Code Validation Error');
+        Alert.alert('Invalid Postcode', 'You may have entered the wrong postal code, or it has been terminated.');
       }
     }
-    return null;
   };
 
 

@@ -3,8 +3,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar, useColorScheme } from 'react-native';
 import MainPage from './src/pages/MainPage';
 import DisplayPage from './src/pages/DisplayPage';
+import type { RootStackParamList } from './src/types/navigation';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App = () => {
     const colorScheme = useColorScheme();

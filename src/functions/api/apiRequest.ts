@@ -1,5 +1,5 @@
 import * as sampleData from '../../assets/data/L40TH.json';
-import { RestaurantType } from '../../types/restaurant_type'; // Import RestaurantType
+import { RestaurantType } from '../../types/restaurant';
 import { API_URLS } from '../../configs/api';
 //Functions for API Requests.
 

@@ -1,5 +1,5 @@
-import { cuisineEmojiMatch } from '../../configs/cuisine-emoji-match';
-import { RestaurantType, CuisineType } from '../../types/restaurant_type';
+import { cuisineEmojiMatch } from '../../configs/cuisineEmojiMatch';
+import { RestaurantType, CuisineType } from '../../types/restaurant';
 
 /**
  * Function to match the cuisine names with emojis.

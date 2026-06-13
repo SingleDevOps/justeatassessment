@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useColorScheme, View, FlatList, RefreshControl } from 'react-native';
-import { displayPageStyles } from '../stylesheets/Pages/DisplayPage_StyleSheet';
-import { filterCuisines } from '../functions/Filtering_Functions/filter';
-import { RestaurantCard } from '../components/restaurantCardComponent';
-import { SelectListComponent } from '../components/selectListComponent';
+import { displayPageStyles } from '../stylesheets/pages/displayPage';
+import { filterCuisines } from '../functions/filtering/filter';
+import { RestaurantCard } from '../components/RestaurantCard';
+import { SelectListComponent } from '../components/SelectList';
 import { useRestaurantSorting } from '../hooks/useRestaurantSorting';
-import { handleSearch } from '../functions/API_Functions/apiRequest';
+import { handleSearch } from '../functions/api/apiRequest';
+import type { DisplayPageProps } from '../types/navigation';
 
-const DisplayPage = ({ navigation, route }: { navigation:any, route:any }) => {
-  const { restaurants } = route.params; //Get the restaurant data from MainPage.
+const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
+  const { restaurants } = route.params ?? { restaurants: [] }; //Get the restaurant data from MainPage.
   const [postcode, setPostcode] = useState('L40TH'); // Default Value for sample data
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
@@ -30,7 +31,6 @@ const DisplayPage = ({ navigation, route }: { navigation:any, route:any }) => {
   useEffect(() => {    //Show page title, and its style setting
     navigation.setOptions({
       title: `Restaurants at ${postcode}`,
-      fontsize: 20,
       headerTitleAlign: 'center',
       headerStyle: {
         backgroundColor: isDarkMode ? '#1A1A18' : '#F8F9FA',

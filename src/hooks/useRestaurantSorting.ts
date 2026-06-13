@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { RestaurantType } from '../types/restaurant_type';
-import { sortResData } from '../functions/Sorting_Functions/sortRestaurantData';
+import { RestaurantType } from '../types/restaurant';
+import { sortResData } from '../functions/sorting/sortRestaurantData';
 import { SortOptionValue, SortOrder } from '../configs/sortingOptions';
 /**
  * Custom hook to manage sorting of restaurant data.

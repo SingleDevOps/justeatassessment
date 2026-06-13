@@ -6,7 +6,7 @@ import { TextMatch } from '@testing-library/react-native/build/matches';
 const mockSetOptions = jest.fn();
 const mockNavigation = {
     setOptions: mockSetOptions,
-};
+} as any;
 
 const mockRestaurants = [
     {
@@ -40,7 +40,7 @@ const mockRoute = {
         postcode: 'SW1A 0AA',
         restaurants: mockRestaurants,
     },
-};
+} as any;
 
 jest.mock('react-native/Libraries/Utilities/useColorScheme', () => ({
     default: jest.fn().mockReturnValue('light'), // or 'dark'

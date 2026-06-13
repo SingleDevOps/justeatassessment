@@ -30,12 +30,5 @@ export const displayPageStyles = StyleSheet.create({
     listfooterComponent: {
         height: 50,
     },
-
-
-    // Style for placeholder text
-    Placeholder: {
-        color: 'black',
-        fontSize: 16,
-    },
 }
 );
