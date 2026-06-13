@@ -10,7 +10,7 @@ import type { DisplayPageProps } from '../types/navigation';
 
 const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
   const { restaurants, postcode: routePostcode } = route.params ?? {};
-  const postcode = routePostcode ?? 'L40TH';
+  const postcode = routePostcode || 'L40TH';
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const {sortedRestaurants, setSelectedSortOption, setSortedRestaurants, selectedSortOption} = useRestaurantSorting(restaurants ?? []);
