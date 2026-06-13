@@ -9,56 +9,50 @@ import { handleSearch } from '../functions/api/apiRequest';
 import type { DisplayPageProps } from '../types/navigation';
 
 const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
-  const { restaurants } = route.params ?? { restaurants: [] }; //Get the restaurant data from MainPage.
-  const [postcode, setPostcode] = useState('L40TH'); // Default Value for sample data
+  const { restaurants, postcode: routePostcode } = route.params ?? {};
+  const postcode = routePostcode ?? 'L40TH';
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
-  const {sortedRestaurants, setSelectedSortOption, setSortedRestaurants, selectedSortOption} = useRestaurantSorting(restaurants);
+  const {sortedRestaurants, setSelectedSortOption, setSortedRestaurants, selectedSortOption} = useRestaurantSorting(restaurants ?? []);
   const [refreshing, setRefreshing] = useState(false);
   const [key, setKey] = useState(0);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    const newRestaurants = await handleSearch(postcode);
-    if (newRestaurants && Array.isArray(newRestaurants)) {
-      setSelectedSortOption(''); // Reset sorting to show new restaurants in original order
-      setSortedRestaurants(newRestaurants);
-      setKey(prevKey => prevKey + 1); // Force the re-render of the SelectListComponent by updating the key
+    const result = await handleSearch(postcode);
+    if (result.ok) {
+      setSelectedSortOption('');
+      setSortedRestaurants(result.restaurants);
+      setKey(prevKey => prevKey + 1);
     }
     setRefreshing(false);
   };
 
-  useEffect(() => {    //Show page title, and its style setting
+  useEffect(() => {
     navigation.setOptions({
       title: `Restaurants at ${postcode}`,
       headerTitleAlign: 'center',
       headerStyle: {
         backgroundColor: isDarkMode ? '#1A1A18' : '#F8F9FA',
       },
-      headerTintColor: '#FF8000', // Just Eat Orange, the return arrow's color.
+      headerTintColor: '#FF8000',
       headerTitleStyle: {
         fontWeight: 'bold',
         fontSize: 20,
         color: '#FF8000',
       },
-    },);
-
-    if (route.params.postcode && route.params.postcode !== postcode) { // Prevents infinite postcode rendering on the header
-      setPostcode(route.params.postcode);
-    }
-  }, [navigation, route, postcode, route.params.postcode, isDarkMode]);
+    });
+  }, [navigation, postcode, isDarkMode]);
 
   return (
     <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
-      <SelectListComponent //The selectlist displays sorting options.
+      <SelectListComponent
         setSelected={(value: string) => setSelectedSortOption(value)}
         isDarkMode={isDarkMode}
         selected={selectedSortOption}
         key={key}
       />
-      {/********************* The container of all restaurant cards *************************/}
       <View style={displayPageStyles.container}>
-        {/* The FlatList for showing each restaurant */}
         <FlatList
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
@@ -73,13 +67,13 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
             );
           }}
           keyExtractor={(item) => item.id.toString()}
-          ListFooterComponent={<View style={displayPageStyles.listfooterComponent} />} // Add extra space so that the last card is not blocked by Android's navigation bar.
+          ListFooterComponent={<View style={displayPageStyles.listfooterComponent} />}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              colors={['#FF8000']} // Just Eat Orange color
-              tintColor={isDarkMode ? '#FFFFFF' : '#000000'} // White in dark mode, black in light mode
+              colors={['#FF8000']}
+              tintColor={isDarkMode ? '#FFFFFF' : '#000000'}
             />
           }
         />

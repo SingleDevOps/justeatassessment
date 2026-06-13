@@ -1,8 +1,8 @@
 import {
   validatePostcode,
+  fetchRestaurantsFromJustEat,
   handleSearch,
 } from '../functions/api/apiRequest';
-
 
 global.fetch = jest.fn();
 
@@ -51,14 +51,38 @@ describe('API Functions', () => {
       );
       expect(isValid).toBe(false);
     });
-
-
+  });
 
   describe('fetchRestaurantsFromJustEat', () => {
-    const mockPostcode = 'sw1a1aa';
+    it('should return restaurants when API responds with data', async () => {
+      const mockRestaurants = [
+        { id: '1', name: 'Testaurant' },
+        { id: '2', name: 'Food Place' },
+      ];
+      (fetch as jest.Mock).mockResolvedValueOnce(
+        createMockResponse({ restaurants: mockRestaurants })
+      );
+
+      const result = await fetchRestaurantsFromJustEat('SW1A0AA');
+
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(mockRestaurants);
+    });
+
+    it('should return null when API returns no restaurants', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce(
+        createMockResponse({ restaurants: null })
+      );
+
+      const result = await fetchRestaurantsFromJustEat('INVALID');
+
+      expect(result).toBeNull();
+    });
+  });
 
   describe('handleSearch', () => {
     const mockRestaurants = [{ id: '1', name: 'Testaurant' }];
+    const mockPostcode = 'sw1a1aa';
 
     it('should fetch restaurants if validation succeeds', async () => {
       (fetch as jest.Mock).mockResolvedValueOnce(createMockResponse({ result: true }));
@@ -66,50 +90,43 @@ describe('API Functions', () => {
 
       const result = await handleSearch(mockPostcode);
 
-      expect(fetch).toHaveBeenCalledTimes(2); // 1 for validatePostcode, 1 for fetchRestaurantsFromJustEat
+      expect(fetch).toHaveBeenCalledTimes(2);
       expect(fetch).toHaveBeenNthCalledWith(1, `https://postcodes.io/postcodes/${mockPostcode}/validate`, { method: 'GET' });
       expect(fetch).toHaveBeenNthCalledWith(2, `https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/${mockPostcode}`, { method: 'GET' });
-      expect(result).toEqual(mockRestaurants);
+      expect(result).toEqual({ ok: true, restaurants: mockRestaurants });
     });
 
-    it('should return false if validation fails', async () => {
+    it('should return invalid_postcode if validation fails', async () => {
       (fetch as jest.Mock).mockResolvedValueOnce(createMockResponse({ result: false }));
-      let tempMockPostcode = '11111'; // Invalid Postcode
-      const result = await handleSearch(tempMockPostcode);
+      const result = await handleSearch('11111');
 
-      expect(fetch).toHaveBeenCalledTimes(1); // Only validatePostcode is called
-      expect(fetch).toHaveBeenCalledWith(`https://postcodes.io/postcodes/${tempMockPostcode}/validate`, { method: 'GET' });
-      expect(result).toBe(false);
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(result).toEqual({ ok: false, reason: 'invalid_postcode' });
     });
 
     it('should fetch restaurants directly if validation times out', async () => {
       jest.useFakeTimers();
 
-      // Mock validatePostcode to simulate timeout
-      (fetch as jest.Mock).mockImplementationOnce(url => {
+      (fetch as jest.Mock).mockImplementationOnce((url: string) => {
         if (url.includes('postcodes.io')) {
-          return new Promise(() => {}); // Never resolves
+          return new Promise(() => {});
         }
         return Promise.reject(new Error('Unexpected fetch call'));
       });
-      // Mock fetchRestaurantsFromJustEat
       (fetch as jest.Mock).mockResolvedValueOnce(createMockResponse({ restaurants: mockRestaurants }));
 
       const searchPromise = handleSearch(mockPostcode);
 
-      // Timer to simulate TIMEOUT
       jest.advanceTimersByTime(3001);
 
       const result = await searchPromise;
 
-      expect(fetch).toHaveBeenCalledTimes(2); // 1 for validatePostcode, 1 for fetchRestaurantsFromJustEat
+      expect(fetch).toHaveBeenCalledTimes(2);
       expect(fetch).toHaveBeenNthCalledWith(1, `https://postcodes.io/postcodes/${mockPostcode}/validate`, { method: 'GET' });
       expect(fetch).toHaveBeenNthCalledWith(2, `https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/${mockPostcode}`, { method: 'GET' });
-      expect(result).toEqual(mockRestaurants);
+      expect(result).toEqual({ ok: true, restaurants: mockRestaurants });
 
       jest.useRealTimers();
     });
   });
-  });
-});
 });
