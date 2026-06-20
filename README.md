@@ -27,6 +27,8 @@ Besides, this application has dark mode design, for the night usage.
 
 ## Code Structure
 
+### `main` Branch
+
 ```
 ├── App.tsx                     # Main application container with navigation setup
 └── src/
@@ -96,6 +98,90 @@ Besides, this application has dark mode design, for the night usage.
     │
     └── apk/
         └── just-eat.apk        # Pre-built Android APK
+```
+
+### `Full-Info-Display` Branch
+
+Extends the `main` branch structure with the following additions:
+
+```
+├── App.tsx                     # Main application container with navigation setup
+└── src/
+    ├── pages/
+    │   ├── MainPage.tsx
+    │   ├── DisplayPage.tsx
+    │   └── RestaurantDetailPage.tsx  # Full restaurant details view [NEW]
+    │
+    ├── components/
+    │   ├── RestaurantCard.tsx
+    │   ├── SelectList.tsx
+    │   ├── SearchBar.tsx
+    │   ├── FilterModal.tsx           # Advanced filtering modal [NEW]
+    │   └── FilterSearchBar.tsx       # Search with filter integration [NEW]
+    │
+    ├── types/
+    │   ├── restaurant.ts
+    │   ├── restaurantCard.ts
+    │   ├── searchBar.ts
+    │   ├── selectList.ts
+    │   ├── selectListOption.ts
+    │   ├── navigation.ts
+    │   └── filterOptions.ts          # Filter state and option types [NEW]
+    │
+    ├── functions/
+    │   ├── api/
+    │   │   └── apiRequest.ts
+    │   ├── filtering/
+    │   │   ├── filter.ts
+    │   │   └── searchRestaurants.ts  # Multi-keyword search logic [NEW]
+    │   └── sorting/
+    │       └── sortRestaurantData.ts
+    │
+    ├── hooks/
+    │   ├── useKeyboardVisible.ts
+    │   └── useRestaurantSorting.ts
+    │
+    ├── configs/
+    │   ├── api.ts
+    │   ├── sortingOptions.ts
+    │   ├── cuisineEmojiMatch.ts
+    │   └── filterDefaults.ts         # Default filter options and values [NEW]
+    │
+    ├── stylesheets/
+    │   ├── pages/
+    │   │   ├── mainPage.ts
+    │   │   ├── displayPage.ts
+    │   │   └── restaurantDetailPage.ts # Styles for RestaurantDetailPage [NEW]
+    │   └── props/
+    │       ├── restaurantCard.ts
+    │       ├── searchBar.ts
+    │       ├── selectList.ts
+    │       ├── filterModal.ts         # Styles for FilterModal [NEW]
+    │       └── filterSearchBar.ts     # Styles for FilterSearchBar [NEW]
+    │
+    ├── assets/
+    │   ├── data/
+    │   │   └── L40TH.json
+    │   ├── fonts/
+    │   └── icon/
+    │       └── search_icon.png
+    │
+    ├── images/
+    │   ├── just-eat-logo.png
+    │   ├── Just-Eat-Star.png
+    │   └── downarrow.png
+    │
+    ├── __mocks__/
+    │   └── @react-native-community/
+    │       └── netinfo.js
+    │
+    ├── __tests__/
+    │   ├── MainPage.test.tsx
+    │   ├── CustomSorting.test.tsx
+    │   └── apiRequest.test.ts
+    │
+    └── apk/
+        └── just-eat.apk
 ```
 
 ## Design Principles
@@ -225,6 +311,44 @@ yarn ios
 
 This is one way to run your app — you can also build it directly from Android Studio or Xcode.
 
+## Branches
+
+### `main` Branch
+The main branch contains the core restaurant search functionality:
+- Search restaurants by UK postcode using postcode.io validation API
+- Display first 10 restaurants from Just Eat API
+- Basic sorting options (Rating, RatingCount, Alphabetical Order)
+- Dark mode support for night usage
+- Error handling for API failures, timeouts, and network issues
+
+### `Full-Info-Display` Branch
+The Full-Info-Display branch extends the main branch with enhanced features:
+
+#### Restaurant Detail Page
+- Click on any restaurant card to view detailed information
+- Full address, delivery time estimates, and availability slots
+- Restaurant deals and promotions with deduplication
+- Responsive design with dark mode support
+
+#### Advanced Filtering System
+- **FilterModal Component**: Interactive modal with animated slide-up behavior
+  - Filter by rating thresholds (4+, 4.5+, 5 stars)
+  - Filter by delivery cost (Free, £0-£2, £2-£4, £4+)
+  - Filter by top cuisines (Pizza, Burgers, Chinese, Indian, Kebab)
+  - Pan gesture dismissal with threshold detection
+  - Real-time filter state management
+
+- **FilterSearchBar Component**: Enhanced search with filter integration
+  - Filter button with badge showing active filter count
+  - Integrated search functionality across full restaurant list
+  - Multi-keyword AND filtering logic
+
+#### Technical Implementation
+- **Filter State Management**: Centralized filter configuration with `FilterState` type
+- **Search Algorithm**: Multi-keyword AND filtering across restaurant names and cuisines
+- **Deduplication Logic**: Smart deal deduplication using offerType + description keys
+- **Performance Optimization**: Memoized filtering and sorting operations
+
 ## Visuals
 
 ### Video
@@ -277,10 +401,11 @@ The definition of "cuisine" is not specified. There are names such as "Local Leg
 ## Potential Improvements
 
 1. Better Displaying of Cuisine Items & Better Distinguishability of Restaurants / Non-Restaurants.
-2. More custom components to increase modularity. ✅
-3. Better StyleSheet Design with more dynamic settings. ✅
-4. Restaurant Details in a full page when each restaurant card is clicked.
+2. More custom components to increase modularity. ✅ (`main` branch)
+3. Better StyleSheet Design with more dynamic settings. ✅ (`main` branch)
+4. Restaurant Details in a full page when each restaurant card is clicked. ✅ (`Full-Info-Display` branch)
 5. Tests for checking the returned data and the correct rendering of elements.
-   (Can be done by *Jest* and *@testing-library/react-native*: e.g. Restaurant card components with various data inputs, Search input component behavior, Sorting controls and their state changes, Navigation between MainPage and DisplayPage, Data passing between screens, Dark/light mode toggle behavior) ✅
+   (Can be done by *Jest* and *@testing-library/react-native*: e.g. Restaurant card components with various data inputs, Search input component behavior, Sorting controls and their state changes, Navigation between MainPage and DisplayPage, Data passing between screens, Dark/light mode toggle behavior) ✅ (`main` branch)
 6. GeoPoint + Map Integration for navigation to the restaurant.
-7. More Restaurant Sorting Options. ✅
+7. More Restaurant Sorting Options. ✅ (`main` branch)
+8. Advanced Filtering by Rating, Delivery Cost, and Cuisine. ✅ (`Full-Info-Display` branch)
