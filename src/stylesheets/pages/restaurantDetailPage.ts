@@ -277,4 +277,23 @@ export const detailPageStyles = StyleSheet.create({
     darklocationText: {
         color: '#AAAAAA',
     },
+
+    showMoreButton: {
+        marginTop: 8,
+        paddingVertical: 10,
+        alignItems: 'center',
+        borderRadius: 8,
+        backgroundColor: '#FFF3E0',
+        borderWidth: 1,
+        borderColor: '#FF8000',
+    },
+    darkshowMoreButton: {
+        backgroundColor: '#2D2D2A',
+        borderColor: '#FF8000',
+    },
+    showMoreText: {
+        fontFamily: 'OpenSans-Bold',
+        fontSize: 14,
+        color: '#FF8000',
+    },
 });

@@ -1,8 +1,8 @@
-﻿import React, { useEffect } from 'react';
-import { useColorScheme, View, Text, Image, ScrollView } from 'react-native';
+﻿import React, { useEffect, useState, useMemo } from 'react';
+import { useColorScheme, View, Text, Image, ScrollView, Pressable } from 'react-native';
 import { detailPageStyles } from '../stylesheets/pages/restaurantDetailPage';
 import type { DetailPageProps } from '../types/navigation';
-import type { RestaurantType, DealType, AvailabilitySlotType } from '../types/restaurant';
+import type {  DealType, AvailabilitySlotType } from '../types/restaurant';
 
 const formatDate = (dateStr?: string): string => {
     if (!dateStr) return 'N/A';
@@ -25,6 +25,21 @@ const formatEta = (eta?: { rangeLower?: number; rangeUpper?: number; approximate
     return 'N/A';
 };
 
+
+const DEALS_INITIAL_LIMIT = 5;
+
+function deduplicateDeals(deals: DealType[]): DealType[] {
+    const seen = new Set<string>();
+    return deals.filter(deal => {
+        if (deal.offerType === 'StampCard' && (!deal.description || deal.description.trim() === '')) {
+            return false;
+        }
+        const key = deal.offerType + '::' + deal.description;
+        if (seen.has(key)) { return false; }
+        seen.add(key);
+        return true;
+    });
+}
 
 const InfoRow = ({ label, value, isDarkMode }: { label: string; value: string; isDarkMode: boolean }) => (
     <View style={[detailPageStyles.infoRow, isDarkMode && detailPageStyles.darkinfoRow]}>
@@ -65,6 +80,9 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
     const { restaurant } = route.params;
     const colorScheme = useColorScheme();
     const isDarkMode = colorScheme === 'dark';
+    const [dealsExpanded, setDealsExpanded] = useState(false);
+
+    const uniqueDeals = useMemo(() => deduplicateDeals(restaurant.deals ?? []), [restaurant.deals]);
 
     useEffect(() => {
         navigation.setOptions({
@@ -184,15 +202,25 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                     <InfoRow label="Delivery Opens" value={formatDate(restaurant.deliveryOpeningTimeLocal)} isDarkMode={isDarkMode} />
                 </View>
 
-                {restaurant.deals && restaurant.deals.length > 0 && (
+                {uniqueDeals.length > 0 && (
                     <View style={[detailPageStyles.section, isDarkMode && detailPageStyles.darksection]}>
-                        <Text style={[detailPageStyles.sectionTitle, isDarkMode && detailPageStyles.darksectionTitle]}>Deals ({restaurant.deals.length})</Text>
-                        {restaurant.deals.map((deal: DealType, i: number) => (
+                        <Text style={[detailPageStyles.sectionTitle, isDarkMode && detailPageStyles.darksectionTitle]}>Deals ({uniqueDeals.length})</Text>
+                        {(dealsExpanded ? uniqueDeals : uniqueDeals.slice(0, DEALS_INITIAL_LIMIT)).map((deal: DealType, i: number) => (
                             <View key={i} style={[detailPageStyles.dealCard, isDarkMode && detailPageStyles.darkdealCard]}>
                                 <Text style={[detailPageStyles.dealDescription, isDarkMode && detailPageStyles.darkdealDescription]}>{deal.description}</Text>
                                 <Text style={detailPageStyles.dealType}>{deal.offerType}</Text>
                             </View>
                         ))}
+                        {uniqueDeals.length > DEALS_INITIAL_LIMIT && (
+                            <Pressable
+                                onPress={() => setDealsExpanded(prev => !prev)}
+                                style={[detailPageStyles.showMoreButton, isDarkMode && detailPageStyles.darkshowMoreButton]}
+                            >
+                                <Text style={detailPageStyles.showMoreText}>
+                                    {dealsExpanded ? 'Show less' : `Show ${uniqueDeals.length - DEALS_INITIAL_LIMIT} more deals`}
+                                </Text>
+                            </Pressable>
+                        )}
                     </View>
                 )}
 
