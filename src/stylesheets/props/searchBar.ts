@@ -7,11 +7,10 @@ export const searchBarStyles = StyleSheet.create({
     // Removes default styling and adds custom shadow and positioning
     searchBarContainer: {
         bottom: 10,
-        shadowColor: 'gray', // Add subtle shadow for depth
-        backgroundColor: '#F8F9FA', // Remove default grey background
-        borderTopWidth: 0, // Remove top border
-        borderBottomWidth: 0, // Remove bottom border
-        paddingHorizontal: 1, // Remove extra padding
+        backgroundColor: 'transparent',
+        borderTopWidth: 0,
+        borderBottomWidth: 0,
+        paddingHorizontal: 1,
         marginLeft: 20,
         marginRight: 20,
         textAlign: 'center',
@@ -21,19 +20,16 @@ export const searchBarStyles = StyleSheet.create({
     // Dark mode override for search bar container
     // Changes background to match dark theme
     darksearchBarContainer: {
-        backgroundColor: '#1A1A18',
+        backgroundColor: 'transparent',
     },
     // Style for the inner container of the search input
     // Creates a rounded input field with subtle shadow
     searchInputContainer: {
         borderColor: '#D4C9BE',
         borderWidth: 1,
-        backgroundColor: 'white', // Set clean white background for input field
+        backgroundColor: 'white',
         borderRadius: 25,
         height: 65,
-        shadowOpacity: 0.1, // Softer shadow opacity
-        shadowRadius: 4, // Smooth shadow blur
-        elevation: 1,
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
@@ -47,6 +43,7 @@ export const searchBarStyles = StyleSheet.create({
         elevation: 0,
         borderWidth: 1,
         borderBottomWidth: 1,
+        borderColor: '#858a7e',
     },
 
     // Style for the text input itself
