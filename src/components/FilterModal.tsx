@@ -45,9 +45,8 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
     }, [translateY]);
 
     useEffect(() => {
-        if (visible) {
+        if (visible && !isClosingRef.current) {
             setLocalFilters(currentFilters);
-            isClosingRef.current = false;
             animateIn();
         }
     }, [visible, currentFilters, animateIn]);
@@ -119,8 +118,11 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
     };
 
     const handleApply = () => {
-        onApply(localFilters);
-        handleClose();
+        isClosingRef.current = true;
+        animateOut(() => {
+            onApply(localFilters);
+            onClose();
+        });
     };
 
     if (!modalMounted) return null;
