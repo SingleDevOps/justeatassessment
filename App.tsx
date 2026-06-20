@@ -1,8 +1,9 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+﻿import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar, useColorScheme } from 'react-native';
 import MainPage from './src/pages/MainPage';
 import DisplayPage from './src/pages/DisplayPage';
+import RestaurantDetailPage from './src/pages/RestaurantDetailPage';
 import type { RootStackParamList } from './src/types/navigation';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -21,6 +22,7 @@ const App = () => {
             <Stack.Navigator initialRouteName="MainPage">
                 <Stack.Screen name="MainPage" component={MainPage} />
                 <Stack.Screen name="DisplayPage" component={DisplayPage} />
+                <Stack.Screen name="RestaurantDetailPage" component={RestaurantDetailPage} />
             </Stack.Navigator>
         </NavigationContainer>
     );

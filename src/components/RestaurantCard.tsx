@@ -1,14 +1,14 @@
-import { View, Text, Image, TouchableHighlight } from 'react-native';
+﻿import { View, Text, Image, TouchableHighlight } from 'react-native';
 import { restaurantCardStyles } from '../stylesheets/props/restaurantCard';
 import { RestaurantCardPropType } from '../types/restaurantCard';
 
 
-export const RestaurantCard = ({ item, isDarkMode, cuisines }: RestaurantCardPropType) => {
+export const RestaurantCard = ({ item, isDarkMode, cuisines, navigation }: RestaurantCardPropType) => {
   return (
     <TouchableHighlight
       testID={`restaurant-card-${item.id}`}
       underlayColor={isDarkMode ? '#1A1A18' : '#F8F9FA'}
-      onPress={() => { }}
+      onPress={() => navigation.navigate('RestaurantDetailPage', { restaurant: item })}
       style={restaurantCardStyles.touchableHighlight}
     >
       {/********************* The card has two parts: upperPart & lowerPart ********************/}

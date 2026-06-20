@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useColorScheme, View, FlatList, RefreshControl } from 'react-native';
 import { displayPageStyles } from '../stylesheets/pages/displayPage';
 import { filterCuisines } from '../functions/filtering/filter';
@@ -63,7 +63,9 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
               <RestaurantCard
                 item={item}
                 isDarkMode={isDarkMode}
-                cuisines={cuisines} />
+                cuisines={cuisines}
+                navigation={navigation}
+              />
             );
           }}
           keyExtractor={(item) => item.id.toString()}
