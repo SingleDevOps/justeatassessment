@@ -203,7 +203,6 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                         {(dealsExpanded ? uniqueDeals : uniqueDeals.slice(0, DEALS_INITIAL_LIMIT)).map((deal: DealType, i: number) => (
                             <View key={i} style={[detailPageStyles.dealCard, isDarkMode && detailPageStyles.darkdealCard]}>
                                 <Text style={[detailPageStyles.dealDescription, isDarkMode && detailPageStyles.darkdealDescription]}>{deal.description}</Text>
-                                <Text style={detailPageStyles.dealType}>{deal.offerType}</Text>
                             </View>
                         ))}
                         {uniqueDeals.length > DEALS_INITIAL_LIMIT && (
