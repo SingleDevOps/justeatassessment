@@ -93,7 +93,7 @@ describe('API Functions', () => {
       expect(fetch).toHaveBeenCalledTimes(2);
       expect(fetch).toHaveBeenNthCalledWith(1, `https://postcodes.io/postcodes/${mockPostcode}/validate`, { method: 'GET' });
       expect(fetch).toHaveBeenNthCalledWith(2, `https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/${mockPostcode}`, { method: 'GET' });
-      expect(result).toEqual({ ok: true, restaurants: mockRestaurants });
+      expect(result).toEqual({ ok: true, restaurants: mockRestaurants, allRestaurants: mockRestaurants });
     });
 
     it('should return invalid_postcode if validation fails', async () => {
@@ -124,7 +124,7 @@ describe('API Functions', () => {
       expect(fetch).toHaveBeenCalledTimes(2);
       expect(fetch).toHaveBeenNthCalledWith(1, `https://postcodes.io/postcodes/${mockPostcode}/validate`, { method: 'GET' });
       expect(fetch).toHaveBeenNthCalledWith(2, `https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/${mockPostcode}`, { method: 'GET' });
-      expect(result).toEqual({ ok: true, restaurants: mockRestaurants });
+      expect(result).toEqual({ ok: true, restaurants: mockRestaurants, allRestaurants: mockRestaurants });
 
       jest.useRealTimers();
     });

@@ -3,7 +3,7 @@ import { RestaurantType } from './restaurant';
 
 export type RootStackParamList = {
     MainPage: undefined;
-    DisplayPage: { postcode: string; restaurants: RestaurantType[] };
+    DisplayPage: { postcode: string; restaurants: RestaurantType[]; allRestaurants: RestaurantType[] };
     RestaurantDetailPage: { restaurant: RestaurantType };
 };
 

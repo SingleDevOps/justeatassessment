@@ -3,7 +3,7 @@ import { RestaurantType } from '../../types/restaurant';
 import { API_URLS } from '../../configs/api';
 
 export type SearchResult =
-  | { ok: true; restaurants: RestaurantType[] }
+  | { ok: true; restaurants: RestaurantType[]; allRestaurants: RestaurantType[] }
   | { ok: false; reason: 'invalid_postcode' | 'api_error' };
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -38,7 +38,7 @@ export async function fetchRestaurantsFromJustEat(postcode: string): Promise<Res
     const apiData = await response.json();
     const restaurants = apiData.restaurants;
     if (restaurants) {
-      return pickRandomTen(restaurants);
+      return restaurants;
     }
   } catch {
     return null;
@@ -48,12 +48,13 @@ export async function fetchRestaurantsFromJustEat(postcode: string): Promise<Res
 
 export async function handleSearch(postcode: string): Promise<SearchResult> {
   if (!postcode || postcode === 'L40TH') {
+    const allRestaurants = sampleData.restaurants as RestaurantType[];
     const restaurants = await new Promise<RestaurantType[]>((resolve) => {
       setTimeout(() => {
-        resolve(pickRandomTen(sampleData.restaurants as RestaurantType[]));
+        resolve(pickRandomTen(allRestaurants));
       }, 1000);
     });
-    return { ok: true, restaurants };
+    return { ok: true, restaurants, allRestaurants };
   }
 
   const POSTCODE_VALIDATION_TIMEOUT = new Promise<string>((resolve) =>
@@ -66,11 +67,12 @@ export async function handleSearch(postcode: string): Promise<SearchResult> {
   ]);
 
   if (validationResult === 'TIMEOUT' || validationResult === true) {
-    const restaurants = await fetchRestaurantsFromJustEat(postcode);
-    if (restaurants === null) {
+    const allRestaurants = await fetchRestaurantsFromJustEat(postcode);
+    if (allRestaurants === null) {
       return { ok: false, reason: 'api_error' };
     }
-    return { ok: true, restaurants };
+    const restaurants = pickRandomTen(allRestaurants);
+    return { ok: true, restaurants, allRestaurants };
   }
 
   return { ok: false, reason: 'invalid_postcode' };

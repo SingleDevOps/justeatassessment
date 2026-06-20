@@ -1,7 +1,8 @@
 ﻿import React, { useEffect, useState, useMemo } from 'react';
-import { useColorScheme, View, FlatList, RefreshControl } from 'react-native';
+import { useColorScheme, View, Text, FlatList, RefreshControl } from 'react-native';
 import { displayPageStyles } from '../stylesheets/pages/displayPage';
 import { filterCuisines } from '../functions/filtering/filter';
+import { filterRestaurants, shuffleArray, SEARCH_RESULT_LIMIT } from '../functions/filtering/searchRestaurants';
 import { RestaurantCard } from '../components/RestaurantCard';
 import { SelectListComponent } from '../components/SelectList';
 import { FilterSearchBar } from '../components/FilterSearchBar';
@@ -10,35 +11,32 @@ import { handleSearch } from '../functions/api/apiRequest';
 import type { DisplayPageProps } from '../types/navigation';
 import type { RestaurantType } from '../types/restaurant';
 
-function matchesQuery(obj: unknown, query: string): boolean {
-  if (obj === null || obj === undefined) { return false; }
-  if (typeof obj === 'string') { return obj.toLowerCase().includes(query); }
-  if (typeof obj === 'number') { return obj.toString().includes(query); }
-  if (typeof obj === 'boolean') { return obj ? 'true'.includes(query) : 'false'.includes(query); }
-  if (Array.isArray(obj)) { return obj.some(item => matchesQuery(item, query)); }
-  if (typeof obj === 'object') { return Object.values(obj).some(val => matchesQuery(val, query)); }
-  return false;
-}
-
-function filterRestaurants(restaurants: RestaurantType[], query: string): RestaurantType[] {
-  if (!query.trim()) { return restaurants; }
-  const lower = query.toLowerCase();
-  return restaurants.filter(r => matchesQuery(r, lower));
-}
-
 const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
-  const { restaurants, postcode: routePostcode } = route.params ?? {};
+  const { restaurants: routeRestaurants, allRestaurants: routeAllRestaurants, postcode: routePostcode } = route.params ?? {};
   const postcode = routePostcode || 'L40TH';
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
-  const {sortedRestaurants, setSelectedSortOption, setSortedRestaurants, selectedSortOption} = useRestaurantSorting(restaurants ?? []);
+  const {sortedRestaurants, setSelectedSortOption, setSortedRestaurants, selectedSortOption} = useRestaurantSorting(routeRestaurants ?? []);
+  const [allRestaurants, setAllRestaurants] = useState<RestaurantType[]>(routeAllRestaurants ?? []);
   const [refreshing, setRefreshing] = useState(false);
   const [key, setKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
+  const [shuffleKey, setShuffleKey] = useState(0);
 
   const filteredRestaurants = useMemo(() => {
-    return filterRestaurants(sortedRestaurants, searchQuery);
-  }, [sortedRestaurants, searchQuery]);
+    if (!searchQuery.trim()) {
+      return sortedRestaurants;
+    }
+    const results = filterRestaurants(allRestaurants, searchQuery);
+    return shuffleArray(results).slice(0, SEARCH_RESULT_LIMIT);
+  }, [sortedRestaurants, allRestaurants, searchQuery, shuffleKey]);
+
+  const matchCount = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return allRestaurants.length;
+    }
+    return filterRestaurants(allRestaurants, searchQuery).length;
+  }, [allRestaurants, searchQuery]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -46,7 +44,9 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
     if (result.ok) {
       setSelectedSortOption('');
       setSortedRestaurants(result.restaurants);
+      setAllRestaurants(result.allRestaurants);
       setKey(prevKey => prevKey + 1);
+      setShuffleKey(prev => prev + 1);
     }
     setRefreshing(false);
   };
@@ -69,6 +69,13 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
 
   return (
     <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
+      <View style={displayPageStyles.countBar}>
+        <Text style={[displayPageStyles.countText, isDarkMode && displayPageStyles.darkcountText]}>
+          {searchQuery.trim()
+            ? `${matchCount} of ${allRestaurants.length} restaurants`
+            : `${allRestaurants.length} restaurants`}
+        </Text>
+      </View>
       <FilterSearchBar
         query={searchQuery}
         onChangeText={setSearchQuery}

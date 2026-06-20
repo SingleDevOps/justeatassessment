@@ -37,7 +37,7 @@ const MainPage = ({ navigation }: MainPageProps) => {
     setLoading(false);
 
     if (result.ok) {
-      navigation.navigate('DisplayPage', { postcode: cleaned, restaurants: result.restaurants });
+      navigation.navigate('DisplayPage', { postcode: cleaned, restaurants: result.restaurants, allRestaurants: result.allRestaurants });
     } else if (result.reason === 'api_error') {
       Alert.alert('Error fetching restaurant data', 'The Just Eat API Endpoint is down, or your IP address is not European.');
     } else {
