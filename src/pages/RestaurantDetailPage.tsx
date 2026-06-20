@@ -157,11 +157,6 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                     <Text style={[detailPageStyles.locationText, isDarkMode && detailPageStyles.darklocationText]}>{restaurant.address.firstLine}</Text>
                     <Text style={[detailPageStyles.locationText, isDarkMode && detailPageStyles.darklocationText]}>{restaurant.address.city}</Text>
                     <Text style={[detailPageStyles.locationText, isDarkMode && detailPageStyles.darklocationText]}>{restaurant.address.postalCode}</Text>
-                    {restaurant.address.location?.coordinates && (
-                        <Text style={[detailPageStyles.locationText, isDarkMode && detailPageStyles.darklocationText, { marginTop: 6 }]}>
-                            Coordinates: {restaurant.address.location.coordinates[1].toFixed(6)}, {restaurant.address.location.coordinates[0].toFixed(6)}
-                        </Text>
-                    )}
                 </View>
 
                 <View style={[detailPageStyles.section, isDarkMode && detailPageStyles.darksection]}>
