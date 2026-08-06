@@ -66,6 +66,7 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                 backgroundColor: isDarkMode ? '#1A1A18' : '#F8F9FA',
             },
             headerTintColor: '#FF8000',
+            headerBackButtonDisplayMode: 'minimal',
             headerTitleStyle: {
                 fontWeight: 'bold',
                 fontSize: 18,
