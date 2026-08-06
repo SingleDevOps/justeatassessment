@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { FilterChipsBar } from '../components/FilterChipsBar';
+import { pieTokens } from '../configs/pieTokens';
 
 jest.mock('react-native/Libraries/Utilities/useColorScheme', () => ({
     default: jest.fn().mockReturnValue('light'),
@@ -14,7 +15,7 @@ const defs = [
 describe('<FilterChipsBar />', () => {
     it('renders a chip per definition with its count', () => {
         const { getByTestId, getByText, queryByText } = render(
-            <FilterChipsBar defs={defs} selectedIds={[]} onToggle={jest.fn()} isDarkMode={false} />
+            <FilterChipsBar defs={defs} selectedIds={[]} onToggle={jest.fn()} theme={pieTokens.light} />
         );
 
         expect(getByTestId('filter-chip-free_delivery')).toBeTruthy();
@@ -26,7 +27,7 @@ describe('<FilterChipsBar />', () => {
 
     it('does not render when there are no definitions', () => {
         const { queryByTestId } = render(
-            <FilterChipsBar defs={[]} selectedIds={[]} onToggle={jest.fn()} isDarkMode={false} />
+            <FilterChipsBar defs={[]} selectedIds={[]} onToggle={jest.fn()} theme={pieTokens.light} />
         );
         expect(queryByTestId('filter-chip-free_delivery')).toBeNull();
     });
@@ -34,10 +35,22 @@ describe('<FilterChipsBar />', () => {
     it('toggles a chip via callback', () => {
         const onToggle = jest.fn();
         const { getByTestId } = render(
-            <FilterChipsBar defs={defs} selectedIds={[]} onToggle={onToggle} isDarkMode={false} />
+            <FilterChipsBar defs={defs} selectedIds={[]} onToggle={onToggle} theme={pieTokens.light} />
         );
 
         fireEvent.press(getByTestId('filter-chip-free_delivery'));
         expect(onToggle).toHaveBeenCalledWith('free_delivery');
+    });
+
+    it('exposes each chip as a selectable button with an accessible name', () => {
+        const { getByRole } = render(
+            <FilterChipsBar defs={defs} selectedIds={['free_delivery']} onToggle={jest.fn()} theme={pieTokens.light} />
+        );
+
+        const selectedChip = getByRole('button', { name: 'Free Delivery, 2 restaurants' });
+        expect(selectedChip).toBeSelected();
+
+        const unselectedChip = getByRole('button', { name: 'Open Now' });
+        expect(unselectedChip).not.toBeSelected();
     });
 });

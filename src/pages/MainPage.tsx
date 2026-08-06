@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
-import { useColorScheme, Text, View, Alert, Image, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { SearchBarComponent } from '../components/SearchBar';
-import { useMainPageViewModel } from '../viewmodels/useMainPageViewModel';
+import { Logo } from '../components/icons/Logo';
+import { ErrorStateView } from '../components/icons/ErrorStateView';
+import { useMainPageViewModel, type SearchErrorType } from '../viewmodels/useMainPageViewModel';
+import { usePieTheme } from '../hooks/usePieTheme';
 import type { MainPageProps } from '../types/navigation';
 import { mainpageStyles } from '../stylesheets/pages/mainPage';
+import type { PieIllustrationKey } from '../assets/svg/pieIllustrations';
 
 const ERROR_MESSAGES: Record<string, { title: string; message: string }> = {
     no_connection: {
@@ -22,58 +26,68 @@ const ERROR_MESSAGES: Record<string, { title: string; message: string }> = {
     },
 };
 
+const ERROR_ILLUSTRATIONS: Record<SearchErrorType, PieIllustrationKey> = {
+    no_connection: 'noConnection',
+    api_error: 'apiError',
+    invalid_postcode: 'invalidPostcode',
+};
+
 const MainPage = ({ navigation }: MainPageProps) => {
   const netInfo = useNetInfo();
-  const colorScheme = useColorScheme();
-  const isDarkMode = colorScheme === 'dark';
+  const { theme, isDarkMode } = usePieTheme();
   const { postcode, setPostcode, loading, error, dismissError, submit } = useMainPageViewModel({
     navigation,
     isConnected: netInfo.isConnected,
   });
+  const styles = mainpageStyles(theme);
 
   useEffect(() => {
-    SystemNavigationBar.setNavigationColor(isDarkMode ? '#262626' : 'gray');
+    SystemNavigationBar.setNavigationColor(isDarkMode ? theme.color.backgroundSubtle : 'gray');
 
     navigation.setOptions({
       headerShown: false,
     });
-  }, [navigation, isDarkMode]);
-
-  useEffect(() => {
-    if (!error) return;
-    const { title, message } = ERROR_MESSAGES[error];
-    Alert.alert(title, message);
-    dismissError();
-  }, [error, dismissError]);
+  }, [navigation, isDarkMode, theme.color.backgroundSubtle]);
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={[mainpageStyles.overAll, isDarkMode && mainpageStyles.darkOverAll]}>
+      <View style={styles.overAll}>
         <KeyboardAvoidingView
-          style={mainpageStyles.keyboardAvoidingView}
+          style={styles.keyboardAvoidingView}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={0}
         >
-          <View style={[mainpageStyles.container, isDarkMode && mainpageStyles.darkcontainer]}>
+          <View style={styles.container}>
             <View>
-              <Image
-                source={require('../images/just-eat-logo.png')}
-                style={mainpageStyles.logo}
-              />
+              <Logo width="55%" style={styles.logo} />
             </View>
-            <View style={mainpageStyles.searchContainer}>
-              <View style={mainpageStyles.twoTexts}>
-                <Text style={[mainpageStyles.titleFirstpart, isDarkMode && mainpageStyles.darktitleFirstpart]}>Find Restaurants </Text>
-                <Text style={[mainpageStyles.titleSecondpart, isDarkMode && mainpageStyles.darktitleSecondpart]}>Near You</Text>
+            <View style={styles.searchContainer}>
+              <View style={styles.twoTexts}>
+                <Text style={styles.titleFirstpart}>Find Restaurants </Text>
+                <Text style={styles.titleSecondpart}>Near You</Text>
               </View>
               <SearchBarComponent
                 setPostcode={setPostcode}
                 loading={loading}
                 onSubmit={submit}
-                isDarkMode={isDarkMode}
+                theme={theme}
                 postcode={postcode}
               />
             </View>
+            {error && (
+              <View style={styles.errorStateContainer}>
+                <ErrorStateView
+                  illustration={ERROR_ILLUSTRATIONS[error]}
+                  title={ERROR_MESSAGES[error].title}
+                  message={ERROR_MESSAGES[error].message}
+                  theme={theme}
+                  primaryActionLabel={error === 'invalid_postcode' ? undefined : 'Try again'}
+                  onPrimaryAction={error === 'invalid_postcode' ? undefined : () => submit(postcode)}
+                  secondaryActionLabel="Dismiss"
+                  onSecondaryAction={dismissError}
+                />
+              </View>
+            )}
           </View>
         </KeyboardAvoidingView>
       </View>

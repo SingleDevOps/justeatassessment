@@ -1,39 +1,35 @@
-import { StyleSheet } from 'react-native';
+import { makeThemedStyles } from '../makeThemedStyles';
 
-export const restaurantMapStyles = StyleSheet.create({
+export const restaurantMapStyles = makeThemedStyles((t) => ({
     container: {
         overflow: 'hidden',
-        borderRadius: 12,
+        borderRadius: t.radius.roundedC,
     },
     map: {
         width: '100%',
         height: 200,
     },
-    darkmap: {
-        // iOS MapKit has no dark mode toggle; keep default tiles.
-    },
     expandButton: {
         position: 'absolute',
-        right: 12,
-        bottom: 12,
-        backgroundColor: '#FF8000',
-        paddingHorizontal: 14,
-        paddingVertical: 8,
-        borderRadius: 20,
-        shadowOpacity: 0.3,
-        shadowRadius: 6,
-        shadowOffset: { width: 0, height: 2 },
-        elevation: 4,
+        right: t.spacing.c,
+        bottom: t.spacing.c,
+        backgroundColor: t.color.interactiveBrand,
+        paddingHorizontal: t.spacing.c,
+        paddingVertical: t.spacing.b,
+        borderRadius: t.radius.roundedE,
+        minHeight: 44,
+        justifyContent: 'center',
+        ...t.elevation.shadowD,
     },
     expandButtonText: {
-        fontFamily: 'OpenSans-Bold',
-        fontSize: 13,
-        color: '#FFFFFF',
+        fontFamily: t.fontFamily.bold,
+        fontSize: t.fontSize.size12,
+        color: t.color.contentInverseSolid,
     },
 
     modalOverlay: {
         flex: 1,
-        backgroundColor: '#000000',
+        backgroundColor: t.color.backgroundDark,
     },
     modalMap: {
         flex: 1,
@@ -45,18 +41,20 @@ export const restaurantMapStyles = StyleSheet.create({
         right: 0,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingTop: 50,
-        paddingHorizontal: 16,
+        paddingTop: t.spacing.g,
+        paddingHorizontal: t.spacing.d,
     },
     closeButton: {
-        backgroundColor: 'rgba(0, 0, 0, 0.65)',
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        borderRadius: 20,
+        backgroundColor: t.color.overlay,
+        paddingHorizontal: t.spacing.d,
+        paddingVertical: t.spacing.b,
+        borderRadius: t.radius.roundedE,
+        minHeight: 44,
+        justifyContent: 'center',
     },
     closeButtonText: {
-        fontFamily: 'OpenSans-Bold',
-        fontSize: 14,
-        color: '#FFFFFF',
+        fontFamily: t.fontFamily.bold,
+        fontSize: t.fontSize.size14,
+        color: t.color.contentInverseSolid,
     },
-});
+}));

@@ -1,54 +1,44 @@
-import { StyleSheet } from 'react-native';
+import { makeThemedStyles } from '../makeThemedStyles';
 
-export const localLegendsCarouselStyles = StyleSheet.create({
+export const localLegendsCarouselStyles = makeThemedStyles((t) => ({
     container: {
-        marginTop: 4,
-        marginBottom: 4,
+        marginTop: t.spacing.a,
+        marginBottom: t.spacing.a,
     },
     title: {
-        fontFamily: 'OpenSans-Bold',
-        fontSize: 16,
-        color: '#333333',
-        paddingHorizontal: 16,
-        marginBottom: 8,
-    },
-    darkTitle: {
-        color: '#FFFFFF',
+        fontFamily: t.fontFamily.bold,
+        fontSize: t.fontSize.size16,
+        color: t.color.contentDefault,
+        paddingHorizontal: t.spacing.d,
+        marginBottom: t.spacing.b,
     },
     card: {
         width: 132,
-        marginHorizontal: 6,
-        padding: 10,
-        borderRadius: 12,
-        backgroundColor: '#FFFFFF',
+        marginHorizontal: t.spacing.aSmall,
+        padding: t.spacing.b,
+        borderRadius: t.radius.roundedC,
+        backgroundColor: t.color.containerDefault,
         borderWidth: 0.5,
-        borderColor: '#D4C9BE',
+        borderColor: t.color.borderDefault,
         alignItems: 'center',
     },
-    darkCard: {
-        backgroundColor: '#272724',
-        borderColor: '#4A4A45',
-    },
     logo: {
-        width: 56,
-        height: 56,
-        borderRadius: 28,
-        backgroundColor: '#F5F5F5',
-        marginBottom: 8,
+        width: t.spacing.h,
+        height: t.spacing.h,
+        borderRadius: t.radius.roundedE,
+        backgroundColor: t.color.containerStrong,
+        marginBottom: t.spacing.b,
     },
     name: {
-        fontFamily: 'OpenSans-Semibold',
-        fontSize: 12,
-        color: '#333333',
+        fontFamily: t.fontFamily.semibold,
+        fontSize: t.fontSize.size12,
+        color: t.color.contentDefault,
         textAlign: 'center',
     },
-    darkName: {
-        color: '#FFFFFF',
-    },
     rating: {
-        fontFamily: 'OpenSans-Regular',
-        fontSize: 12,
-        color: '#FF8000',
-        marginTop: 4,
+        fontFamily: t.fontFamily.primary,
+        fontSize: t.fontSize.size12,
+        color: t.color.contentBrand,
+        marginTop: t.spacing.a,
     },
-});
+}));

@@ -2,20 +2,22 @@ import React from 'react';
 import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native';
 import { localLegendsCarouselStyles } from '../stylesheets/props/localLegendsCarousel';
 import type { RestaurantType } from '../types/restaurant';
+import type { PieTokens } from '../configs/pieTokens';
 
 type LocalLegendsCarouselProps = {
     restaurants: RestaurantType[];
-    isDarkMode: boolean;
+    theme: PieTokens;
     onPress: (restaurant: RestaurantType) => void;
 };
 
-export const LocalLegendsCarousel = ({ restaurants, isDarkMode, onPress }: LocalLegendsCarouselProps) => {
+export const LocalLegendsCarousel = ({ restaurants, theme, onPress }: LocalLegendsCarouselProps) => {
     if (restaurants.length === 0) {
         return null;
     }
+    const styles = localLegendsCarouselStyles(theme);
     return (
-        <View style={localLegendsCarouselStyles.container}>
-            <Text style={[localLegendsCarouselStyles.title, isDarkMode && localLegendsCarouselStyles.darkTitle]}>
+        <View style={styles.container}>
+            <Text style={styles.title}>
                 Local Legends
             </Text>
             <FlatList
@@ -28,20 +30,19 @@ export const LocalLegendsCarousel = ({ restaurants, isDarkMode, onPress }: Local
                     <TouchableOpacity
                         testID={`local-legend-${item.id}`}
                         onPress={() => onPress(item)}
-                        style={[
-                            localLegendsCarouselStyles.card,
-                            isDarkMode && localLegendsCarouselStyles.darkCard,
-                        ]}
+                        style={styles.card}
+                        accessibilityRole="button"
+                        accessibilityLabel={`${item.name}, Local Legend`}
                     >
-                        <Image source={{ uri: item.logoUrl }} style={localLegendsCarouselStyles.logo} />
+                        <Image source={{ uri: item.logoUrl }} style={styles.logo} />
                         <Text
                             numberOfLines={2}
-                            style={[localLegendsCarouselStyles.name, isDarkMode && localLegendsCarouselStyles.darkName]}
+                            style={styles.name}
                         >
                             {item.name}
                         </Text>
                         {item.rating.starRating > 0 && (
-                            <Text style={localLegendsCarouselStyles.rating}>⭐ {item.rating.starRating}</Text>
+                            <Text style={styles.rating}>⭐ {item.rating.starRating}</Text>
                         )}
                     </TouchableOpacity>
                 )}

@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Modal, View, Text, Pressable, ScrollView, Switch, Animated, PanResponder, Dimensions, StyleSheet } from 'react-native';
+import { Modal, View, Text, Pressable, ScrollView, Switch, Animated, PanResponder, Dimensions, StyleSheet, AccessibilityInfo } from 'react-native';
 import { filterModalStyles } from '../stylesheets/props/filterModal';
 import { RATING_OPTIONS, DELIVERY_COST_OPTIONS, TOP_CUISINES } from '../configs/filterDefaults';
 import { SORT_OPTIONS } from '../configs/sortingOptions';
 import { useFilterModalViewModel } from '../viewmodels/useFilterModalViewModel';
 import type { FilterState } from '../types/filterOptions';
+import type { PieTokens } from '../configs/pieTokens';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const DISMISS_THRESHOLD = SCREEN_HEIGHT * 0.2;
@@ -15,37 +16,55 @@ type FilterModalProps = {
     onApply: (filters: FilterState, sortOption: string) => void;
     currentFilters: FilterState;
     currentSortOption: string;
-    isDarkMode: boolean;
+    theme: PieTokens;
 };
 
-export const FilterModal = ({ visible, onClose, onApply, currentFilters, currentSortOption, isDarkMode }: FilterModalProps) => {
+export const FilterModal = ({ visible, onClose, onApply, currentFilters, currentSortOption, theme }: FilterModalProps) => {
     const vm = useFilterModalViewModel({ visible, currentFilters, currentSortOption, onApply, onClose });
     const [modalMounted, setModalMounted] = useState(false);
+    const [reduceMotion, setReduceMotion] = useState(false);
     const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
     const isClosingRef = useRef(false);
+    const styles = filterModalStyles(theme);
+
+    useEffect(() => {
+        AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
+        const subscription = AccessibilityInfo.addEventListener('reduceMotionChanged', setReduceMotion);
+        return () => subscription.remove();
+    }, []);
 
     const animateIn = useCallback(() => {
         translateY.setValue(SCREEN_HEIGHT);
         setModalMounted(true);
+        if (reduceMotion) {
+            translateY.setValue(0);
+            return;
+        }
         Animated.timing(translateY, {
             toValue: 0,
-            duration: 300,
+            duration: theme.motion.timing300,
             useNativeDriver: true,
         }).start();
-    }, [translateY]);
+    }, [translateY, reduceMotion, theme.motion]);
 
     const animateOut = useCallback((callback?: () => void) => {
         isClosingRef.current = true;
+        if (reduceMotion) {
+            setModalMounted(false);
+            isClosingRef.current = false;
+            callback?.();
+            return;
+        }
         Animated.timing(translateY, {
             toValue: SCREEN_HEIGHT,
-            duration: 250,
+            duration: theme.motion.timing250,
             useNativeDriver: true,
         }).start(() => {
             setModalMounted(false);
             isClosingRef.current = false;
             callback?.();
         });
-    }, [translateY]);
+    }, [translateY, reduceMotion, theme.motion]);
 
     useEffect(() => {
         if (visible && !isClosingRef.current) {
@@ -70,9 +89,15 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, current
             onPanResponderRelease: (_, gestureState) => {
                 if (gestureState.dy > DISMISS_THRESHOLD || gestureState.vy > 0.5) {
                     isClosingRef.current = true;
+                    if (reduceMotion) {
+                        setModalMounted(false);
+                        isClosingRef.current = false;
+                        onClose();
+                        return;
+                    }
                     Animated.timing(translateY, {
                         toValue: SCREEN_HEIGHT,
-                        duration: 250,
+                        duration: theme.motion.timing250,
                         useNativeDriver: true,
                     }).start(() => {
                         setModalMounted(false);
@@ -97,59 +122,63 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, current
 
     if (!modalMounted) return null;
 
+    const switchColors = {
+        false: theme.color.borderStrong,
+        true: theme.color.interactiveBrand,
+    };
+
     return (
         <Modal visible animationType="none" transparent onRequestClose={handleClose}>
-            <View style={filterModalStyles.overlay}>
-                <Pressable style={StyleSheet.absoluteFill} onPress={handleClose} />
+            <View style={styles.overlay}>
+                <Pressable style={StyleSheet.absoluteFill} onPress={handleClose} accessibilityLabel="Dismiss filters" accessibilityRole="button" />
                 <Animated.View
                     style={[
-                        filterModalStyles.modalContainer,
-                        isDarkMode && filterModalStyles.darkModalContainer,
+                        styles.modalContainer,
                         { transform: [{ translateY }] },
                     ]}
                 >
                     <View {...panResponder.panHandlers}>
-                        <View style={[filterModalStyles.handle, isDarkMode && filterModalStyles.darkHandle]} />
+                        <View style={styles.handle} />
 
-                        <View style={[filterModalStyles.header, isDarkMode && filterModalStyles.darkHeader]}>
-                            <Pressable onPress={vm.reset}>
-                                <Text style={[filterModalStyles.headerButton, !vm.hasChanges && filterModalStyles.disabledButton]}>
+                        <View style={styles.header}>
+                            <Pressable onPress={vm.reset} accessibilityRole="button" accessibilityLabel="Reset filters" accessibilityState={{ disabled: !vm.hasChanges }}>
+                                <Text style={[styles.headerButton, !vm.hasChanges && styles.disabledButton]}>
                                     Reset
                                 </Text>
                             </Pressable>
-                            <Text style={[filterModalStyles.headerTitle, isDarkMode && filterModalStyles.darkHeaderTitle]}>
+                            <Text style={styles.headerTitle}>
                                 Filters
                             </Text>
-                            <Pressable onPress={handleApply}>
-                                <Text style={filterModalStyles.headerButton}>Apply</Text>
+                            <Pressable onPress={handleApply} accessibilityRole="button" accessibilityLabel="Apply filters">
+                                <Text style={styles.headerButton}>Apply</Text>
                             </Pressable>
                         </View>
                     </View>
 
-                    <ScrollView style={filterModalStyles.scrollView} showsVerticalScrollIndicator={false}>
-                        <View style={filterModalStyles.section}>
-                            <Text style={[filterModalStyles.sectionTitle, isDarkMode && filterModalStyles.darkSectionTitle]}>
+                    <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>
                                 Sort By
                             </Text>
-                            <View style={filterModalStyles.optionsRow}>
+                            <View style={styles.optionsRow}>
                                 {SORT_OPTIONS.map(option => {
                                     const isSelected = vm.localSortOption === option.value;
                                     return (
                                         <Pressable
                                             key={option.key}
                                             style={[
-                                                filterModalStyles.optionPill,
-                                                isDarkMode && filterModalStyles.darkOptionPill,
-                                                isSelected && filterModalStyles.selectedOptionPill,
-                                                isSelected && isDarkMode && filterModalStyles.darkSelectedOptionPill,
+                                                styles.optionPill,
+                                                isSelected && styles.selectedOptionPill,
                                             ]}
                                             onPress={() => vm.setSortOption(option.value)}
+                                            accessibilityRole="button"
+                                            accessibilityState={{ selected: isSelected }}
+                                            accessibilityLabel={`Sort by ${option.value}`}
                                         >
                                             <Text
                                                 style={[
-                                                    filterModalStyles.optionPillText,
-                                                    isDarkMode && filterModalStyles.darkOptionPillText,
-                                                    isSelected && filterModalStyles.selectedOptionPillText,
+                                                    styles.optionPillText,
+                                                    isSelected && styles.selectedOptionPillText,
                                                 ]}
                                             >
                                                 {option.value}
@@ -160,79 +189,83 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, current
                             </View>
                         </View>
 
-                        <View style={filterModalStyles.section}>
-                            <Text style={[filterModalStyles.sectionTitle, isDarkMode && filterModalStyles.darkSectionTitle]}>
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>
                                 Quick Filters
                             </Text>
-                            <View style={[filterModalStyles.toggleRow, isDarkMode && filterModalStyles.darkToggleRow]}>
-                                <Text style={[filterModalStyles.toggleLabel, isDarkMode && filterModalStyles.darkToggleLabel]}>
+                            <View style={styles.toggleRow}>
+                                <Text style={styles.toggleLabel}>
                                     Open Now
                                 </Text>
                                 <Switch
                                     value={vm.localFilters.openNow}
                                     onValueChange={() => vm.toggleBoolean('openNow')}
-                                    trackColor={{ false: '#E0E0E0', true: '#FF8000' }}
-                                    thumbColor={vm.localFilters.openNow ? '#FFFFFF' : '#F4F3F4'}
+                                    trackColor={switchColors}
+                                    thumbColor={vm.localFilters.openNow ? theme.color.contentInverseSolid : theme.color.containerStrong}
+                                    accessibilityLabel="Open now filter"
                                 />
                             </View>
-                            <View style={[filterModalStyles.toggleRow, isDarkMode && filterModalStyles.darkToggleRow]}>
-                                <Text style={[filterModalStyles.toggleLabel, isDarkMode && filterModalStyles.darkToggleLabel]}>
+                            <View style={styles.toggleRow}>
+                                <Text style={styles.toggleLabel}>
                                     Delivery
                                 </Text>
                                 <Switch
                                     value={vm.localFilters.delivery}
                                     onValueChange={() => vm.toggleBoolean('delivery')}
-                                    trackColor={{ false: '#E0E0E0', true: '#FF8000' }}
-                                    thumbColor={vm.localFilters.delivery ? '#FFFFFF' : '#F4F3F4'}
+                                    trackColor={switchColors}
+                                    thumbColor={vm.localFilters.delivery ? theme.color.contentInverseSolid : theme.color.containerStrong}
+                                    accessibilityLabel="Delivery filter"
                                 />
                             </View>
-                            <View style={[filterModalStyles.toggleRow, isDarkMode && filterModalStyles.darkToggleRow]}>
-                                <Text style={[filterModalStyles.toggleLabel, isDarkMode && filterModalStyles.darkToggleLabel]}>
+                            <View style={styles.toggleRow}>
+                                <Text style={styles.toggleLabel}>
                                     Collection
                                 </Text>
                                 <Switch
                                     value={vm.localFilters.collection}
                                     onValueChange={() => vm.toggleBoolean('collection')}
-                                    trackColor={{ false: '#E0E0E0', true: '#FF8000' }}
-                                    thumbColor={vm.localFilters.collection ? '#FFFFFF' : '#F4F3F4'}
+                                    trackColor={switchColors}
+                                    thumbColor={vm.localFilters.collection ? theme.color.contentInverseSolid : theme.color.containerStrong}
+                                    accessibilityLabel="Collection filter"
                                 />
                             </View>
-                            <View style={[filterModalStyles.toggleRow, isDarkMode && filterModalStyles.darkToggleRow]}>
-                                <Text style={[filterModalStyles.toggleLabel, isDarkMode && filterModalStyles.darkToggleLabel]}>
+                            <View style={styles.toggleRow}>
+                                <Text style={styles.toggleLabel}>
                                     Has Deals
                                 </Text>
                                 <Switch
                                     value={vm.localFilters.hasDeals}
                                     onValueChange={() => vm.toggleBoolean('hasDeals')}
-                                    trackColor={{ false: '#E0E0E0', true: '#FF8000' }}
-                                    thumbColor={vm.localFilters.hasDeals ? '#FFFFFF' : '#F4F3F4'}
+                                    trackColor={switchColors}
+                                    thumbColor={vm.localFilters.hasDeals ? theme.color.contentInverseSolid : theme.color.containerStrong}
+                                    accessibilityLabel="Has deals filter"
                                 />
                             </View>
                         </View>
 
-                        <View style={filterModalStyles.section}>
-                            <Text style={[filterModalStyles.sectionTitle, isDarkMode && filterModalStyles.darkSectionTitle]}>
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>
                                 Minimum Rating
                             </Text>
-                            <View style={filterModalStyles.optionsRow}>
+                            <View style={styles.optionsRow}>
                                 {RATING_OPTIONS.map(option => {
                                     const isSelected = vm.localFilters.minRating === option.value;
                                     return (
                                         <Pressable
                                             key={option.label}
                                             style={[
-                                                filterModalStyles.optionPill,
-                                                isDarkMode && filterModalStyles.darkOptionPill,
-                                                isSelected && filterModalStyles.selectedOptionPill,
-                                                isSelected && isDarkMode && filterModalStyles.darkSelectedOptionPill,
+                                                styles.optionPill,
+                                                isSelected && styles.selectedOptionPill,
                                             ]}
                                             onPress={() => vm.setMinRating(option.value)}
+                                            accessibilityRole="button"
+                                            accessibilityState={{ selected: isSelected }}
+                                            accessibilityLabel={`Minimum rating ${option.label}`}
                                         >
                                             <Text
                                                 style={[
-                                                    filterModalStyles.optionPillText,
-                                                    isDarkMode && filterModalStyles.darkOptionPillText,
-                                                    isSelected && filterModalStyles.selectedOptionPillText,
+                                                    styles.optionPillText,
+                                                    isSelected && styles.selectedOptionPillText,
                                                 ]}
                                             >
                                                 {option.label === 'Any' ? 'Any' : `⭐ ${option.label}`}
@@ -243,29 +276,29 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, current
                             </View>
                         </View>
 
-                        <View style={filterModalStyles.section}>
-                            <Text style={[filterModalStyles.sectionTitle, isDarkMode && filterModalStyles.darkSectionTitle]}>
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>
                                 Max Delivery Cost
                             </Text>
-                            <View style={filterModalStyles.optionsRow}>
+                            <View style={styles.optionsRow}>
                                 {DELIVERY_COST_OPTIONS.map(option => {
                                     const isSelected = vm.localFilters.maxDeliveryCost === option.value;
                                     return (
                                         <Pressable
                                             key={option.label}
                                             style={[
-                                                filterModalStyles.optionPill,
-                                                isDarkMode && filterModalStyles.darkOptionPill,
-                                                isSelected && filterModalStyles.selectedOptionPill,
-                                                isSelected && isDarkMode && filterModalStyles.darkSelectedOptionPill,
+                                                styles.optionPill,
+                                                isSelected && styles.selectedOptionPill,
                                             ]}
                                             onPress={() => vm.setMaxDeliveryCost(option.value)}
+                                            accessibilityRole="button"
+                                            accessibilityState={{ selected: isSelected }}
+                                            accessibilityLabel={`Max delivery cost ${option.label}`}
                                         >
                                             <Text
                                                 style={[
-                                                    filterModalStyles.optionPillText,
-                                                    isDarkMode && filterModalStyles.darkOptionPillText,
-                                                    isSelected && filterModalStyles.selectedOptionPillText,
+                                                    styles.optionPillText,
+                                                    isSelected && styles.selectedOptionPillText,
                                                 ]}
                                             >
                                                 {option.label}
@@ -276,30 +309,30 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, current
                             </View>
                         </View>
 
-                        <View style={filterModalStyles.section}>
-                            <Text style={[filterModalStyles.sectionTitle, isDarkMode && filterModalStyles.darkSectionTitle]}>
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>
                                 Cuisines
                             </Text>
-                            <View style={filterModalStyles.cuisineGrid}>
+                            <View style={styles.cuisineGrid}>
                                 {TOP_CUISINES.map(cuisine => {
                                     const isSelected = vm.localFilters.selectedCuisines.includes(cuisine.uniqueName);
                                     return (
                                         <Pressable
                                             key={cuisine.uniqueName}
                                             style={[
-                                                filterModalStyles.cuisineChip,
-                                                isDarkMode && filterModalStyles.darkCuisineChip,
-                                                isSelected && filterModalStyles.selectedCuisineChip,
-                                                isSelected && isDarkMode && filterModalStyles.darkSelectedCuisineChip,
+                                                styles.cuisineChip,
+                                                isSelected && styles.selectedCuisineChip,
                                             ]}
                                             onPress={() => vm.toggleCuisine(cuisine.uniqueName)}
+                                            accessibilityRole="button"
+                                            accessibilityState={{ selected: isSelected }}
+                                            accessibilityLabel={`Cuisine ${cuisine.name}`}
                                         >
-                                            <Text style={filterModalStyles.cuisineEmoji}>{cuisine.emoji}</Text>
+                                            <Text style={styles.cuisineEmoji}>{cuisine.emoji}</Text>
                                             <Text
                                                 style={[
-                                                    filterModalStyles.cuisineText,
-                                                    isDarkMode && filterModalStyles.darkCuisineText,
-                                                    isSelected && filterModalStyles.selectedCuisineText,
+                                                    styles.cuisineText,
+                                                    isSelected && styles.selectedCuisineText,
                                                 ]}
                                             >
                                                 {cuisine.name}
@@ -311,9 +344,9 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, current
                         </View>
                     </ScrollView>
 
-                    <View style={[filterModalStyles.footer, isDarkMode && filterModalStyles.darkFooter]}>
-                        <Pressable style={filterModalStyles.applyButton} onPress={handleApply}>
-                            <Text style={filterModalStyles.applyButtonText}>Apply Filters</Text>
+                    <View style={styles.footer}>
+                        <Pressable style={styles.applyButton} onPress={handleApply} accessibilityRole="button" accessibilityLabel="Apply filters to restaurant list">
+                            <Text style={styles.applyButtonText}>Apply Filters</Text>
                         </Pressable>
                     </View>
                 </Animated.View>

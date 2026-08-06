@@ -1,39 +1,35 @@
-import { StyleSheet } from 'react-native';
+import { makeThemedStyles } from '../makeThemedStyles';
 
-export const displayPageStyles = StyleSheet.create({
+export const displayPageStyles = makeThemedStyles((t) => ({
     fullview: {
         flex: 1,
-        backgroundColor: '#F8F9FA',
-    },
-    darkfullview: {
-        backgroundColor: '#1A1A18',
+        backgroundColor: t.color.backgroundDefault,
     },
     countBar: {
-        paddingHorizontal: 20,
-        paddingTop: 12,
-        paddingBottom: 4,
+        paddingHorizontal: t.spacing.d,
+        paddingTop: t.spacing.c,
+        paddingBottom: t.spacing.a,
     },
     areaText: {
-        fontFamily: 'OpenSans-Bold',
-        fontSize: 16,
-        color: '#333333',
-        marginBottom: 2,
-    },
-    darkareaText: {
-        color: '#FFFFFF',
+        fontFamily: t.fontFamily.bold,
+        fontSize: t.fontSize.size16,
+        color: t.color.contentDefault,
+        marginBottom: t.spacing.aSmall,
     },
     countText: {
-        fontFamily: 'OpenSans-Regular',
-        fontSize: 13,
-        color: '#888888',
-    },
-    darkcountText: {
-        color: '#AAAAAA',
+        fontFamily: t.fontFamily.primary,
+        fontSize: t.fontSize.size12,
+        color: t.color.contentSubdued,
     },
     container: {
-        paddingHorizontal: 16,
+        paddingHorizontal: t.spacing.d,
     },
     listfooterComponent: {
-        height: 50,
+        height: t.spacing.g,
     },
-});
+
+    emptyStateContainer: {
+        paddingTop: t.spacing.f,
+        paddingBottom: t.spacing.g,
+    },
+}));

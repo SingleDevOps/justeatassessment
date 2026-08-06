@@ -2,24 +2,27 @@ import React from 'react';
 import { ScrollView, Text, TouchableOpacity } from 'react-native';
 import { filterChipsBarStyles } from '../stylesheets/props/filterChipsBar';
 import { LayoutFilterDef } from '../functions/filtering/layoutFilters';
+import type { PieTokens } from '../configs/pieTokens';
 
 type FilterChipsBarProps = {
     defs: LayoutFilterDef[];
     selectedIds: string[];
     onToggle: (id: string) => void;
-    isDarkMode: boolean;
+    theme: PieTokens;
 };
 
-export const FilterChipsBar = ({ defs, selectedIds, onToggle, isDarkMode }: FilterChipsBarProps) => {
+export const FilterChipsBar = ({ defs, selectedIds, onToggle, theme }: FilterChipsBarProps) => {
     if (defs.length === 0) {
         return null;
     }
+    const styles = filterChipsBarStyles(theme);
+
     return (
         <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            style={filterChipsBarStyles.chipsBar}
-            contentContainerStyle={filterChipsBarStyles.chipsContent}
+            style={styles.chipsBar}
+            contentContainerStyle={styles.chipsContent}
         >
             {defs.map(def => {
                 const isSelected = selectedIds.includes(def.id);
@@ -29,16 +32,17 @@ export const FilterChipsBar = ({ defs, selectedIds, onToggle, isDarkMode }: Filt
                         testID={`filter-chip-${def.id}`}
                         onPress={() => onToggle(def.id)}
                         style={[
-                            filterChipsBarStyles.chip,
-                            isDarkMode && filterChipsBarStyles.darkChip,
-                            isSelected && filterChipsBarStyles.selectedChip,
+                            styles.chip,
+                            isSelected && styles.selectedChip,
                         ]}
+                        accessibilityRole="button"
+                        accessibilityState={{ selected: isSelected }}
+                        accessibilityLabel={def.count > 0 ? `${def.title}, ${def.count} restaurants` : def.title}
                     >
                         <Text
                             style={[
-                                filterChipsBarStyles.chipText,
-                                isDarkMode && filterChipsBarStyles.darkChipText,
-                                isSelected && filterChipsBarStyles.selectedChipText,
+                                styles.chipText,
+                                isSelected && styles.selectedChipText,
                             ]}
                         >
                             {def.title}
@@ -46,9 +50,8 @@ export const FilterChipsBar = ({ defs, selectedIds, onToggle, isDarkMode }: Filt
                         {def.count > 0 && (
                             <Text
                                 style={[
-                                    filterChipsBarStyles.chipCount,
-                                    isDarkMode && filterChipsBarStyles.darkChipCount,
-                                    isSelected && filterChipsBarStyles.selectedChipCount,
+                                    styles.chipCount,
+                                    isSelected && styles.selectedChipCount,
                                 ]}
                             >
                                 {def.count}

@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useMemo } from 'react';
-import { useColorScheme, View, Text, FlatList, RefreshControl } from 'react-native';
+import { View, Text, FlatList, RefreshControl } from 'react-native';
 import { displayPageStyles } from '../stylesheets/pages/displayPage';
 import { filterCuisines } from '../functions/filtering/filter';
 import { getDeliveryFeesEntry, getFreeDeliveryLabel } from '../functions/filtering/deliveryFees';
@@ -8,18 +8,20 @@ import { FilterSearchBar } from '../components/FilterSearchBar';
 import { FilterModal } from '../components/FilterModal';
 import { FilterChipsBar } from '../components/FilterChipsBar';
 import { LocalLegendsCarousel } from '../components/LocalLegendsCarousel';
+import { ErrorStateView } from '../components/icons/ErrorStateView';
 import { useDisplayPageViewModel } from '../viewmodels/useDisplayPageViewModel';
 import { useUserLocation } from '../hooks/useUserLocation';
+import { usePieTheme } from '../hooks/usePieTheme';
 import { haversineDistanceMeters } from '../functions/map/distance';
 import { getRestaurantLatLng } from '../components/RestaurantMap';
 import type { DisplayPageProps } from '../types/navigation';
 import type { RestaurantType } from '../types/restaurant';
 
 const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
-    const colorScheme = useColorScheme();
-    const isDarkMode = colorScheme === 'dark';
+    const { theme, isDarkMode } = usePieTheme();
     const vm = useDisplayPageViewModel({ route });
     const { userLocation } = useUserLocation();
+    const styles = displayPageStyles(theme);
 
     const distanceMap = useMemo(() => {
         if (!userLocation) {
@@ -40,22 +42,22 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
             title: `Restaurants at ${vm.postcode}`,
             headerTitleAlign: 'center',
             headerStyle: {
-                backgroundColor: isDarkMode ? '#1A1A18' : '#F8F9FA',
+                backgroundColor: theme.color.backgroundDefault,
             },
-            headerTintColor: '#FF8000',
+            headerTintColor: theme.color.interactiveBrand,
             headerBackButtonDisplayMode: 'minimal',
             headerTitleStyle: {
                 fontWeight: 'bold',
-                fontSize: 20,
-                color: '#FF8000',
+                fontSize: theme.fontSize.size20,
+                color: theme.color.interactiveBrand,
             },
         });
-    }, [navigation, vm.postcode, isDarkMode]);
+    }, [navigation, vm.postcode, isDarkMode, theme]);
 
     const showCarousel = vm.searchQuery.trim() === '' && vm.localLegendsRestaurants.length > 0;
 
     return (
-        <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
+        <View style={styles.fullview}>
             <FlatList
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -64,10 +66,10 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
                     const cuisines = filterCuisines(item);
                     const gpsDistance = distanceMap[item.id.toString()];
                     return (
-                        <View style={displayPageStyles.container}>
+                        <View style={styles.container}>
                             <RestaurantCard
                                 item={item}
-                                isDarkMode={isDarkMode}
+                                theme={theme}
                                 cuisines={cuisines}
                                 navigation={navigation}
                                 distanceMeters={gpsDistance ?? item.driveDistanceMeters ?? null}
@@ -82,13 +84,13 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
                 keyExtractor={(item) => item.id.toString()}
                 ListHeaderComponent={
                     <View>
-                        <View style={displayPageStyles.countBar}>
+                        <View style={styles.countBar}>
                             {vm.metaData && (
-                                <Text style={[displayPageStyles.areaText, isDarkMode && displayPageStyles.darkareaText]} testID="area-header">
+                                <Text style={styles.areaText} testID="area-header">
                                     {vm.metaData.area} · {vm.metaData.postalCode}
                                 </Text>
                             )}
-                            <Text style={[displayPageStyles.countText, isDarkMode && displayPageStyles.darkcountText]}>
+                            <Text style={styles.countText}>
                                 {vm.searchQuery.trim() || vm.activeFilterCount > 0
                                     ? `${vm.matchCount} of ${vm.allRestaurants.length} restaurants`
                                     : `${vm.allRestaurants.length} restaurants`}
@@ -97,7 +99,7 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
                         <FilterSearchBar
                             query={vm.searchQuery}
                             onChangeText={vm.setSearchQuery}
-                            isDarkMode={isDarkMode}
+                            theme={theme}
                             onFilterPress={() => vm.toggleFilterModal(true)}
                             activeFilterCount={vm.activeFilterCount}
                         />
@@ -105,13 +107,13 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
                             defs={vm.layoutFilterDefs}
                             selectedIds={vm.layoutFilters}
                             onToggle={vm.toggleLayoutFilter}
-                            isDarkMode={isDarkMode}
+                            theme={theme}
                         />
                         {showCarousel && (
-                            <View style={displayPageStyles.container}>
+                            <View style={styles.container}>
                                 <LocalLegendsCarousel
                                     restaurants={vm.localLegendsRestaurants}
-                                    isDarkMode={isDarkMode}
+                                    theme={theme}
                                     onPress={(restaurant) =>
                                         navigation.navigate('RestaurantDetailPage', {
                                             restaurant,
@@ -123,13 +125,23 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
                         )}
                     </View>
                 }
-                ListFooterComponent={<View style={displayPageStyles.listfooterComponent} />}
+                ListEmptyComponent={
+                    <View style={styles.emptyStateContainer}>
+                        <ErrorStateView
+                            illustration="emptyResults"
+                            title="No restaurants found"
+                            message="Try a different search, or clear the active filters to see more results."
+                            theme={theme}
+                        />
+                    </View>
+                }
+                ListFooterComponent={<View style={styles.listfooterComponent} />}
                 refreshControl={
                     <RefreshControl
                         refreshing={vm.refreshing}
                         onRefresh={vm.onRefresh}
-                        colors={['#FF8000']}
-                        tintColor={isDarkMode ? '#FFFFFF' : '#000000'}
+                        colors={[theme.color.interactiveBrand]}
+                        tintColor={theme.color.contentDefault}
                     />
                 }
             />
@@ -142,7 +154,7 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
                 }}
                 currentFilters={vm.filters}
                 currentSortOption={vm.selectedSortOption}
-                isDarkMode={isDarkMode}
+                theme={theme}
             />
         </View>
     );

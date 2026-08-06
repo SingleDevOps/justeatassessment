@@ -1,12 +1,13 @@
 // Style for touchable elements (restaurant cards)
 // Ensures rounded corners and prevents content overflow
 
-import { StyleSheet } from 'react-native';
-export const restaurantCardStyles = StyleSheet.create({
+import { makeThemedStyles } from '../makeThemedStyles';
+
+export const restaurantCardStyles = makeThemedStyles((t) => ({
     // Style for touchable elements (restaurant cards)
     // Ensures rounded corners and prevents content overflow
     touchableHighlight: {
-        borderRadius: 12,
+        borderRadius: t.radius.roundedC,
         overflow: 'hidden',
     },
 
@@ -14,26 +15,16 @@ export const restaurantCardStyles = StyleSheet.create({
     // Defines appearance with border, background, shadow, and spacing
     // Creates visual separation between restaurant listings
     card: {
-        borderColor: '#D4C9BE',
+        borderColor: t.color.borderDefault,
         borderWidth: 0.5,
-        backgroundColor: 'white',
-        borderRadius: 12,
-        paddingTop: 9,
-        paddingBottom: 9,
-        marginTop: 10,
-        marginBottom: 6,
+        backgroundColor: t.color.containerDefault,
+        borderRadius: t.radius.roundedC,
+        paddingTop: t.spacing.b,
+        paddingBottom: t.spacing.b,
+        marginTop: t.spacing.b,
+        marginBottom: t.spacing.aSmall,
         overflow: 'hidden',
-        shadowOpacity: 0.9,
-        shadowRadius: 10,
-        elevation: 1,
-    },
-
-    // Dark mode override for restaurant cards
-    // Applies darker colors and subtle border
-    darkcard: {
-        borderColor: '#858a7e',
-        borderWidth: 0.1,
-        backgroundColor: '#272724',
+        ...t.elevation.shadowA,
     },
 
     // Style for the top section of restaurant cards
@@ -41,32 +32,32 @@ export const restaurantCardStyles = StyleSheet.create({
     upperPart: {
         flexDirection: 'row', // Align image and text side by side
         alignItems: 'center',
-        paddingHorizontal: 16,
-        paddingVertical: 12,
+        paddingHorizontal: t.spacing.d,
+        paddingVertical: t.spacing.c,
     },
 
     // Style for restaurant logo images
     image: {
-        width: 60,
-        height: 60,
-        borderRadius: 12, // radius on image corners.
-        backgroundColor: '#F5F5F5', // Placeholder background color
+        width: t.spacing.i,
+        height: t.spacing.i,
+        borderRadius: t.radius.roundedC, // radius on image corners.
+        backgroundColor: t.color.containerStrong, // Placeholder background color
     },
 
     // Container for text content next to restaurant logo
     // Uses flex to take available space with appropriate spacing
     textContainer: {
         flex: 1,
-        marginLeft: 16, // Space between image and text
+        marginLeft: t.spacing.d, // Space between image and text
     },
 
     // Style for restaurant name text
     // Makes name prominent with bold font and appropriate size
     name: {
-        fontFamily: 'OpenSans-Bold',
-        fontSize: 18,
-        color: '#333333',
-        marginBottom: 4,
+        fontFamily: t.fontFamily.bold,
+        fontSize: t.fontSize.size16,
+        color: t.color.contentDefault,
+        marginBottom: t.spacing.a,
         flexShrink: 1,
     },
 
@@ -80,53 +71,48 @@ export const restaurantCardStyles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'flex-end',
-        marginLeft: 8,
-        gap: 4,
+        marginLeft: t.spacing.b,
+        gap: t.spacing.a,
     },
 
     badge: {
-        borderRadius: 8,
-        paddingHorizontal: 6,
-        paddingVertical: 2,
+        borderRadius: t.radius.roundedB,
+        paddingHorizontal: t.spacing.aSmall,
+        paddingVertical: t.spacing.aSmall,
     },
 
     newBadge: {
-        backgroundColor: '#3B82F6',
+        backgroundColor: t.color.supportInfo,
     },
 
     newBadgeText: {
-        fontFamily: 'OpenSans-Bold',
-        fontSize: 10,
-        color: '#FFFFFF',
+        fontFamily: t.fontFamily.bold,
+        fontSize: t.fontSize.size12,
+        color: t.color.contentInverseSolid,
     },
 
     promotedBadge: {
-        backgroundColor: '#FF8000',
+        backgroundColor: t.color.interactiveBrand,
     },
 
     promotedBadgeText: {
-        fontFamily: 'OpenSans-Bold',
-        fontSize: 10,
-        color: '#FFFFFF',
+        fontFamily: t.fontFamily.bold,
+        fontSize: t.fontSize.size12,
+        color: t.color.contentInverseSolid,
     },
 
     boostedBadge: {
-        backgroundColor: '#8B5CF6',
+        backgroundColor: t.color.supportBrand06,
     },
 
     boostedBadgeText: {
-        fontFamily: 'OpenSans-Bold',
-        fontSize: 10,
-        color: '#FFFFFF',
+        fontFamily: t.fontFamily.bold,
+        fontSize: t.fontSize.size12,
+        color: t.color.contentInverseSolid,
     },
 
     offlineImage: {
         opacity: 0.4,
-    },
-
-    // Dark mode override for restaurant name
-    darkname: {
-        color: 'white',
     },
 
     // Container for rating elements
@@ -136,161 +122,128 @@ export const restaurantCardStyles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    // Style for star rating icon
-    // Defines size and spacing
-    ratingImage: {
-        width: 10,
-        height: 10,
-        marginRight: 4, // Space between star icon and rating text
+    starIcon: {
+        marginRight: t.spacing.a, // Space between star icon and rating text
     },
 
     // Style for the rating value text
-    // Uses Just Eat brand orange to highlight ratings
+    // Uses the PIE content-brand colour to highlight ratings
     rating: {
-        fontFamily: 'OpenSans-Bold',
-        fontSize: 14,
-        color: '#FF8000', // Just Eat orange for ratings
+        fontFamily: t.fontFamily.bold,
+        fontSize: t.fontSize.size14,
+        color: t.color.contentBrand,
     },
 
     // Style for the rating count text
     // Uses standard color and font weight
     ratingNumbers: {
-        fontFamily: 'OpenSans-Regular',
-        fontSize: 14,
-        color: '#333333',
-    },
-
-    // Dark mode override for rating count text
-    darkratingNumbers: {
-        color: 'white',
+        fontFamily: t.fontFamily.primary,
+        fontSize: t.fontSize.size14,
+        color: t.color.contentDefault,
     },
 
     openDot: {
-        marginLeft: 8,
-        borderRadius: 8,
-        paddingHorizontal: 6,
-        paddingVertical: 2,
-        backgroundColor: '#E6F4EA',
+        marginLeft: t.spacing.b,
+        borderRadius: t.radius.roundedB,
+        paddingHorizontal: t.spacing.aSmall,
+        paddingVertical: t.spacing.aSmall,
+        backgroundColor: t.color.supportPositiveTonal,
     },
 
     openDotText: {
-        fontFamily: 'OpenSans-Semibold',
-        fontSize: 10,
-        color: '#1E8E3E',
+        fontFamily: t.fontFamily.semibold,
+        fontSize: t.fontSize.size12,
+        color: t.color.supportPositive,
     },
 
     offlineDot: {
-        backgroundColor: '#FDE7E7',
+        backgroundColor: t.color.supportErrorTonal,
     },
 
     offlineDotText: {
-        fontFamily: 'OpenSans-Semibold',
-        fontSize: 10,
-        color: '#C5221F',
+        fontFamily: t.fontFamily.semibold,
+        fontSize: t.fontSize.size12,
+        color: t.color.supportError,
     },
 
     freeDeliveryText: {
-        fontFamily: 'OpenSans-Semibold',
-        fontSize: 12,
-        color: '#1E8E3E',
-        marginTop: 4,
-    },
-
-    darkFreeDeliveryText: {
-        color: '#7AD47E',
+        fontFamily: t.fontFamily.semibold,
+        fontSize: t.fontSize.size12,
+        color: t.color.contentPositive,
+        marginTop: t.spacing.a,
     },
 
     // Style for the divider between upper and lower card sections
-    // Creates subtle visual separation with partially transparent line
+    // Creates subtle visual separation with the PIE divider token
     separator: {
-        bottom: 2,
+        bottom: t.spacing.aSmall,
         height: 1,
-        backgroundColor: '#708090',
-        marginHorizontal: 16,
-        marginVertical: 8,
+        backgroundColor: t.color.dividerDefault,
+        marginHorizontal: t.spacing.d,
+        marginVertical: t.spacing.b,
         opacity: 0.3,
     },
 
     // Container for the bottom section of restaurant cards
     // Provides consistent horizontal padding
     lowerPart: {
-        paddingHorizontal: 16,
+        paddingHorizontal: t.spacing.d,
     },
 
     // Style for restaurant cuisine text
     // Defines appearance and positioning of cuisine information
     cuisine: {
-        fontFamily: 'OpenSans-Regular',
-        top: 5,
-        fontSize: 14,
-        color: 'black',
-        marginBottom: 6,
+        fontFamily: t.fontFamily.primary,
+        top: t.spacing.a,
+        fontSize: t.fontSize.size14,
+        color: t.color.contentDefault,
+        marginBottom: t.spacing.aSmall,
         textAlign: 'left',
-    },
-
-
-    // Dark mode override for cuisine text
-    darkcuisine: {
-        color: '#e6e6e6',
     },
 
     // Container for restaurant address section
     // Arranges address elements with appropriate spacing
     addressContainer: {
-        marginTop: 10, // Space between cuisines and address
+        marginTop: t.spacing.b, // Space between cuisines and address
         flexDirection: 'row',
-        right: 5,
-        marginRight: 10,
-        paddingRight: 15, // Add some padding for longer addresses
-        paddingBottom: 10,
+        right: t.spacing.a,
+        marginRight: t.spacing.b,
+        paddingRight: t.spacing.c, // Add some padding for longer addresses
+        paddingBottom: t.spacing.b,
     },
-
 
     // Style for pin icon (emoji) in address section
     // Defines font and spacing
     pinIcon: {
-        fontFamily: 'OpenSans-LightItalic',
-        fontSize: 14,
-        marginRight: 4, // Add some space between the icon and text
-        lineHeight: 20, // Match with the address line height
+        marginRight: t.spacing.a, // Add some space between the icon and text
     },
 
     // Container for address text with left padding
     addressTextContainer: {
         flex: 1,
-        paddingLeft: 4,
+        paddingLeft: t.spacing.a,
         overflow: 'hidden',
     },
 
     // Style for restaurant address text
     // Defines appearance with italic font and appropriate line height
     address: {
-        fontFamily: 'OpenSans-LightItalic',
-        fontSize: 13,
+        fontFamily: t.fontFamily.lightItalic,
+        fontSize: t.fontSize.size12,
 
         flex: 1, // Allow text to take remaining space
-        lineHeight: 20, // Consistent line height for multi-line text
-    },
-
-    // Dark mode override for address text
-    darkaddress: {
-        color: '#e6e6e6',
+        lineHeight: t.lineHeight.lh20, // Consistent line height for multi-line text
     },
 
     // Style for distance text at the bottom right of the card
     distanceText: {
-        fontFamily: 'OpenSans-Regular',
-        fontSize: 11,
-        color: '#5F6368',
+        fontFamily: t.fontFamily.primary,
+        fontSize: t.fontSize.size12,
+        color: t.color.contentSubdued,
         alignSelf: 'flex-end',
         textAlign: 'right',
-        marginTop: 4,
-        marginBottom: 4,
-        marginRight: 2,
+        marginTop: t.spacing.a,
+        marginBottom: t.spacing.a,
+        marginRight: t.spacing.aSmall,
     },
-
-    // Dark mode override for distance text
-    darkdistanceText: {
-        color: '#9AA0A6',
-    },
-});
+}));

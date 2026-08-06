@@ -52,7 +52,7 @@ describe('<DisplayPage />', () => {
     });
 
     const selectSortOption = async (optionText: TextMatch) => {
-        fireEvent.press(screen.getByText('⚙'));
+        fireEvent.press(screen.getByLabelText('Filters'));
         const option = await screen.findByText(optionText);
         fireEvent.press(option);
         fireEvent.press(screen.getByText('Apply Filters'));

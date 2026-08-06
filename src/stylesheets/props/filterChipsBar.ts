@@ -1,53 +1,45 @@
-import { StyleSheet } from 'react-native';
+import { makeThemedStyles } from '../makeThemedStyles';
 
-export const filterChipsBarStyles = StyleSheet.create({
+export const filterChipsBarStyles = makeThemedStyles((t) => ({
     chipsBar: {
         flexGrow: 0,
     },
     chipsContent: {
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        gap: 8,
+        paddingHorizontal: t.spacing.d,
+        paddingVertical: t.spacing.b,
+        gap: t.spacing.b,
     },
     chip: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 12,
-        paddingVertical: 7,
-        borderRadius: 18,
-        backgroundColor: '#FFFFFF',
+        paddingHorizontal: t.spacing.c,
+        paddingVertical: t.spacing.aSmall,
+        borderRadius: t.radius.roundedD,
+        backgroundColor: t.color.containerDefault,
         borderWidth: 1,
-        borderColor: '#D4C9BE',
-    },
-    darkChip: {
-        backgroundColor: '#272724',
-        borderColor: '#4A4A45',
+        borderColor: t.color.borderDefault,
+        minHeight: 44,
+        justifyContent: 'center',
     },
     selectedChip: {
-        backgroundColor: '#FF8000',
-        borderColor: '#FF8000',
+        backgroundColor: t.color.interactiveBrand,
+        borderColor: t.color.interactiveBrand,
     },
     chipText: {
-        fontFamily: 'OpenSans-Semibold',
-        fontSize: 13,
-        color: '#333333',
-    },
-    darkChipText: {
-        color: '#E6E6E6',
+        fontFamily: t.fontFamily.semibold,
+        fontSize: t.fontSize.size12,
+        color: t.color.contentDefault,
     },
     selectedChipText: {
-        color: '#FFFFFF',
+        color: t.color.contentInverseSolid,
     },
     chipCount: {
-        fontFamily: 'OpenSans-Regular',
-        fontSize: 12,
-        color: '#888888',
-        marginLeft: 6,
-    },
-    darkChipCount: {
-        color: '#AAAAAA',
+        fontFamily: t.fontFamily.primary,
+        fontSize: t.fontSize.size12,
+        color: t.color.contentSubdued,
+        marginLeft: t.spacing.aSmall,
     },
     selectedChipCount: {
-        color: '#FFFFFF',
+        color: t.color.contentInverseSolid,
     },
-});
+}));

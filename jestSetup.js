@@ -28,3 +28,20 @@ jest.mock('react-native-maps', () => {
         Marker: MockMarker,
     };
 });
+
+jest.mock('react-native-svg', () => {
+    const { View } = require('react-native');
+    const React = require('react');
+    const createMock = (name) => (props) => React.createElement(View, props);
+    return {
+        __esModule: true,
+        default: createMock('SvgXml'),
+        SvgXml: createMock('SvgXml'),
+        Svg: createMock('Svg'),
+        Path: createMock('Path'),
+        G: createMock('G'),
+        Circle: createMock('Circle'),
+        Rect: createMock('Rect'),
+        Line: createMock('Line'),
+    };
+});

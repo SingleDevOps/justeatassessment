@@ -1,22 +1,13 @@
-import { StyleSheet } from 'react-native';
+import { makeThemedStyles } from '../makeThemedStyles';
 
-export const mainpageStyles = StyleSheet.create({
-
+export const mainpageStyles = makeThemedStyles((t) => ({
 
     // Main container style that wraps the entire screen
-    // Uses flex to fill available space with light background color
+    // Uses flex to fill available space with the PIE background-default token
     overAll: {
         flex: 1, //Span the whole page
-        backgroundColor: '#F8F9FA', // Light gray background for the main page
+        backgroundColor: t.color.backgroundDefault,
     },
-
-
-    // Dark mode override for the main container
-    // Changes background to dark color when dark mode is active
-    darkOverAll: {
-        backgroundColor: '#1A1A18', // Dark gray background for the main page
-    },
-
 
     // Container style for KeyboardAvoidingView
     // Ensures content adjusts when keyboard appears
@@ -24,64 +15,41 @@ export const mainpageStyles = StyleSheet.create({
         flex: 1,
     },
 
-
     // Primary content container with horizontal padding
     // Centers content vertically and provides spacing from edges
     container: {
         flex: 1, //Span the whole page
-        backgroundColor: '#F8F9FA', // Light gray background for the main page
-        paddingHorizontal: 20, //Padding for the search Bar
+        backgroundColor: t.color.backgroundDefault,
+        paddingHorizontal: t.spacing.d, //Padding for the search Bar
         justifyContent: 'center',
-        marginTop: '30%',
     },
-
-
-    // Dark mode override for the primary container
-    darkcontainer: {
-        backgroundColor: '#1A1A18',
-    },
-
 
     // Style for the Just Eat logo image
-    // Sets proportional dimensions and centers the image
+    // Official PIE logo mark (156:38 ratio), centered
     logo: {
-        marginTop: -50,
-        width: '80%',
-        height: undefined,
-        aspectRatio: 1,
-        resizeMode: 'contain',
+        width: '55%',
+        aspectRatio: 156 / 38,
         alignSelf: 'center',
+        marginBottom: t.spacing.e,
     },
-
 
     // Container for search bar and title text
     // Positions search elements below logo with appropriate spacing
     searchContainer: {
-        bottom: 130,
         width: '100%',
-        marginTop: '30%',
         alignItems: 'center',
     },
 
-
     // Style for the "Near You" portion of title text
-    // Defines appearance with italic gray text that complements the orange text
+    // Defines appearance with italic subdued text that complements the brand text
     titleSecondpart: {
-        fontSize: 20,
+        fontSize: t.fontSize.size20,
         fontWeight: 'bold',
-        color: '#888',
+        color: t.color.contentSubdued,
         textAlign: 'center',
         fontStyle: 'italic',
-        marginBottom: 5,
+        marginBottom: t.spacing.aSmall,
     },
-
-
-    // Dark mode override for title text
-    // Changes text color to white for better visibility
-    darktitleSecondpart: {
-        color: '#FFFFFF',
-    },
-
 
     // Container for two-part title text
     // Arranges "Find Restaurants" and "Near You" horizontally with centered alignment
@@ -89,26 +57,24 @@ export const mainpageStyles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 5,
+        marginBottom: t.spacing.aSmall,
     },
-
 
     // Style for the "Find Restaurants" portion of title text
-    // Uses Just Eat brand orange color with bold italic styling
+    // Uses the PIE interactive-brand colour with bold italic styling
     titleFirstpart: { //style of the text "Find Restaurants"
-        fontSize: 20,
+        fontSize: t.fontSize.size20,
         fontWeight: 'bold',
-        color: '#FF8000',
+        color: t.color.interactiveBrand,
         textAlign: 'center',
         fontStyle: 'italic',
-        marginBottom: 5,
+        marginBottom: t.spacing.aSmall,
     },
 
-
-    // Dark mode override for first part of title
-    // Changes text color from orange to white for dark mode
-    darktitleFirstpart: {
-        color: '#FFFFFF',
+    // Wrapper for the in-app error state shown below the search bar
+    errorStateContainer: {
+        width: '100%',
+        marginTop: t.spacing.e,
+        flexShrink: 1,
     },
-
-});
+}));

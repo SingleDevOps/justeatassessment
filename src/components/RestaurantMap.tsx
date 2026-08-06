@@ -3,6 +3,7 @@ import { View, Text, Pressable, Modal } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { restaurantMapStyles } from '../stylesheets/props/restaurantMap';
 import type { RestaurantType } from '../types/restaurant';
+import type { PieTokens } from '../configs/pieTokens';
 
 export const getRestaurantLatLng = (restaurant: RestaurantType) => {
     const coordinates = restaurant.address.location?.coordinates;
@@ -15,21 +16,23 @@ export const getRestaurantLatLng = (restaurant: RestaurantType) => {
     };
 };
 
-export const FullScreenMapModal = ({ visible, restaurant, onClose }: {
+export const FullScreenMapModal = ({ visible, restaurant, onClose, theme }: {
     visible: boolean;
     restaurant: RestaurantType;
     onClose: () => void;
+    theme: PieTokens;
 }) => {
     const coordinate = getRestaurantLatLng(restaurant);
+    const styles = restaurantMapStyles(theme);
     if (!coordinate) {
         return null;
     }
 
     return (
         <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
-            <View style={restaurantMapStyles.modalOverlay}>
+            <View style={styles.modalOverlay}>
                 <MapView
-                    style={restaurantMapStyles.modalMap}
+                    style={styles.modalMap}
                     initialRegion={{
                         ...coordinate,
                         latitudeDelta: 0.02,
@@ -39,13 +42,15 @@ export const FullScreenMapModal = ({ visible, restaurant, onClose }: {
                 >
                     <Marker coordinate={coordinate} title={restaurant.name} />
                 </MapView>
-                <View style={restaurantMapStyles.modalHeader}>
+                <View style={styles.modalHeader}>
                     <Pressable
                         testID="close-fullscreen-map"
                         onPress={onClose}
-                        style={restaurantMapStyles.closeButton}
+                        style={styles.closeButton}
+                        accessibilityRole="button"
+                        accessibilityLabel="Close full screen map"
                     >
-                        <Text style={restaurantMapStyles.closeButtonText}>✕ Close</Text>
+                        <Text style={styles.closeButtonText}>✕ Close</Text>
                     </Pressable>
                 </View>
             </View>
@@ -53,19 +58,20 @@ export const FullScreenMapModal = ({ visible, restaurant, onClose }: {
     );
 };
 
-export const RestaurantMap = ({ restaurant }: { restaurant: RestaurantType }) => {
+export const RestaurantMap = ({ restaurant, theme }: { restaurant: RestaurantType; theme: PieTokens }) => {
     const [fullScreenVisible, setFullScreenVisible] = useState(false);
     const coordinate = getRestaurantLatLng(restaurant);
+    const styles = restaurantMapStyles(theme);
 
     if (!coordinate) {
         return null;
     }
 
     return (
-        <View style={restaurantMapStyles.container}>
+        <View style={styles.container}>
             <MapView
                 testID="restaurant-map"
-                style={restaurantMapStyles.map}
+                style={styles.map}
                 initialRegion={{
                     ...coordinate,
                     latitudeDelta: 0.02,
@@ -79,14 +85,17 @@ export const RestaurantMap = ({ restaurant }: { restaurant: RestaurantType }) =>
             <Pressable
                 testID="expand-map-button"
                 onPress={() => setFullScreenVisible(true)}
-                style={restaurantMapStyles.expandButton}
+                style={styles.expandButton}
+                accessibilityRole="button"
+                accessibilityLabel="Open full screen map"
             >
-                <Text style={restaurantMapStyles.expandButtonText}>Full screen</Text>
+                <Text style={styles.expandButtonText}>Full screen</Text>
             </Pressable>
             <FullScreenMapModal
                 visible={fullScreenVisible}
                 restaurant={restaurant}
                 onClose={() => setFullScreenVisible(false)}
+                theme={theme}
             />
         </View>
     );
