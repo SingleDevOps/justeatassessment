@@ -14,8 +14,8 @@ const { execFileSync } = require('child_process');
 
 const LOGOS_DIR = path.join(process.env.HOME, 'Documents', 'pie-logos', 'Brand', 'Light');
 const ROOT = path.join(__dirname, '..');
-const IOS_ICON_DIR = path.join(ROOT, 'ios', 'justeatassessment', 'Images.xcassets', 'AppIcon.appiconset');
-const IOS_SPLASH_DIR = path.join(ROOT, 'ios', 'justeatassessment', 'Images.xcassets', 'SplashLogo.imageset');
+const IOS_ICON_DIR = path.join(ROOT, 'ios', 'justeatfinder', 'Images.xcassets', 'AppIcon.appiconset');
+const IOS_SPLASH_DIR = path.join(ROOT, 'ios', 'justeatfinder', 'Images.xcassets', 'SplashLogo.imageset');
 const ANDROID_MIPMAPS = path.join(ROOT, 'android', 'app', 'src', 'main', 'res', 'mipmap-%s');
 const ANDROID_DRAWABLE = path.join(ROOT, 'android', 'app', 'src', 'main', 'res', 'drawable');
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'justeat-logo-'));

@@ -1,4 +1,4 @@
-package com.justeatassessment
+package com.justeatfinder
 
 import android.app.Application
 import com.facebook.react.PackageList

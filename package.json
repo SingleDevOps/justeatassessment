@@ -1,6 +1,6 @@
 {
-  "name": "justeatassessment",
-  "version": "1.2",
+  "name": "justeatfinder",
+  "version": "1.3",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
