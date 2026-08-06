@@ -71,7 +71,7 @@ export const restaurantCardStyles = StyleSheet.create({
 
     // Dark mode override for restaurant name
     darkname: {
-        color: 'white',
+        color: '#FFFFFF',
     },
 
     // Container for rating elements
@@ -107,7 +107,7 @@ export const restaurantCardStyles = StyleSheet.create({
 
     // Dark mode override for rating count text
     darkratingNumbers: {
-        color: 'white',
+        color: '#FFFFFF',
     },
 
     // Style for the divider between upper and lower card sections
@@ -141,7 +141,7 @@ export const restaurantCardStyles = StyleSheet.create({
 
     // Dark mode override for cuisine text
     darkcuisine: {
-        color: '#e6e6e6',
+        color: '#FFFFFF',
     },
 
     // Container for restaurant address section
@@ -184,6 +184,6 @@ export const restaurantCardStyles = StyleSheet.create({
 
     // Dark mode override for address text
     darkaddress: {
-        color: '#e6e6e6',
+        color: '#FFFFFF',
     },
 });

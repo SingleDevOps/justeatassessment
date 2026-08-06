@@ -59,9 +59,9 @@ export const searchBarStyles = StyleSheet.create({
     },
 
     // Dark mode override for search input text
-    // Changes text color to light gray for visibility on dark background
+    // Changes text color to white for visibility on dark background
     darksearchInput: {
-        color: '#e0e0e0',
+        color: '#FFFFFF',
     },
 
     searchButton: {

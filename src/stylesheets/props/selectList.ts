@@ -60,7 +60,7 @@ export const selectListStyles = StyleSheet.create({
     // Changes text color for dark theme
     darkDropdownText: {
         textAlign: 'left',
-        color: 'white',
+        color: '#FFFFFF',
         right: 6,
         fontFamily: 'OpenSans-Regular',
         fontSize: 14,

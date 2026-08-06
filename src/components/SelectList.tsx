@@ -14,7 +14,7 @@ export const SelectListComponent = ({ setSelected, isDarkMode, selected }: Selec
             placeholder="Sort By"
             defaultOption={selected ? { key: selected, value: selected } : undefined}
             // eslint-disable-next-line react-native/no-inline-styles
-            inputStyles={isDarkMode ? { color: 'white' } : { color: 'black' }}
+            inputStyles={isDarkMode ? { color: '#FFFFFF' } : { color: 'black' }}
             search={false}
             boxStyles={isDarkMode ? selectListStyles.darkDropdownBox : selectListStyles.dropdownBox}
             dropdownStyles={isDarkMode ? selectListStyles.darkDropdown : selectListStyles.dropdown}
