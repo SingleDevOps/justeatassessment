@@ -8,14 +8,14 @@ It is a mobile application for Android system, and potentially for iOS system fo
 
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-This application includes two pages:
+The project is maintained in two branches, each described below.
+
+### `main` Branch
+
+The `main` branch contains the core restaurant search functionality and includes two pages:
 
 1. MainPage
 2. DisplayPage
-
-On the `Full-Info-Display` branch, a third page is added:
-
-3. RestaurantDetailPage
 
 This application does two things:
 
@@ -26,6 +26,21 @@ This application does two things:
    ***If searching L4 0TH, or empty string, the local sample data will be used for display purpose***
 
 2. On **DisplayPage**, it can display the restaurant in the order of the returning data, or it can display the same restaurants by multiple sorting options: ***Rating***, ***RatingCount***, ***Alphabetical Order of Restaurant Names***, each with both ascending and descending directions. It can refresh the restaurant list by swiping down the screen.
+
+### `Full-Info-Display` Branch
+
+The `Full-Info-Display` branch extends the `main` branch with a third page and a set of enhanced features:
+
+3. RestaurantDetailPage
+
+Its additions over the `main` branch include:
+
+1. **RestaurantDetailPage**: Clicking any restaurant card opens a full page showing the restaurant's complete details — full address, delivery time estimates and availability slots, deals and promotions (with smart deduplication and deal-type badges), your personal rating, and a delivery pricing breakdown parsed from the API's delivery fees (minimum order value, free delivery threshold, and each delivery fee band).
+2. **Advanced filtering**: A **FilterModal** filters by Open Now, Delivery, Collection, Has Deals, rating thresholds (3+, 3.5+, 4+, 4.5+), delivery cost bands and top cuisines; a **FilterSearchBar** combines search with an active-filter badge; and a **FilterChipsBar** offers quick-filter chips rendered from the API's layout/filter data.
+3. **LocalLegendsCarousel**: A horizontal carousel of "Local Legends" restaurants shown at the top of the DisplayPage when no search is active.
+4. **Distance & map**: Each card shows its straight-line distance from your GPS location, and the detail page embeds an interactive **RestaurantMap** with a full-screen modal.
+5. **Enhanced sorting**: The sorting dropdown grows to 7 options, adding **Promoted first** (the API's promoted placement ranking) alongside the original Rating, RatingCount and Alphabetical sorts, each in ascending and descending directions.
+6. **Enhanced cards**: "NEW", "Promoted" and "Boosted" status badges, an open/offline status pill, and a free-delivery label derived from the delivery fee bands.
 
 Besides, this application has dark mode design, for the night usage.
 
