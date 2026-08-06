@@ -66,7 +66,7 @@ describe('API Functions', () => {
       const result = await fetchRestaurantsFromJustEat('SW1A0AA');
 
       expect(fetch).toHaveBeenCalledTimes(1);
-      expect(result).toEqual(mockRestaurants);
+      expect(result).toEqual({ restaurants: mockRestaurants });
     });
 
     it('should return null when API returns no restaurants', async () => {

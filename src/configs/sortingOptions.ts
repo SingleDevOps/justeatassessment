@@ -10,6 +10,7 @@ export const SORT_OPTIONS: SortOption[] = [
     { key: '4', value: 'Rating Count (Less to More)' },
     { key: '5', value: 'Name (A-Z)' },
     { key: '6', value: 'Name (Z-A)' },
+    { key: '7', value: 'Promoted first' },
 ];
 
 export enum SortOrder { // Standardized Sorting Keys
@@ -28,5 +29,6 @@ export enum SortOptionValue { //Standardized Sorting Values
     COUNT_LESS_MORE = 'Rating Count (Less to More)',
     NAME_A_Z = 'Name (A-Z)',
     NAME_Z_A = 'Name (Z-A)',
+    PROMOTED_FIRST = 'Promoted first',
 }
 

@@ -53,3 +53,13 @@ export const TOP_CUISINES: CuisineOption[] = [
 export const DEFAULT_FILTER_STATE: FilterState = { ...DEFAULT_FILTERS };
 
 export const DEFAULT_SORT_OPTION = '';
+
+export const DEFAULT_LAYOUT_FILTERS = [
+    { id: 'with_discounts', title: 'Deals', type: 'filter' },
+    { id: 'free_delivery', title: 'Free Delivery', type: 'filter' },
+    { id: 'stampcards', title: 'StampCards', type: 'filter' },
+    { id: 'four_star', title: '4+ stars', type: 'filter' },
+    { id: 'open_now', title: 'Open Now', type: 'filter' },
+    { id: 'collection', title: 'Collection', type: 'filter' },
+    { id: 'new', title: 'New', type: 'filter' },
+];

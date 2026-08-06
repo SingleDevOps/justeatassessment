@@ -9,4 +9,7 @@ export type RestaurantCardPropType = {
     navigation: NativeStackNavigationProp<RootStackParamList, 'DisplayPage'>;
     distanceMeters?: number | null;
     distanceIsFromUser?: boolean;
+    isPromoted?: boolean;
+    isBoosted?: boolean;
+    freeDeliveryLabel?: string | null;
 };

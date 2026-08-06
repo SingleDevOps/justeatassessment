@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { handleSearch } from '../functions/api/apiRequest';
-import { applyFilters, countActiveFilters } from '../functions/filtering/applyFilters';
+import { applyFilters, applyRestaurantIdFilter, countActiveFilters } from '../functions/filtering/applyFilters';
 import { filterRestaurants, shuffleArray, SEARCH_RESULT_LIMIT } from '../functions/filtering/searchRestaurants';
+import { getLayoutFilterDefs, getRestaurantIdsForLayoutFilters } from '../functions/filtering/layoutFilters';
 import { sortResData } from '../functions/sorting/sortRestaurantData';
+import { sortByPromotedPlacement } from '../functions/sorting/sortByPromotedPlacement';
 import { SortOptionValue, SortOrder } from '../configs/sortingOptions';
-import { DEFAULT_FILTER_STATE } from '../configs/filterDefaults';
+import { DEFAULT_FILTER_STATE, DEFAULT_LAYOUT_FILTERS } from '../configs/filterDefaults';
 import type { DisplayPageProps } from '../types/navigation';
 import type { RestaurantType } from '../types/restaurant';
 import type { FilterState } from '../types/filterOptions';
+import type { DeliveryFeesType, MetaDataType, PromotedPlacementType, FilterDefType } from '../types/searchData';
 
 type UseDisplayPageViewModelOptions = {
     route: DisplayPageProps['route'];
@@ -33,7 +36,16 @@ function mapSortOptionToOrder(option: string): SortOrder | null {
 }
 
 export const useDisplayPageViewModel = ({ route }: UseDisplayPageViewModelOptions) => {
-    const { restaurants: routeRestaurants, allRestaurants: routeAllRestaurants, postcode: routePostcode } = route.params ?? {};
+    const {
+        restaurants: routeRestaurants,
+        allRestaurants: routeAllRestaurants,
+        postcode: routePostcode,
+        metaData: routeMetaData,
+        deliveryFees: routeDeliveryFees,
+        promotedPlacement: routePromotedPlacement,
+        filters: routeFilters,
+        layout: routeLayout,
+    } = route.params ?? {};
     const postcode = routePostcode || 'L40TH';
 
     const [allRestaurants, setAllRestaurants] = useState<RestaurantType[]>(routeAllRestaurants ?? []);
@@ -44,22 +56,73 @@ export const useDisplayPageViewModel = ({ route }: UseDisplayPageViewModelOption
     const [filterModalVisible, setFilterModalVisible] = useState(false);
     const [selectedSortOption, setSelectedSortOption] = useState('');
     const [filters, setFilters] = useState<FilterState>({ ...DEFAULT_FILTER_STATE });
+    const [layoutFilters, setLayoutFilters] = useState<string[]>([]);
+    const [metaData, setMetaData] = useState<MetaDataType | undefined>(routeMetaData);
+    const [deliveryFees, setDeliveryFees] = useState<DeliveryFeesType | undefined>(routeDeliveryFees);
+    const [promotedPlacement, setPromotedPlacement] = useState<PromotedPlacementType | undefined>(routePromotedPlacement);
+    const [filterDefs, setFilterDefs] = useState<Record<string, FilterDefType> | undefined>(routeFilters);
 
     useEffect(() => {
         return () => {
             setFilters({ ...DEFAULT_FILTER_STATE });
+            setLayoutFilters([]);
         };
     }, []);
 
-    const activeFilterCount = useMemo(() => countActiveFilters(filters), [filters]);
+    const activeFilterCount = useMemo(
+        () => countActiveFilters(filters) + layoutFilters.length,
+        [filters, layoutFilters]
+    );
 
-    const sortedRestaurants = useMemo(() => {
-        const order = mapSortOptionToOrder(selectedSortOption);
-        if (!order) {
+    const isPromoted = useCallback(
+        (restaurantId: string | number): boolean => {
+            const entry = promotedPlacement?.restaurants?.[restaurantId.toString()];
+            return entry?.defaultPromoted === true;
+        },
+        [promotedPlacement]
+    );
+
+    const layoutFilterDefs = useMemo(
+        () => getLayoutFilterDefs(routeLayout, filterDefs, DEFAULT_LAYOUT_FILTERS),
+        [routeLayout, filterDefs]
+    );
+
+    const layoutRestaurantIds = useMemo(
+        () => getRestaurantIdsForLayoutFilters(filterDefs, layoutFilters),
+        [filterDefs, layoutFilters]
+    );
+
+    const localLegendsIds = useMemo(() => {
+        const ids = filterDefs?.['local-legends']?.restaurantIds ?? [];
+        return new Set(ids);
+    }, [filterDefs]);
+
+    const localLegendsRestaurants = useMemo(() => {
+        const ids = filterDefs?.['local-legends']?.restaurantIds ?? [];
+        if (ids.length === 0) {
+            return [];
+        }
+        const byId = new Map(allRestaurants.map(r => [r.id.toString(), r]));
+        return ids.map(id => byId.get(id)).filter((r): r is RestaurantType => r !== undefined);
+    }, [filterDefs, allRestaurants]);
+
+    const listBase = useMemo(() => {
+        if (searchQuery.trim() || localLegendsRestaurants.length === 0) {
             return displayRestaurants;
         }
-        return sortResData(displayRestaurants, order);
-    }, [displayRestaurants, selectedSortOption]);
+        return displayRestaurants.filter(r => !localLegendsIds.has(r.id.toString()));
+    }, [displayRestaurants, searchQuery, localLegendsRestaurants, localLegendsIds]);
+
+    const sortedRestaurants = useMemo(() => {
+        if (selectedSortOption === SortOptionValue.PROMOTED_FIRST) {
+            return sortByPromotedPlacement(listBase, promotedPlacement);
+        }
+        const order = mapSortOptionToOrder(selectedSortOption);
+        if (!order) {
+            return listBase;
+        }
+        return sortResData(listBase, order);
+    }, [listBase, selectedSortOption, promotedPlacement]);
 
     const filteredRestaurants = useMemo(() => {
         let base: RestaurantType[];
@@ -70,7 +133,7 @@ export const useDisplayPageViewModel = ({ route }: UseDisplayPageViewModelOption
             base = sortedRestaurants;
         }
 
-        const filtered = applyFilters(base, filters);
+        const filtered = applyRestaurantIdFilter(applyFilters(base, filters), layoutRestaurantIds);
 
         if (searchQuery.trim()) {
             return shuffleArray(filtered).slice(0, SEARCH_RESULT_LIMIT);
@@ -78,7 +141,7 @@ export const useDisplayPageViewModel = ({ route }: UseDisplayPageViewModelOption
 
         return filtered;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sortedRestaurants, allRestaurants, searchQuery, shuffleKey, filters]);
+    }, [sortedRestaurants, allRestaurants, searchQuery, shuffleKey, filters, layoutRestaurantIds]);
 
     const matchCount = useMemo(() => {
         let base: RestaurantType[];
@@ -89,8 +152,14 @@ export const useDisplayPageViewModel = ({ route }: UseDisplayPageViewModelOption
             base = allRestaurants;
         }
 
-        return applyFilters(base, filters).length;
-    }, [allRestaurants, searchQuery, filters]);
+        return applyRestaurantIdFilter(applyFilters(base, filters), layoutRestaurantIds).length;
+    }, [allRestaurants, searchQuery, filters, layoutRestaurantIds]);
+
+    const toggleLayoutFilter = useCallback((id: string) => {
+        setLayoutFilters(prev =>
+            prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
+        );
+    }, []);
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
@@ -100,6 +169,18 @@ export const useDisplayPageViewModel = ({ route }: UseDisplayPageViewModelOption
             setDisplayRestaurants(result.restaurants);
             setAllRestaurants(result.allRestaurants);
             setShuffleKey(prev => prev + 1);
+            if (result.metaData) {
+                setMetaData(result.metaData);
+            }
+            if (result.deliveryFees) {
+                setDeliveryFees(result.deliveryFees);
+            }
+            if (result.promotedPlacement) {
+                setPromotedPlacement(result.promotedPlacement);
+            }
+            if (result.filters) {
+                setFilterDefs(result.filters);
+            }
         }
         setRefreshing(false);
     }, [postcode]);
@@ -110,6 +191,7 @@ export const useDisplayPageViewModel = ({ route }: UseDisplayPageViewModelOption
 
     return {
         postcode,
+        metaData,
         allRestaurants,
         sortedRestaurants,
         filteredRestaurants,
@@ -124,6 +206,12 @@ export const useDisplayPageViewModel = ({ route }: UseDisplayPageViewModelOption
         toggleFilterModal,
         filters,
         setFilters,
+        layoutFilters,
+        toggleLayoutFilter,
+        layoutFilterDefs,
+        deliveryFees,
+        isPromoted,
+        localLegendsRestaurants,
         onRefresh,
     };
 };

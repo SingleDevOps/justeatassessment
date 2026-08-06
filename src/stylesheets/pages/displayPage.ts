@@ -13,6 +13,15 @@ export const displayPageStyles = StyleSheet.create({
         paddingTop: 12,
         paddingBottom: 4,
     },
+    areaText: {
+        fontFamily: 'OpenSans-Bold',
+        fontSize: 16,
+        color: '#333333',
+        marginBottom: 2,
+    },
+    darkareaText: {
+        color: '#FFFFFF',
+    },
     countText: {
         fontFamily: 'OpenSans-Regular',
         fontSize: 13,
@@ -22,7 +31,6 @@ export const displayPageStyles = StyleSheet.create({
         color: '#AAAAAA',
     },
     container: {
-        flex: 1,
         paddingHorizontal: 16,
     },
     listfooterComponent: {

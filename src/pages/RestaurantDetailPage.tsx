@@ -1,7 +1,7 @@
 ﻿import React, { useEffect, useMemo } from 'react';
 import { useColorScheme, View, Text, Image, ScrollView, Pressable } from 'react-native';
 import { detailPageStyles } from '../stylesheets/pages/restaurantDetailPage';
-import { useRestaurantDetailViewModel, formatDate, formatEta, DEALS_INITIAL_LIMIT } from '../viewmodels/useRestaurantDetailViewModel';
+import { useRestaurantDetailViewModel, formatDate, formatEta, getDealOfferTypeLabel, DEALS_INITIAL_LIMIT } from '../viewmodels/useRestaurantDetailViewModel';
 import { RestaurantMap, getRestaurantLatLng } from '../components/RestaurantMap';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { haversineDistanceMeters, formatDistance } from '../functions/map/distance';
@@ -44,10 +44,11 @@ const AvailabilitySection = ({ title, data, isDarkMode }: { title: string; data:
 );
 
 const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
-    const { restaurant } = route.params;
+    const { restaurant, deliveryFees } = route.params ?? {};
     const colorScheme = useColorScheme();
     const isDarkMode = colorScheme === 'dark';
-    const { uniqueDeals, dealsExpanded, toggleDealsExpanded } = useRestaurantDetailViewModel(restaurant);
+    const { uniqueDeals, dealsExpanded, toggleDealsExpanded, userRating, feeBands, freeDeliveryLabel, minimumOrderValue } =
+        useRestaurantDetailViewModel(restaurant, deliveryFees);
     const { userLocation } = useUserLocation();
 
     const distanceFromUser = useMemo(() => {
@@ -106,6 +107,9 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                         <Text style={detailPageStyles.ratingValue}>{restaurant.rating.starRating}</Text>
                         <Text style={[detailPageStyles.ratingCount, isDarkMode && detailPageStyles.darkratingCount]}>({restaurant.rating.count} reviews)</Text>
                     </View>
+                    {userRating !== null && userRating !== undefined && (
+                        <InfoRow label="Your Rating" value={`⭐ ${userRating}`} isDarkMode={isDarkMode} />
+                    )}
                 </View>
 
                 <View style={[detailPageStyles.section, isDarkMode && detailPageStyles.darksection]}>
@@ -148,6 +152,15 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                     {restaurant.deliveryCost !== undefined && (
                         <InfoRow label="Delivery Cost" value={`£${restaurant.deliveryCost.toFixed(2)}`} isDarkMode={isDarkMode} />
                     )}
+                    {minimumOrderValue !== null && minimumOrderValue > 0 && (
+                        <InfoRow label="Minimum Order" value={`£${(minimumOrderValue / 100).toFixed(2)}`} isDarkMode={isDarkMode} />
+                    )}
+                    {freeDeliveryLabel && (
+                        <InfoRow label="Free Delivery" value={freeDeliveryLabel} isDarkMode={isDarkMode} />
+                    )}
+                    {feeBands.length > 0 && feeBands.map((band, i) => (
+                        <InfoRow key={i} label={band.label} value={band.fee} isDarkMode={isDarkMode} />
+                    ))}
                     {restaurant.minimumDeliveryValue !== undefined && (
                         <InfoRow label="Min Delivery Value" value={restaurant.minimumDeliveryValue === 0 ? 'None' : `£${restaurant.minimumDeliveryValue.toFixed(2)}`} isDarkMode={isDarkMode} />
                     )}
@@ -182,6 +195,9 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                         {(dealsExpanded ? uniqueDeals : uniqueDeals.slice(0, DEALS_INITIAL_LIMIT)).map((deal: DealType, i: number) => (
                             <View key={i} style={[detailPageStyles.dealCard, isDarkMode && detailPageStyles.darkdealCard]}>
                                 <Text style={[detailPageStyles.dealDescription, isDarkMode && detailPageStyles.darkdealDescription]}>{deal.description}</Text>
+                                <View style={[detailPageStyles.dealTypeBadge, isDarkMode && detailPageStyles.darkdealTypeBadge]}>
+                                    <Text style={detailPageStyles.dealTypeBadgeText}>{getDealOfferTypeLabel(deal.offerType)}</Text>
+                                </View>
                             </View>
                         ))}
                         {uniqueDeals.length > DEALS_INITIAL_LIMIT && (
@@ -197,18 +213,6 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                     </View>
                 )}
 
-                {restaurant.tags && restaurant.tags.length > 0 && (
-                    <View style={[detailPageStyles.section, isDarkMode && detailPageStyles.darksection]}>
-                        <Text style={[detailPageStyles.sectionTitle, isDarkMode && detailPageStyles.darksectionTitle]}>Tags</Text>
-                        <View style={detailPageStyles.tagsWrap}>
-                            {restaurant.tags.map((tag: string, i: number) => (
-                                <View key={i} style={[detailPageStyles.tagChip, isDarkMode && detailPageStyles.darktagChip]}>
-                                    <Text style={[detailPageStyles.tagText, isDarkMode && detailPageStyles.darktagText]}>{tag}</Text>
-                                </View>
-                            ))}
-                        </View>
-                    </View>
-                )}
             </ScrollView>
         </View>
     );

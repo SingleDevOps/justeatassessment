@@ -37,12 +37,6 @@ export const detailPageStyles = StyleSheet.create({
     darkrestaurantName: {
         color: '#FFFFFF',
     },
-    uniqueName: {
-        fontFamily: 'OpenSans-Regular',
-        fontSize: 12,
-        color: '#999999',
-        marginTop: 4,
-    },
 
     badgesRow: {
         flexDirection: 'row',
@@ -204,6 +198,24 @@ export const detailPageStyles = StyleSheet.create({
         color: '#999999',
         marginTop: 4,
     },
+    dealTypeBadge: {
+        alignSelf: 'flex-start',
+        marginTop: 6,
+        borderRadius: 6,
+        paddingHorizontal: 8,
+        paddingVertical: 3,
+        backgroundColor: '#FFF3E0',
+        borderWidth: 1,
+        borderColor: '#FF8000',
+    },
+    darkdealTypeBadge: {
+        backgroundColor: '#3A3A38',
+    },
+    dealTypeBadgeText: {
+        fontFamily: 'OpenSans-Semibold',
+        fontSize: 11,
+        color: '#FF8000',
+    },
 
     availabilityCard: {
         marginBottom: 12,
@@ -243,30 +255,6 @@ export const detailPageStyles = StyleSheet.create({
     },
     darkavailabilityValue: {
         color: '#E6E6E6',
-    },
-
-    tagChip: {
-        backgroundColor: '#E8E8E8',
-        borderRadius: 6,
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        marginRight: 6,
-        marginBottom: 6,
-    },
-    darktagChip: {
-        backgroundColor: '#3A3A38',
-    },
-    tagText: {
-        fontFamily: 'OpenSans-Regular',
-        fontSize: 12,
-        color: '#555555',
-    },
-    darktagText: {
-        color: '#CCCCCC',
-    },
-    tagsWrap: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
     },
 
     locationText: {

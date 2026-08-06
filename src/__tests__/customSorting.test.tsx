@@ -132,4 +132,77 @@ describe('<DisplayPage />', () => {
         expect(within(allCards[1]).getByText('Pizza Place')).toBeTruthy();  // 150
         expect(within(allCards[2]).getByText('Burger Joint')).toBeTruthy(); // 200
     });
+
+    it('sorts promoted restaurants first', async () => {
+        render(
+            <DisplayPage
+                navigation={mockNavigation}
+                route={{
+                    params: {
+                        postcode: 'SW1A 0AA',
+                        restaurants: mockRestaurants,
+                        allRestaurants: mockRestaurants,
+                        promotedPlacement: {
+                            filteredSearchPromotedLimit: 2,
+                            rankedIds: ['102', '101'],
+                            restaurants: {
+                                '101': { restaurantId: '101', defaultPromoted: true },
+                                '102': { restaurantId: '102', defaultPromoted: true },
+                            },
+                        },
+                    },
+                } as any}
+            />
+        );
+
+
+        await selectSortOption('Promoted first');
+
+        let allCards = await screen.findAllByTestId(/restaurant-card-/);
+        expect(within(allCards[0]).getByText('Burger Joint')).toBeTruthy();
+        expect(within(allCards[1]).getByText('Pizza Place')).toBeTruthy();
+        expect(within(allCards[2]).getByText('Sushi Spot')).toBeTruthy();
+    });
+
+    it('shows the promoted badge and area header from enriched data', async () => {
+        render(
+            <DisplayPage
+                navigation={mockNavigation}
+                route={{
+                    params: {
+                        postcode: 'SW1A 0AA',
+                        restaurants: mockRestaurants,
+                        allRestaurants: mockRestaurants,
+                        metaData: { area: 'Anfield', postalCode: 'L4 0TH', district: 'L4' },
+                        promotedPlacement: {
+                            filteredSearchPromotedLimit: 2,
+                            rankedIds: ['101'],
+                            restaurants: {
+                                '101': { restaurantId: '101', defaultPromoted: true },
+                            },
+                        },
+                        deliveryFees: {
+                            restaurants: {
+                                '101': {
+                                    restaurantId: '101',
+                                    minimumOrderValue: 0,
+                                    bands: [
+                                        { minimumAmount: 0, fee: 300 },
+                                        { minimumAmount: 1000, fee: 0 },
+                                    ],
+                                },
+                            },
+                        },
+                    },
+                } as any}
+            />
+        );
+
+
+        expect(await screen.findByText('Anfield · L4 0TH')).toBeTruthy();
+
+        const pizzaCard = await screen.findByTestId('restaurant-card-101');
+        expect(within(pizzaCard).getByText('Promoted')).toBeTruthy();
+        expect(within(pizzaCard).getByText('Free delivery over £10')).toBeTruthy();
+    });
 });

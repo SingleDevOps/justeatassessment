@@ -31,7 +31,16 @@ export const useMainPageViewModel = ({ navigation, isConnected }: UseMainPageVie
         setLoading(false);
 
         if (result.ok) {
-            navigation.navigate('DisplayPage', { postcode: cleaned, restaurants: result.restaurants, allRestaurants: result.allRestaurants });
+            navigation.navigate('DisplayPage', {
+                postcode: cleaned,
+                restaurants: result.restaurants,
+                allRestaurants: result.allRestaurants,
+                metaData: result.metaData,
+                deliveryFees: result.deliveryFees,
+                promotedPlacement: result.promotedPlacement,
+                filters: result.filters,
+                layout: result.layout,
+            });
         } else if (result.reason === 'api_error') {
             setError('api_error');
         } else {

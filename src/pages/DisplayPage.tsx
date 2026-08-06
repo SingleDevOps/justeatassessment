@@ -2,9 +2,12 @@
 import { useColorScheme, View, Text, FlatList, RefreshControl } from 'react-native';
 import { displayPageStyles } from '../stylesheets/pages/displayPage';
 import { filterCuisines } from '../functions/filtering/filter';
+import { getDeliveryFeesEntry, getFreeDeliveryLabel } from '../functions/filtering/deliveryFees';
 import { RestaurantCard } from '../components/RestaurantCard';
 import { FilterSearchBar } from '../components/FilterSearchBar';
 import { FilterModal } from '../components/FilterModal';
+import { FilterChipsBar } from '../components/FilterChipsBar';
+import { LocalLegendsCarousel } from '../components/LocalLegendsCarousel';
 import { useDisplayPageViewModel } from '../viewmodels/useDisplayPageViewModel';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { haversineDistanceMeters } from '../functions/map/distance';
@@ -49,31 +52,19 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
         });
     }, [navigation, vm.postcode, isDarkMode]);
 
+    const showCarousel = vm.searchQuery.trim() === '' && vm.localLegendsRestaurants.length > 0;
+
     return (
         <View style={[displayPageStyles.fullview, isDarkMode && displayPageStyles.darkfullview]}>
-            <View style={displayPageStyles.countBar}>
-                <Text style={[displayPageStyles.countText, isDarkMode && displayPageStyles.darkcountText]}>
-                    {vm.searchQuery.trim() || vm.activeFilterCount > 0
-                        ? `${vm.matchCount} of ${vm.allRestaurants.length} restaurants`
-                        : `${vm.allRestaurants.length} restaurants`}
-                </Text>
-            </View>
-            <FilterSearchBar
-                query={vm.searchQuery}
-                onChangeText={vm.setSearchQuery}
-                isDarkMode={isDarkMode}
-                onFilterPress={() => vm.toggleFilterModal(true)}
-                activeFilterCount={vm.activeFilterCount}
-            />
-            <View style={displayPageStyles.container}>
-                <FlatList
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    data={vm.filteredRestaurants}
-                    renderItem={({ item }) => {
-                        const cuisines = filterCuisines(item);
-                        const gpsDistance = distanceMap[item.id.toString()];
-                        return (
+            <FlatList
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                data={vm.filteredRestaurants}
+                renderItem={({ item }) => {
+                    const cuisines = filterCuisines(item);
+                    const gpsDistance = distanceMap[item.id.toString()];
+                    return (
+                        <View style={displayPageStyles.container}>
                             <RestaurantCard
                                 item={item}
                                 isDarkMode={isDarkMode}
@@ -81,21 +72,67 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
                                 navigation={navigation}
                                 distanceMeters={gpsDistance ?? item.driveDistanceMeters ?? null}
                                 distanceIsFromUser={gpsDistance !== undefined}
+                                isPromoted={vm.isPromoted(item.id)}
+                                isBoosted={item.isTemporaryBoost}
+                                freeDeliveryLabel={getFreeDeliveryLabel(item.id, vm.deliveryFees)}
                             />
-                        );
-                    }}
-                    keyExtractor={(item) => item.id.toString()}
-                    ListFooterComponent={<View style={displayPageStyles.listfooterComponent} />}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={vm.refreshing}
-                            onRefresh={vm.onRefresh}
-                            colors={['#FF8000']}
-                            tintColor={isDarkMode ? '#FFFFFF' : '#000000'}
+                        </View>
+                    );
+                }}
+                keyExtractor={(item) => item.id.toString()}
+                ListHeaderComponent={
+                    <View>
+                        <View style={displayPageStyles.countBar}>
+                            {vm.metaData && (
+                                <Text style={[displayPageStyles.areaText, isDarkMode && displayPageStyles.darkareaText]} testID="area-header">
+                                    {vm.metaData.area} · {vm.metaData.postalCode}
+                                </Text>
+                            )}
+                            <Text style={[displayPageStyles.countText, isDarkMode && displayPageStyles.darkcountText]}>
+                                {vm.searchQuery.trim() || vm.activeFilterCount > 0
+                                    ? `${vm.matchCount} of ${vm.allRestaurants.length} restaurants`
+                                    : `${vm.allRestaurants.length} restaurants`}
+                            </Text>
+                        </View>
+                        <FilterSearchBar
+                            query={vm.searchQuery}
+                            onChangeText={vm.setSearchQuery}
+                            isDarkMode={isDarkMode}
+                            onFilterPress={() => vm.toggleFilterModal(true)}
+                            activeFilterCount={vm.activeFilterCount}
                         />
-                    }
-                />
-            </View>
+                        <FilterChipsBar
+                            defs={vm.layoutFilterDefs}
+                            selectedIds={vm.layoutFilters}
+                            onToggle={vm.toggleLayoutFilter}
+                            isDarkMode={isDarkMode}
+                        />
+                        {showCarousel && (
+                            <View style={displayPageStyles.container}>
+                                <LocalLegendsCarousel
+                                    restaurants={vm.localLegendsRestaurants}
+                                    isDarkMode={isDarkMode}
+                                    onPress={(restaurant) =>
+                                        navigation.navigate('RestaurantDetailPage', {
+                                            restaurant,
+                                            deliveryFees: getDeliveryFeesEntry(restaurant.id, vm.deliveryFees),
+                                        })
+                                    }
+                                />
+                            </View>
+                        )}
+                    </View>
+                }
+                ListFooterComponent={<View style={displayPageStyles.listfooterComponent} />}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={vm.refreshing}
+                        onRefresh={vm.onRefresh}
+                        colors={['#FF8000']}
+                        tintColor={isDarkMode ? '#FFFFFF' : '#000000'}
+                    />
+                }
+            />
             <FilterModal
                 visible={vm.filterModalVisible}
                 onClose={() => vm.toggleFilterModal(false)}

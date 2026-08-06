@@ -31,6 +31,14 @@ export function applyFilters(restaurants: RestaurantType[], filters: FilterState
     return results;
 }
 
+export function applyRestaurantIdFilter(restaurants: RestaurantType[], restaurantIds: string[]): RestaurantType[] {
+    if (!restaurantIds || restaurantIds.length === 0) {
+        return restaurants;
+    }
+    const idSet = new Set(restaurantIds);
+    return restaurants.filter(r => idSet.has(r.id.toString()));
+}
+
 export function countActiveFilters(filters: FilterState): number {
     let count = 0;
     if (filters.openNow) count++;

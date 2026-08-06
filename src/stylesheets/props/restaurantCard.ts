@@ -67,6 +67,61 @@ export const restaurantCardStyles = StyleSheet.create({
         fontSize: 18,
         color: '#333333',
         marginBottom: 4,
+        flexShrink: 1,
+    },
+
+    nameRow: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+    },
+
+    badgeRow: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-end',
+        marginLeft: 8,
+        gap: 4,
+    },
+
+    badge: {
+        borderRadius: 8,
+        paddingHorizontal: 6,
+        paddingVertical: 2,
+    },
+
+    newBadge: {
+        backgroundColor: '#3B82F6',
+    },
+
+    newBadgeText: {
+        fontFamily: 'OpenSans-Bold',
+        fontSize: 10,
+        color: '#FFFFFF',
+    },
+
+    promotedBadge: {
+        backgroundColor: '#FF8000',
+    },
+
+    promotedBadgeText: {
+        fontFamily: 'OpenSans-Bold',
+        fontSize: 10,
+        color: '#FFFFFF',
+    },
+
+    boostedBadge: {
+        backgroundColor: '#8B5CF6',
+    },
+
+    boostedBadgeText: {
+        fontFamily: 'OpenSans-Bold',
+        fontSize: 10,
+        color: '#FFFFFF',
+    },
+
+    offlineImage: {
+        opacity: 0.4,
     },
 
     // Dark mode override for restaurant name
@@ -108,6 +163,41 @@ export const restaurantCardStyles = StyleSheet.create({
     // Dark mode override for rating count text
     darkratingNumbers: {
         color: 'white',
+    },
+
+    openDot: {
+        marginLeft: 8,
+        borderRadius: 8,
+        paddingHorizontal: 6,
+        paddingVertical: 2,
+        backgroundColor: '#E6F4EA',
+    },
+
+    openDotText: {
+        fontFamily: 'OpenSans-Semibold',
+        fontSize: 10,
+        color: '#1E8E3E',
+    },
+
+    offlineDot: {
+        backgroundColor: '#FDE7E7',
+    },
+
+    offlineDotText: {
+        fontFamily: 'OpenSans-Semibold',
+        fontSize: 10,
+        color: '#C5221F',
+    },
+
+    freeDeliveryText: {
+        fontFamily: 'OpenSans-Semibold',
+        fontSize: 12,
+        color: '#1E8E3E',
+        marginTop: 4,
+    },
+
+    darkFreeDeliveryText: {
+        color: '#7AD47E',
     },
 
     // Style for the divider between upper and lower card sections

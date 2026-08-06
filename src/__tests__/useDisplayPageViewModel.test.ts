@@ -223,3 +223,117 @@ describe('useDisplayPageViewModel', () => {
         expect(result.current.filterModalVisible).toBe(true);
     });
 });
+
+const enrichedRoute = (overrides: any = {}): any => ({
+    params: {
+        postcode: 'SW1A0AA',
+        restaurants: mockRestaurants,
+        allRestaurants: mockRestaurants,
+        metaData: { area: 'Anfield', postalCode: 'L4 0TH', district: 'L4' },
+        promotedPlacement: {
+            filteredSearchPromotedLimit: 2,
+            rankedIds: ['102', '103'],
+            restaurants: {
+                '102': { restaurantId: '102', defaultPromoted: true },
+                '103': { restaurantId: '103', defaultPromoted: true },
+            },
+        },
+        filters: {
+            'free_delivery': {
+                displayName: 'Free Delivery',
+                restaurantIds: ['101', '102'],
+            },
+            'open_now': {
+                displayName: 'Open Now',
+                restaurantIds: ['102'],
+            },
+            'local-legends': {
+                displayName: 'Local Legends',
+                restaurantIds: ['103'],
+            },
+        },
+        layout: {
+            'search-refine-filters': {
+                type: 'list',
+                id: 'search-refine-filters',
+                title: 'Filters',
+                contents: [
+                    { type: 'filter', id: 'free_delivery', title: 'Free Delivery' },
+                    { type: 'filter', id: 'open_now', title: 'Open Now' },
+                ],
+            },
+        },
+        ...overrides,
+    },
+});
+
+describe('useDisplayPageViewModel enriched data', () => {
+    it('exposes meta data for the area header', () => {
+        const { result } = renderHook(() => useDisplayPageViewModel({ route: enrichedRoute() }));
+
+        expect(result.current.metaData?.area).toBe('Anfield');
+        expect(result.current.metaData?.postalCode).toBe('L4 0TH');
+    });
+
+    it('identifies promoted restaurants from promotedPlacement', () => {
+        const { result } = renderHook(() => useDisplayPageViewModel({ route: enrichedRoute() }));
+
+        expect(result.current.isPromoted('102')).toBe(true);
+        expect(result.current.isPromoted('101')).toBe(false);
+    });
+
+    it('sorts promoted restaurants first when the promoted sort is selected', () => {
+        const { result } = renderHook(() => useDisplayPageViewModel({ route: enrichedRoute() }));
+
+        act(() => {
+            result.current.setSelectedSortOption('Promoted first');
+        });
+
+        expect(result.current.sortedRestaurants.map(r => r.id)).toEqual(['102', '101']);
+    });
+
+    it('builds layout filter definitions with counts', () => {
+        const { result } = renderHook(() => useDisplayPageViewModel({ route: enrichedRoute() }));
+
+        expect(result.current.layoutFilterDefs).toEqual([
+            { id: 'free_delivery', title: 'Free Delivery', count: 2 },
+            { id: 'open_now', title: 'Open Now', count: 1 },
+        ]);
+    });
+
+    it('filters the list by a selected layout chip', () => {
+        const { result } = renderHook(() => useDisplayPageViewModel({ route: enrichedRoute() }));
+
+        act(() => {
+            result.current.toggleLayoutFilter('free_delivery');
+        });
+
+        expect(result.current.filteredRestaurants.map(r => r.id)).toEqual(['101', '102']);
+        expect(result.current.activeFilterCount).toBe(1);
+        expect(result.current.matchCount).toBe(2);
+    });
+
+    it('toggles a layout chip off again', () => {
+        const { result } = renderHook(() => useDisplayPageViewModel({ route: enrichedRoute() }));
+
+        act(() => {
+            result.current.toggleLayoutFilter('open_now');
+            result.current.toggleLayoutFilter('open_now');
+        });
+
+        expect(result.current.layoutFilters).toEqual([]);
+        expect(result.current.activeFilterCount).toBe(0);
+    });
+
+    it('builds the local legends list from filter restaurant ids', () => {
+        const { result } = renderHook(() => useDisplayPageViewModel({ route: enrichedRoute() }));
+
+        expect(result.current.localLegendsRestaurants.map(r => r.id)).toEqual(['103']);
+    });
+
+    it('excludes local legends from the main list', () => {
+        const { result } = renderHook(() => useDisplayPageViewModel({ route: enrichedRoute() }));
+
+        expect(result.current.sortedRestaurants.map(r => r.id)).toEqual(['101', '102']);
+    });
+});

@@ -1,9 +1,10 @@
 import * as sampleData from '../../assets/data/L40TH.json';
 import { RestaurantType } from '../../types/restaurant';
+import { SearchEnrichmentType } from '../../types/searchData';
 import { API_URLS } from '../../configs/api';
 
 export type SearchResult =
-  | { ok: true; restaurants: RestaurantType[]; allRestaurants: RestaurantType[] }
+  | { ok: true; restaurants: RestaurantType[]; allRestaurants: RestaurantType[] } & Partial<SearchEnrichmentType>
   | { ok: false; reason: 'invalid_postcode' | 'api_error' };
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -32,13 +33,19 @@ export async function validatePostcode(postcode: string): Promise<boolean> {
   }
 }
 
-export async function fetchRestaurantsFromJustEat(postcode: string): Promise<RestaurantType[] | null> {
+export async function fetchRestaurantsFromJustEat(postcode: string): Promise<{ restaurants: RestaurantType[] } & Partial<SearchEnrichmentType> | null> {
   try {
     const response = await fetch(API_URLS.JUST_EAT_API_URL(postcode), { method: 'GET' });
     const apiData = await response.json();
-    const restaurants = apiData.restaurants;
-    if (restaurants) {
-      return restaurants;
+    if (apiData.restaurants) {
+      const enrichment: Partial<SearchEnrichmentType> = {};
+      const knownKeys: (keyof SearchEnrichmentType)[] = ['metaData', 'deliveryFees', 'promotedPlacement', 'filters', 'layout'];
+      knownKeys.forEach(key => {
+        if (apiData[key] !== undefined) {
+          enrichment[key] = apiData[key];
+        }
+      });
+      return { restaurants: apiData.restaurants, ...enrichment };
     }
   } catch {
     return null;
@@ -54,7 +61,16 @@ export async function handleSearch(postcode: string): Promise<SearchResult> {
         resolve(pickRandomTen(allRestaurants));
       }, 1000);
     });
-    return { ok: true, restaurants, allRestaurants };
+    return {
+      ok: true,
+      restaurants,
+      allRestaurants,
+      metaData: sampleData.metaData,
+      deliveryFees: sampleData.deliveryFees,
+      promotedPlacement: sampleData.promotedPlacement,
+      filters: sampleData.filters,
+      layout: sampleData.layout,
+    };
   }
 
   const POSTCODE_VALIDATION_TIMEOUT = new Promise<string>((resolve) =>
@@ -67,12 +83,13 @@ export async function handleSearch(postcode: string): Promise<SearchResult> {
   ]);
 
   if (validationResult === 'TIMEOUT' || validationResult === true) {
-    const allRestaurants = await fetchRestaurantsFromJustEat(postcode);
-    if (allRestaurants === null) {
+    const result = await fetchRestaurantsFromJustEat(postcode);
+    if (result === null) {
       return { ok: false, reason: 'api_error' };
     }
+    const { restaurants: allRestaurants, ...enrichment } = result;
     const restaurants = pickRandomTen(allRestaurants);
-    return { ok: true, restaurants, allRestaurants };
+    return { ok: true, restaurants, allRestaurants, ...enrichment };
   }
 
   return { ok: false, reason: 'invalid_postcode' };

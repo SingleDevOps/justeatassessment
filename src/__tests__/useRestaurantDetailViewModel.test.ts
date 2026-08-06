@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react-native';
-import { useRestaurantDetailViewModel, formatDate, formatEta, DEALS_INITIAL_LIMIT } from '../viewmodels/useRestaurantDetailViewModel';
+import { useRestaurantDetailViewModel, formatDate, formatEta, getDealOfferTypeLabel, DEALS_INITIAL_LIMIT } from '../viewmodels/useRestaurantDetailViewModel';
 
 describe('useRestaurantDetailViewModel', () => {
     it('deduplicates deals by offerType and description', () => {
@@ -86,5 +86,61 @@ describe('detail formatters', () => {
 
     it('exposes the initial deals limit', () => {
         expect(DEALS_INITIAL_LIMIT).toBe(5);
+    });
+});
+
+describe('getDealOfferTypeLabel', () => {
+    it('maps known offer types to friendly labels', () => {
+        expect(getDealOfferTypeLabel('ItemLevelDiscount')).toBe('Item discount');
+        expect(getDealOfferTypeLabel('FreeItem')).toBe('Free item');
+        expect(getDealOfferTypeLabel('Voucher')).toBe('Voucher');
+        expect(getDealOfferTypeLabel('StampCard')).toBe('Collect stamps');
+        expect(getDealOfferTypeLabel('Notification')).toBe('Offer');
+    });
+
+    it('falls back to the raw type or Offer', () => {
+        expect(getDealOfferTypeLabel('CustomType')).toBe('CustomType');
+        expect(getDealOfferTypeLabel(undefined)).toBe('Offer');
+    });
+});
+
+describe('useRestaurantDetailViewModel with delivery fees', () => {
+    const deliveryFees = {
+        restaurantId: '213648',
+        minimumOrderValue: 0,
+        bands: [
+            { minimumAmount: 0, fee: 300 },
+            { minimumAmount: 1000, fee: 0 },
+        ],
+    };
+
+    it('exposes the user rating when present', () => {
+        const { result } = renderHook(() =>
+            useRestaurantDetailViewModel({ rating: { userRating: 4.5 } } as any)
+        );
+        expect(result.current.userRating).toBe(4.5);
+    });
+
+    it('exposes no user rating when absent or null', () => {
+        const { result } = renderHook(() =>
+            useRestaurantDetailViewModel({ rating: { userRating: null } } as any)
+        );
+        expect(result.current.userRating).toBeNull();
+    });
+
+    it('derives fee bands and free delivery label from delivery fees', () => {
+        const { result } = renderHook(() =>
+            useRestaurantDetailViewModel({} as any, deliveryFees as any)
+        );
+        expect(result.current.feeBands).toHaveLength(2);
+        expect(result.current.freeDeliveryLabel).toBe('Free delivery over £10.00');
+        expect(result.current.minimumOrderValue).toBe(0);
+    });
+
+    it('handles missing delivery fees', () => {
+        const { result } = renderHook(() => useRestaurantDetailViewModel({} as any));
+        expect(result.current.feeBands).toEqual([]);
+        expect(result.current.freeDeliveryLabel).toBeNull();
+        expect(result.current.minimumOrderValue).toBeNull();
     });
 });

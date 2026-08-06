@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { DealType, EtaMinutesType } from '../types/restaurant';
+import type { DeliveryFeesEntryType } from '../types/searchData';
+import { formatFeeBands, formatMoney, getFreeDeliveryThreshold } from '../functions/filtering/deliveryFees';
 
 export const DEALS_INITIAL_LIMIT = 5;
 
@@ -24,6 +26,23 @@ export function formatEta(eta?: EtaMinutesType): string {
     return 'N/A';
 }
 
+export function getDealOfferTypeLabel(offerType?: string): string {
+    switch (offerType) {
+        case 'ItemLevelDiscount':
+            return 'Item discount';
+        case 'FreeItem':
+            return 'Free item';
+        case 'Voucher':
+            return 'Voucher';
+        case 'StampCard':
+            return 'Collect stamps';
+        case 'Notification':
+            return 'Offer';
+        default:
+            return offerType || 'Offer';
+    }
+}
+
 function deduplicateDeals(deals: DealType[]): DealType[] {
     const seen = new Set<string>();
     return deals.filter(deal => {
@@ -37,14 +56,40 @@ function deduplicateDeals(deals: DealType[]): DealType[] {
     });
 }
 
-export const useRestaurantDetailViewModel = (restaurant: { deals?: DealType[] }) => {
+export const useRestaurantDetailViewModel = (
+    restaurant: { deals?: DealType[]; rating?: { userRating?: number | null } },
+    deliveryFees?: DeliveryFeesEntryType
+) => {
     const [dealsExpanded, setDealsExpanded] = useState(false);
 
     const uniqueDeals = useMemo(() => deduplicateDeals(restaurant.deals ?? []), [restaurant.deals]);
+
+    const userRating = restaurant.rating?.userRating ?? null;
+
+    const feeBands = useMemo(() => formatFeeBands(deliveryFees), [deliveryFees]);
+
+    const freeDeliveryLabel = useMemo(() => {
+        const threshold = getFreeDeliveryThreshold(deliveryFees);
+        if (threshold === null) {
+            return null;
+        }
+        if (threshold === 0) {
+            return 'Free delivery';
+        }
+        return `Free delivery over ${formatMoney(threshold)}`;
+    }, [deliveryFees]);
 
     const toggleDealsExpanded = () => {
         setDealsExpanded(prev => !prev);
     };
 
-    return { uniqueDeals, dealsExpanded, toggleDealsExpanded };
+    return {
+        uniqueDeals,
+        dealsExpanded,
+        toggleDealsExpanded,
+        userRating,
+        feeBands,
+        freeDeliveryLabel,
+        minimumOrderValue: deliveryFees?.minimumOrderValue ?? null,
+    };
 };
