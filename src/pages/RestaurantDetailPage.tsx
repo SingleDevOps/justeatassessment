@@ -216,18 +216,6 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                         </View>
                     </View>
                 )}
-
-                <View style={[detailPageStyles.section, isDarkMode && detailPageStyles.darksection]}>
-                    <Text style={[detailPageStyles.sectionTitle, isDarkMode && detailPageStyles.darksectionTitle]}>Flags & Metadata</Text>
-                    <InfoRow label="ID" value={String(restaurant.id)} isDarkMode={isDarkMode} />
-                    {restaurant.defaultDisplayRank !== undefined && (
-                        <InfoRow label="Display Rank" value={String(restaurant.defaultDisplayRank)} isDarkMode={isDarkMode} />
-                    )}
-                    <InfoRow label="Premier" value={restaurant.isPremier ? 'Yes' : 'No'} isDarkMode={isDarkMode} />
-                    <InfoRow label="Temporary Boost" value={restaurant.isTemporaryBoost ? 'Yes' : 'No'} isDarkMode={isDarkMode} />
-                    <InfoRow label="Test Restaurant" value={restaurant.isTestRestaurant ? 'Yes' : 'No'} isDarkMode={isDarkMode} />
-                    <InfoRow label="Temporarily Offline" value={restaurant.isTemporarilyOffline ? 'Yes' : 'No'} isDarkMode={isDarkMode} />
-                </View>
             </ScrollView>
         </View>
     );
