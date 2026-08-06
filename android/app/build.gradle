@@ -83,7 +83,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode project.findProperty('versionCode')?.toInteger() ?: 24
-        versionName project.findProperty('versionName') ?: "1.2"
+        versionName project.findProperty('versionName') ?: "1.4.0"
     }
     signingConfigs {
         debug {
