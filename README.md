@@ -219,9 +219,64 @@ Key settings and values in configuration files.
 
 You can modify key settings without changing the code logic, which improves flexibility and reduces errors.
 
+- **PIE Design Tokens (`src/configs/pieTokens.ts`)**: The single source of truth for every colour, spacing, typography, radius, motion and elevation value, mirroring the official PIE design system tokens (`@justeattakeaway/pie-design-tokens`, Jet theme). Consumers must not invent new token names or hard-code values.
 - **API Configuration (`src/configs/api.ts`)**: All external API URLs and timeout settings are centralized in this file. When API endpoint changes, update it here.
 - **Sorting Options (`src/configs/sortingOptions.ts`)**: All sorting options in one place. When changing sorting list options, update this file.
 - **Cuisine Emoji Mapping (`src/configs/cuisineEmojiMatch.ts`)**: maps cuisine names to emojis, making it easier to manage visual elements across the app.
+
+---
+
+### Theming (Dark Mode as a Token Swap)
+
+Dark mode is not implemented with parallel "dark" stylesheets any more. Every stylesheet is a factory of the active PIE theme (`makeThemedStyles`), and `usePieTheme` (`src/hooks/usePieTheme.ts`) returns the light or dark token set for the current device colour scheme. Components receive `theme` and never branch on hard-coded colours.
+
+---
+
+### PIE Alignment
+
+PIE (Principles for Interfaces and Experiences) is Just Eat Takeaway's global design system. The PIE repositories live in the sibling folders `Documents/pie`, `Documents/pie-iconography`, `Documents/pie-illustrations` and `Documents/pie-logos`. PIE components are web components (Lit 3), so a React Native app cannot consume them directly; this app instead **adopts the PIE tokens, icons, logos, illustrations, component conventions, accessibility and engineering standards**.
+
+#### Component mapping
+
+| App component | PIE equivalent | PIE tokens applied |
+|---|---|---|
+| `RestaurantCard` | `pie-card` | `container-default`, `radius-rounded-c`, `box-shadow-a` |
+| Status badges (NEW / Promoted / Boosted) | `pie-tag` | pill shape, `support-info`, `interactive-brand`, `support-brand-06` |
+| Open / Offline pills | `pie-tag` | `support-positive(-tonal)`, `support-error(-tonal)` |
+| `FilterChipsBar` | `pie-chip` | `container-default`, `interactive-brand` when selected, `focus-outer` |
+| `SearchBar` / `FilterSearchBar` | `pie-text-input` + `pie-button` | `border-default`, `interactive-brand` |
+| `FilterModal` | `pie-modal` | `overlay`, `motion.timing-300/250`, slide-up pattern |
+| `ErrorStateView` / empty state | `pie-notification` + PIE illustrations | `support-error(-tonal)`, `content-error` |
+| Rating display | `pie-rating` | `content-brand` |
+| `LocalLegendsCarousel` | `pie-card` | `container-default`, `box-shadow-a` |
+| Search / star / pin / settings icons | `pie-icon` | `content-inverse-solid`, `content-brand`, `content-subdued` |
+
+#### PIE assets (icons, logos, illustrations)
+
+All vector assets come from the official PIE repositories and are rendered with `react-native-svg` (there are no bundled PNGs for the brand mark or icons any more):
+
+- **Icons** (`pie-iconography`): `All/Functionality/search.svg`, `All/Reaction/star-filled.svg`, `All/Location/location-pin.svg`, `All/Functionality/settings.svg`. Path data lives in `src/assets/svg/pieIcons.ts`; `src/components/icons/PieIcon.tsx` renders it filled with a theme token colour at runtime, so icons adapt to dark mode automatically.
+- **Logo** (`pie-logos`): `Brand/Light/light-justeat-primary-horizontal.svg` (monochrome orange mark, legible on light and dark) in `src/assets/svg/pieLogo.ts`, rendered by `src/components/icons/Logo.tsx`.
+- **Illustrations** (`pie-illustrations`): the "Small" set used for the DisplayPage empty state (`looking-1`) and MainPage error states (`app-down-1`, `error-sorry-1`, `compulsory-fields`), in `src/assets/svg/pieIllustrations.ts`, rendered by `src/components/icons/ErrorStateView.tsx`.
+
+The TS modules are generated verbatim from the downloaded repos by `scripts/generatePieSvgAssets.js` — re-run `node scripts/generatePieSvgAssets.js` after the upstream repos change (output is committed).
+
+#### Accessibility (PIE "Inclusive" principle)
+
+- Interactive elements expose `accessibilityRole`, `accessibilityLabel` and `accessibilityState` (cards, chips, search/filter/apply buttons, map controls).
+- Touch targets respect the PIE 44pt minimum via `minHeight` + sizing on pills, chips and buttons.
+- `FilterModal` honours `AccessibilityInfo.isReduceMotionEnabled()` and skips slide animations when reduced motion is preferred.
+- Text scales with system settings (no fixed heights that clip content).
+
+#### Engineering standards (PIE workflow)
+
+- Commit messages follow the PIE committizen convention: `type(scope): message` (e.g. `feat(restaurantCard): ...`, `style(pieTokens): ...`).
+
+#### Documented divergences
+
+- PIE's `family-primary` is the proprietary JetSansDigital font; this app keeps its bundled OpenSans faces as `family-primary`.
+- `interactive-brand` is the official PIE orange `#f36805`; earlier builds used `#FF8000` (PIE `orange-30`, still available as `support-brand-01`).
+- PIE's BEM-style class naming and `pie-css` SCSS helpers do not apply to React Native stylesheets.
 
 ---
 
@@ -245,8 +300,9 @@ This app handles problems gracefully.
 - **Postcode Validation**: The `validatePostcode` function checks if the user entered a valid UK postcode before making a request. This prevents unnecessary API calls when the input is invalid.
 - **Validation Timeout**: The `handleSearch` function has a timeout built-in. If postcode validation takes too long (e.g., due to network issues), the app doesn't hang; it moves on and tries fetching restaurant data from Just Eat.
 - **Fallback Data**: If no postcode is entered (or if the default `L40TH` postcode is used), the app loads sample data instead of showing an error. The user can explore the app even if the API isn't available (useful for demos or testing).
-- **No Internet Error**: The application shows "No Internet" error when the user searches postcode with no Internet connection.
-- **Restaurant API Error**: If the user is not having an European IP address or if the restaurant api endpoint is down.
+- **No Internet Error**: The application shows an in-app "No Internet" error view (official PIE illustration, `ErrorStateView`) when the user searches a postcode with no Internet connection, with "Try again" and "Dismiss" actions.
+- **Restaurant API Error**: If the user is not having an European IP address or if the restaurant api endpoint is down, the same themed error view appears with the `app-down-1` illustration.
+- **Invalid Postcode Error**: Instead of a native alert, an in-app error view with the `compulsory-fields` illustration and a "Dismiss" action is shown.
 - **Emoji-Cuisine Match**: The `cuisineEmojiMatch.ts` has a mapping of cuisine names to emojis, which makes the restaurant list appealing.
 
 ---
