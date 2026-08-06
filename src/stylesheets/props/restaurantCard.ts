@@ -230,6 +230,7 @@ export const restaurantCardStyles = makeThemedStyles((t) => ({
     address: {
         fontFamily: t.fontFamily.lightItalic,
         fontSize: t.fontSize.size12,
+        color: t.color.contentSubdued,
 
         flex: 1, // Allow text to take remaining space
         lineHeight: t.lineHeight.lh20, // Consistent line height for multi-line text

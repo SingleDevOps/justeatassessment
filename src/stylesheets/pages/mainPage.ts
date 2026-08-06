@@ -27,7 +27,7 @@ export const mainpageStyles = makeThemedStyles((t) => ({
     // Style for the Just Eat logo image
     // Official PIE logo mark (156:38 ratio), centered
     logo: {
-        width: '55%',
+        width: '77.5%',
         aspectRatio: 156 / 38,
         alignSelf: 'center',
         marginBottom: t.spacing.e,
@@ -43,7 +43,7 @@ export const mainpageStyles = makeThemedStyles((t) => ({
     // Style for the "Near You" portion of title text
     // Defines appearance with italic subdued text that complements the brand text
     titleSecondpart: {
-        fontSize: t.fontSize.size20,
+        fontSize: t.fontSize.size24,
         fontWeight: 'bold',
         color: t.color.contentSubdued,
         textAlign: 'center',
@@ -57,13 +57,14 @@ export const mainpageStyles = makeThemedStyles((t) => ({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: t.spacing.aSmall,
+        marginBottom: 20,
+        width: '77.5%',
     },
 
     // Style for the "Find Restaurants" portion of title text
     // Uses the PIE interactive-brand colour with bold italic styling
     titleFirstpart: { //style of the text "Find Restaurants"
-        fontSize: t.fontSize.size20,
+        fontSize: t.fontSize.size24,
         fontWeight: 'bold',
         color: t.color.interactiveBrand,
         textAlign: 'center',
