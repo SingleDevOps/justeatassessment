@@ -82,8 +82,8 @@ android {
         applicationId "com.justeatassessment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 24
-        versionName "1.2"
+        versionCode project.findProperty('versionCode')?.toInteger() ?: 24
+        versionName project.findProperty('versionName') ?: "1.2"
     }
     signingConfigs {
         debug {

@@ -9,8 +9,8 @@
     "start": "react-native start",
     "test": "jest",
     "postinstall": "patch-package",
-    "createAPK": "cd android && gradlew.bat clean && gradlew.bat assembleRelease",
-    "clean": "cd android && gradlew.bat clean"
+    "buildApk": "node scripts/gradle.js",
+    "clean": "node scripts/gradle.js clean"
   },
   "dependencies": {
     "@react-native-community/geolocation": "^3.4.0",
