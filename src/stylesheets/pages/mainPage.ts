@@ -70,11 +70,4 @@ export const mainpageStyles = makeThemedStyles((t) => ({
         fontStyle: 'italic',
         marginBottom: t.spacing.aSmall,
     },
-
-    // Wrapper for the in-app error state shown below the search bar
-    errorStateContainer: {
-        width: '100%',
-        marginTop: t.spacing.e,
-        flexShrink: 1,
-    },
 }));
