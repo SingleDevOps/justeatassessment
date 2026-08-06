@@ -241,6 +241,12 @@ This app handles problems gracefully.
 
 ![Program-Flow-Chart.png](https://i.postimg.cc/L6qMn014/Flow-Chart.png)
 
+## Architecture Diagrams
+
+![Full-Info-Display Architecture](full-info-display-architecture.svg)
+
+![Full-Info-Display Runtime Flow](full-info-display-architecture_001.svg)
+
 ## Getting Started
 
 **If you do not want to set up the project by yourself, you can download the "just-eat.apk" file from src/apk folder and install it on your Android devices.**
