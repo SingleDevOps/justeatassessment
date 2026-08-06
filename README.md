@@ -13,6 +13,10 @@ This application includes two pages:
 1. MainPage
 2. DisplayPage
 
+On the `Full-Info-Display` branch, a third page is added:
+
+3. RestaurantDetailPage
+
 This application does two things:
 
 1. On **MainPage**, it validates the postcode, searches it and returns the first 10 restaurants for any valid UK postcode, with error handling (Validation API Fails, Request Timeout, No Internet, Just Eat API Fails). This is done through two APIs:
@@ -21,7 +25,7 @@ This application does two things:
 
    ***If searching L4 0TH, or empty string, the local sample data will be used for display purpose***
 
-2. On **DisplayPage**, it can display the restaurant in the order of the returning data, or it can display the same restaurants by multiple sorting options: ***Rating***, ***RatingCount***, ***Alphabetical Order of Restaurant Names***. It can refresh the restaurant list by swiping down the screen.
+2. On **DisplayPage**, it can display the restaurant in the order of the returning data, or it can display the same restaurants by multiple sorting options: ***Rating***, ***RatingCount***, ***Alphabetical Order of Restaurant Names***, each with both ascending and descending directions. It can refresh the restaurant list by swiping down the screen.
 
 Besides, this application has dark mode design, for the night usage.
 
@@ -93,7 +97,7 @@ Besides, this application has dark mode design, for the night usage.
     │
     ├── __tests__/              # Test files
     │   ├── MainPage.test.tsx
-    │   ├── CustomSorting.test.tsx
+    │   ├── customSorting.test.tsx
     │   └── apiRequest.test.ts
     │
     └── apk/
@@ -112,9 +116,14 @@ Extends the `main` branch structure with the following additions:
     │   ├── DisplayPage.tsx
     │   └── RestaurantDetailPage.tsx  # Full restaurant details view [NEW]
     │
+    ├── viewmodels/                   # ViewModel layer: per-screen state & business logic [NEW]
+    │   ├── useMainPageViewModel.ts        # Search state, postcode validation, navigation
+    │   ├── useDisplayPageViewModel.ts     # Sorting, filtering, search, refresh, shuffle
+    │   ├── useFilterModalViewModel.ts     # Filter/sort draft state & change tracking
+    │   └── useRestaurantDetailViewModel.ts # Detail data selection & deal deduplication
+    │
     ├── components/
     │   ├── RestaurantCard.tsx
-    │   ├── SelectList.tsx
     │   ├── SearchBar.tsx
     │   ├── FilterModal.tsx           # Advanced filtering modal [NEW]
     │   └── FilterSearchBar.tsx       # Search with filter integration [NEW]
@@ -123,29 +132,28 @@ Extends the `main` branch structure with the following additions:
     │   ├── restaurant.ts
     │   ├── restaurantCard.ts
     │   ├── searchBar.ts
-    │   ├── selectList.ts
-    │   ├── selectListOption.ts
     │   ├── navigation.ts
-    │   └── filterOptions.ts          # Filter state and option types [NEW]
+    │   ├── filterOptions.ts          # Filter state and option types [NEW]
+    │   └── filterSearchBar.ts        # Props for FilterSearchBar [NEW]
     │
     ├── functions/
     │   ├── api/
     │   │   └── apiRequest.ts
     │   ├── filtering/
-    │   │   ├── filter.ts
-    │   │   └── searchRestaurants.ts  # Multi-keyword search logic [NEW]
+    │   │   ├── filter.ts             # Function to format cuisine names with emojis
+    │   │   ├── searchRestaurants.ts  # Multi-keyword search, shuffle, result limit [NEW]
+    │   │   └── applyFilters.ts       # Filter + sort application logic [NEW]
     │   └── sorting/
     │       └── sortRestaurantData.ts
     │
     ├── hooks/
-    │   ├── useKeyboardVisible.ts
-    │   └── useRestaurantSorting.ts
+    │   └── useKeyboardVisible.ts     # Hook to track keyboard visibility
     │
     ├── configs/
     │   ├── api.ts
-    │   ├── sortingOptions.ts
+    │   ├── sortingOptions.ts         # 6 sorting options (rating/count/name, asc & desc)
     │   ├── cuisineEmojiMatch.ts
-    │   └── filterDefaults.ts         # Default filter options and values [NEW]
+    │   └── filterDefaults.ts         # Rating, delivery cost, cuisine options & defaults [NEW]
     │
     ├── stylesheets/
     │   ├── pages/
@@ -155,30 +163,32 @@ Extends the `main` branch structure with the following additions:
     │   └── props/
     │       ├── restaurantCard.ts
     │       ├── searchBar.ts
-    │       ├── selectList.ts
     │       ├── filterModal.ts         # Styles for FilterModal [NEW]
     │       └── filterSearchBar.ts     # Styles for FilterSearchBar [NEW]
     │
     ├── assets/
     │   ├── data/
     │   │   └── L40TH.json
-    │   ├── fonts/
+    │   ├── fonts/                     # OpenSans font files
     │   └── icon/
     │       └── search_icon.png
     │
     ├── images/
     │   ├── just-eat-logo.png
-    │   ├── Just-Eat-Star.png
-    │   └── downarrow.png
+    │   └── Just-Eat-Star.png
     │
     ├── __mocks__/
     │   └── @react-native-community/
     │       └── netinfo.js
     │
-    ├── __tests__/
+    ├── __tests__/                     # Test files [NEW ViewModel tests]
     │   ├── MainPage.test.tsx
-    │   ├── CustomSorting.test.tsx
-    │   └── apiRequest.test.ts
+    │   ├── customSorting.test.tsx
+    │   ├── apiRequest.test.ts
+    │   ├── useMainPageViewModel.test.ts
+    │   ├── useDisplayPageViewModel.test.ts
+    │   ├── useFilterModalViewModel.test.ts
+    │   └── useRestaurantDetailViewModel.test.ts
     │
     └── apk/
         └── just-eat.apk
@@ -202,7 +212,8 @@ You can modify key settings without changing the code logic, which improves flex
 
 - **Functions (`src/functions/`)**: Functions organized by domain (`api/`, `filtering/`, `sorting/`), each with a single, clear responsibility.
 - **Components (`src/components/`)**: Reusable visual components with PascalCase naming.
-- **Hooks (`src/hooks/`)**: Custom hooks for tracking selected sorting options and keyboard visibility.
+- **ViewModels (`src/viewmodels/`)**: Per-screen state and business logic hooks, keeping pages and components presentational (`Full-Info-Display` branch).
+- **Hooks (`src/hooks/`)**: Custom hooks for shared logic, such as tracking keyboard visibility.
 - **Pages (`src/pages/`)**: Separate page files of the app.
 - **Configuration Files (`src/configs/`)**: All configuration values are in the `configs` directory, making them easy to find and update.
 - **Types (`src/types/`)**: Custom types to help define the shape of data.
@@ -332,11 +343,12 @@ The Full-Info-Display branch extends the main branch with enhanced features:
 
 #### Advanced Filtering System
 - **FilterModal Component**: Interactive modal with animated slide-up behavior
-  - Filter by rating thresholds (4+, 4.5+, 5 stars)
-  - Filter by delivery cost (Free, £0-£2, £2-£4, £4+)
-  - Filter by top cuisines (Pizza, Burgers, Chinese, Indian, Kebab)
+  - Toggle switches for Open Now, Delivery, Collection, and Has Deals
+  - Filter by rating thresholds (3+, 3.5+, 4+, 4.5+ stars)
+  - Filter by delivery cost (up to £1, £2, £3, £5)
+  - Filter by top cuisines (25 cuisines with emoji labels)
   - Pan gesture dismissal with threshold detection
-  - Real-time filter state management
+  - Real-time filter state management with change tracking
 
 - **FilterSearchBar Component**: Enhanced search with filter integration
   - Filter button with badge showing active filter count
@@ -344,10 +356,12 @@ The Full-Info-Display branch extends the main branch with enhanced features:
   - Multi-keyword AND filtering logic
 
 #### Technical Implementation
-- **Filter State Management**: Centralized filter configuration with `FilterState` type
-- **Search Algorithm**: Multi-keyword AND filtering across restaurant names and cuisines
+- **ViewModel Layer**: Business logic extracted into per-screen viewmodels (`useMainPageViewModel`, `useDisplayPageViewModel`, `useFilterModalViewModel`, `useRestaurantDetailViewModel`), keeping components presentational
+- **Filter State Management**: Centralized filter configuration with `FilterState` type and `applyFilters` function
+- **Search Algorithm**: Multi-keyword AND filtering across all restaurant fields, with search results randomized (Fisher-Yates shuffle) and limited to `SEARCH_RESULT_LIMIT` (10)
 - **Deduplication Logic**: Smart deal deduplication using offerType + description keys
-- **Performance Optimization**: Memoized filtering and sorting operations
+- **Performance Optimization**: Memoized filtering, sorting, and search operations
+- **Sorting**: 6 options covering rating, rating count, and name, each in ascending and descending order
 
 ## Visuals
 
@@ -408,4 +422,4 @@ The definition of "cuisine" is not specified. There are names such as "Local Leg
    (Can be done by *Jest* and *@testing-library/react-native*: e.g. Restaurant card components with various data inputs, Search input component behavior, Sorting controls and their state changes, Navigation between MainPage and DisplayPage, Data passing between screens, Dark/light mode toggle behavior) ✅ (`main` branch)
 6. GeoPoint + Map Integration for navigation to the restaurant.
 7. More Restaurant Sorting Options. ✅ (`main` branch)
-8. Advanced Filtering by Rating, Delivery Cost, and Cuisine. ✅ (`Full-Info-Display` branch)
+8. Advanced Filtering by Rating, Delivery Cost, Cuisine, and availability toggles (Open Now, Delivery, Collection, Has Deals). ✅ (`Full-Info-Display` branch)
