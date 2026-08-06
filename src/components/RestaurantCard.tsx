@@ -1,9 +1,10 @@
 ﻿import { View, Text, Image, TouchableHighlight } from 'react-native';
 import { restaurantCardStyles } from '../stylesheets/props/restaurantCard';
 import { RestaurantCardPropType } from '../types/restaurantCard';
+import { formatDistance } from '../functions/map/distance';
 
 
-export const RestaurantCard = ({ item, isDarkMode, cuisines, navigation }: RestaurantCardPropType) => {
+export const RestaurantCard = ({ item, isDarkMode, cuisines, navigation, distanceMeters, distanceIsFromUser }: RestaurantCardPropType) => {
   return (
     <TouchableHighlight
       testID={`restaurant-card-${item.id}`}
@@ -34,16 +35,21 @@ export const RestaurantCard = ({ item, isDarkMode, cuisines, navigation }: Resta
         {/*********** lowerPart Starts *********/}
         <View style={restaurantCardStyles.lowerPart}>
           <Text testID="restaurant-cuisine" style={[restaurantCardStyles.cuisine, isDarkMode && restaurantCardStyles.darkcuisine]}>{cuisines}</Text>
-          {/* The address container, with pin icon and address text */}
-          <View style={restaurantCardStyles.addressContainer}>
-            <Text style={restaurantCardStyles.pinIcon}>📍</Text>
-            <View style={restaurantCardStyles.addressTextContainer}>
-              <Text
-                numberOfLines={2}
-                ellipsizeMode="tail"
-                style={[restaurantCardStyles.address, isDarkMode && restaurantCardStyles.darkaddress]}>{item.address.firstLine}, {item.address.city}</Text>
+            {/* The address container, with pin icon and address text */}
+            <View style={restaurantCardStyles.addressContainer}>
+              <Text style={restaurantCardStyles.pinIcon}>📍</Text>
+              <View style={restaurantCardStyles.addressTextContainer}>
+                <Text
+                  numberOfLines={2}
+                  ellipsizeMode="tail"
+                  style={[restaurantCardStyles.address, isDarkMode && restaurantCardStyles.darkaddress]}>{item.address.firstLine}, {item.address.city}</Text>
+              </View>
             </View>
-          </View>
+            {distanceMeters !== undefined && distanceMeters !== null && (
+              <Text testID="restaurant-distance" style={[restaurantCardStyles.distanceText, isDarkMode && restaurantCardStyles.darkdistanceText]}>
+                {formatDistance(distanceMeters)}{distanceIsFromUser ? ' from you' : ' away'}
+              </Text>
+            )}
         </View>
       </View>
     </TouchableHighlight>

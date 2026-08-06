@@ -186,4 +186,21 @@ export const restaurantCardStyles = StyleSheet.create({
     darkaddress: {
         color: '#e6e6e6',
     },
+
+    // Style for distance text at the bottom right of the card
+    distanceText: {
+        fontFamily: 'OpenSans-Regular',
+        fontSize: 11,
+        color: '#5F6368',
+        alignSelf: 'flex-end',
+        textAlign: 'right',
+        marginTop: 4,
+        marginBottom: 4,
+        marginRight: 2,
+    },
+
+    // Dark mode override for distance text
+    darkdistanceText: {
+        color: '#9AA0A6',
+    },
 });

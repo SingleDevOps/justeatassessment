@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react';
+﻿import React, { useEffect, useMemo } from 'react';
 import { useColorScheme, View, Text, FlatList, RefreshControl } from 'react-native';
 import { displayPageStyles } from '../stylesheets/pages/displayPage';
 import { filterCuisines } from '../functions/filtering/filter';
@@ -6,12 +6,31 @@ import { RestaurantCard } from '../components/RestaurantCard';
 import { FilterSearchBar } from '../components/FilterSearchBar';
 import { FilterModal } from '../components/FilterModal';
 import { useDisplayPageViewModel } from '../viewmodels/useDisplayPageViewModel';
+import { useUserLocation } from '../hooks/useUserLocation';
+import { haversineDistanceMeters } from '../functions/map/distance';
+import { getRestaurantLatLng } from '../components/RestaurantMap';
 import type { DisplayPageProps } from '../types/navigation';
+import type { RestaurantType } from '../types/restaurant';
 
 const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
     const colorScheme = useColorScheme();
     const isDarkMode = colorScheme === 'dark';
     const vm = useDisplayPageViewModel({ route });
+    const { userLocation } = useUserLocation();
+
+    const distanceMap = useMemo(() => {
+        if (!userLocation) {
+            return {};
+        }
+        const map: Record<string, number> = {};
+        vm.allRestaurants.forEach((restaurant: RestaurantType) => {
+            const coordinate = getRestaurantLatLng(restaurant);
+            if (coordinate) {
+                map[restaurant.id.toString()] = haversineDistanceMeters(userLocation, coordinate);
+            }
+        });
+        return map;
+    }, [userLocation, vm.allRestaurants]);
 
     useEffect(() => {
         navigation.setOptions({
@@ -21,6 +40,7 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
                 backgroundColor: isDarkMode ? '#1A1A18' : '#F8F9FA',
             },
             headerTintColor: '#FF8000',
+            headerBackButtonDisplayMode: 'minimal',
             headerTitleStyle: {
                 fontWeight: 'bold',
                 fontSize: 20,
@@ -52,12 +72,15 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
                     data={vm.filteredRestaurants}
                     renderItem={({ item }) => {
                         const cuisines = filterCuisines(item);
+                        const gpsDistance = distanceMap[item.id.toString()];
                         return (
                             <RestaurantCard
                                 item={item}
                                 isDarkMode={isDarkMode}
                                 cuisines={cuisines}
                                 navigation={navigation}
+                                distanceMeters={gpsDistance ?? item.driveDistanceMeters ?? null}
+                                distanceIsFromUser={gpsDistance !== undefined}
                             />
                         );
                     }}

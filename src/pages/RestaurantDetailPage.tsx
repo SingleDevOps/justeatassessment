@@ -1,7 +1,10 @@
-﻿import React, { useEffect } from 'react';
+﻿import React, { useEffect, useMemo } from 'react';
 import { useColorScheme, View, Text, Image, ScrollView, Pressable } from 'react-native';
 import { detailPageStyles } from '../stylesheets/pages/restaurantDetailPage';
 import { useRestaurantDetailViewModel, formatDate, formatEta, DEALS_INITIAL_LIMIT } from '../viewmodels/useRestaurantDetailViewModel';
+import { RestaurantMap, getRestaurantLatLng } from '../components/RestaurantMap';
+import { useUserLocation } from '../hooks/useUserLocation';
+import { haversineDistanceMeters, formatDistance } from '../functions/map/distance';
 import type { DetailPageProps } from '../types/navigation';
 import type { DealType, AvailabilitySlotType } from '../types/restaurant';
 
@@ -45,6 +48,15 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
     const colorScheme = useColorScheme();
     const isDarkMode = colorScheme === 'dark';
     const { uniqueDeals, dealsExpanded, toggleDealsExpanded } = useRestaurantDetailViewModel(restaurant);
+    const { userLocation } = useUserLocation();
+
+    const distanceFromUser = useMemo(() => {
+        const coordinate = getRestaurantLatLng(restaurant);
+        if (!userLocation || !coordinate) {
+            return null;
+        }
+        return haversineDistanceMeters(userLocation, coordinate);
+    }, [userLocation, restaurant]);
 
     useEffect(() => {
         navigation.setOptions({
@@ -119,6 +131,18 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                     <Text style={[detailPageStyles.locationText, isDarkMode && detailPageStyles.darklocationText]}>{restaurant.address.firstLine}</Text>
                     <Text style={[detailPageStyles.locationText, isDarkMode && detailPageStyles.darklocationText]}>{restaurant.address.city}</Text>
                     <Text style={[detailPageStyles.locationText, isDarkMode && detailPageStyles.darklocationText]}>{restaurant.address.postalCode}</Text>
+                    {distanceFromUser !== null && (
+                        <View style={[detailPageStyles.mapDistanceRow]}>
+                            <Text style={[detailPageStyles.mapDistanceText, isDarkMode && detailPageStyles.darkmapDistanceText]}>
+                                📍 {formatDistance(distanceFromUser)} from your location
+                            </Text>
+                        </View>
+                    )}
+                </View>
+
+                <View style={[detailPageStyles.section, isDarkMode && detailPageStyles.darksection]}>
+                    <Text style={[detailPageStyles.sectionTitle, isDarkMode && detailPageStyles.darksectionTitle]}>Map</Text>
+                    <RestaurantMap restaurant={restaurant} />
                 </View>
 
                 <View style={[detailPageStyles.section, isDarkMode && detailPageStyles.darksection]}>

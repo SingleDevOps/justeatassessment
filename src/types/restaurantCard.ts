@@ -7,4 +7,6 @@ export type RestaurantCardPropType = {
     isDarkMode: boolean;
     cuisines: string;
     navigation: NativeStackNavigationProp<RootStackParamList, 'DisplayPage'>;
+    distanceMeters?: number | null;
+    distanceIsFromUser?: boolean;
 };

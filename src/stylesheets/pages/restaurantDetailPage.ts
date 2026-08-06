@@ -278,6 +278,20 @@ export const detailPageStyles = StyleSheet.create({
         color: '#AAAAAA',
     },
 
+    mapDistanceRow: {
+        marginTop: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    mapDistanceText: {
+        fontFamily: 'OpenSans-Semibold',
+        fontSize: 13,
+        color: '#FF8000',
+    },
+    darkmapDistanceText: {
+        color: '#FF8000',
+    },
+
     showMoreButton: {
         marginTop: 8,
         paddingVertical: 10,
