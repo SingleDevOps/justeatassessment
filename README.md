@@ -123,10 +123,12 @@ Extends the `main` branch structure with the following additions:
     │   └── useRestaurantDetailViewModel.ts # Detail data selection & deal deduplication
     │
     ├── components/
-    │   ├── RestaurantCard.tsx        # Card with rating, cuisines, address & distance
+    │   ├── RestaurantCard.tsx        # Card with rating, cuisines, address, distance & badges
     │   ├── SearchBar.tsx
     │   ├── FilterModal.tsx           # Advanced filtering modal
     │   ├── FilterSearchBar.tsx       # Search with filter integration
+    │   ├── FilterChipsBar.tsx        # Horizontal quick-filter chips (Deals, Free Delivery, etc.)
+    │   ├── LocalLegendsCarousel.tsx  # Horizontal carousel of "Local Legends" restaurants
     │   └── RestaurantMap.tsx         # Restaurant map with full-screen modal
     │
     ├── types/
@@ -135,19 +137,23 @@ Extends the `main` branch structure with the following additions:
     │   ├── searchBar.ts
     │   ├── navigation.ts
     │   ├── filterOptions.ts          # Filter state and option types
-    │   └── filterSearchBar.ts        # Props for FilterSearchBar
+    │   ├── filterSearchBar.ts        # Props for FilterSearchBar
+    │   └── searchData.ts             # Search enrichment data (metaData, deliveryFees, promotedPlacement, filters, layout)
     │
     ├── functions/
     │   ├── api/
-    │   │   └── apiRequest.ts
+    │   │   └── apiRequest.ts         # API calls + search enrichment data extraction
     │   ├── filtering/
     │   │   ├── filter.ts             # Function to format cuisine names with emojis
     │   │   ├── searchRestaurants.ts  # Multi-keyword search, shuffle, result limit
-    │   │   └── applyFilters.ts       # Filter + sort application logic
+    │   │   ├── applyFilters.ts       # Filter + sort application logic
+    │   │   ├── deliveryFees.ts       # Fee band parsing, free delivery threshold & formatting
+    │   │   └── layoutFilters.ts      # Quick-filter chips from API layout/filter data
     │   ├── map/
     │   │   └── distance.ts           # Haversine distance calculation & formatting
     │   └── sorting/
-    │       └── sortRestaurantData.ts
+    │       ├── sortRestaurantData.ts
+    │       └── sortByPromotedPlacement.ts # Sort by API promoted placement ranking
     │
     ├── hooks/
     │   ├── useKeyboardVisible.ts     # Hook to track keyboard visibility
@@ -155,7 +161,7 @@ Extends the `main` branch structure with the following additions:
     │
     ├── configs/
     │   ├── api.ts
-    │   ├── sortingOptions.ts         # 6 sorting options (rating/count/name, asc & desc)
+    │   ├── sortingOptions.ts         # 7 sorting options (rating/count/name/promoted, asc & desc)
     │   ├── cuisineEmojiMatch.ts
     │   └── filterDefaults.ts         # Rating, delivery cost, cuisine options & defaults
     │
@@ -169,6 +175,8 @@ Extends the `main` branch structure with the following additions:
     │       ├── searchBar.ts
     │       ├── filterModal.ts
     │       ├── filterSearchBar.ts
+    │       ├── filterChipsBar.ts
+    │       ├── localLegendsCarousel.ts
     │       └── restaurantMap.ts
     │
     ├── assets/
@@ -191,6 +199,9 @@ Extends the `main` branch structure with the following additions:
     │   ├── customSorting.test.tsx
     │   ├── apiRequest.test.ts
     │   ├── distance.test.ts
+    │   ├── deliveryFees.test.ts
+    │   ├── sortByPromotedPlacement.test.ts
+    │   ├── FilterChipsBar.test.tsx
     │   ├── useMainPageViewModel.test.ts
     │   ├── useDisplayPageViewModel.test.ts
     │   ├── useFilterModalViewModel.test.ts
@@ -345,7 +356,25 @@ The Full-Info-Display branch extends the main branch with enhanced features:
 - Click on any restaurant card to view detailed information
 - Full address, delivery time estimates, and availability slots
 - Restaurant deals and promotions with deduplication
+- **Your Rating**: Shows the logged-in user's personal rating when available
+- **Delivery pricing breakdown**: Displays the minimum order value, free delivery threshold, and each delivery fee band (e.g. "Orders from £0.00 to £10.00 → £3.00") parsed from the API's delivery fees data
+- **Deal type badges**: Each deal is labelled with its offer type (Item discount, Free item, Voucher, Collect stamps, Offer)
 - Responsive design with dark mode support
+
+#### Quick Filter Chips Bar
+- **FilterChipsBar Component**: Horizontal row of tappable quick-filter chips rendered from the API's `layout`/`filters` data (falls back to defaults: Deals, Free Delivery, StampCards, 4+ stars, Open Now, Collection, New)
+- Each chip shows the number of matching restaurants, toggles on/off independently, and filters the list by the API-provided restaurant IDs
+- Active chips count towards the filter badge on the search bar and the "X of Y restaurants" counter
+
+#### Local Legends Carousel
+- **LocalLegendsCarousel Component**: Horizontal carousel of "Local Legends" restaurants (from the API's `local-legends` filter) shown at the top of the DisplayPage when no search is active
+- Each card shows the restaurant logo, name, and star rating; tapping one opens the RestaurantDetailPage directly
+
+#### Restaurant Card Enhancements
+- **Status badges**: "NEW", "Promoted", and "Boosted" badges next to the restaurant name
+- **Open status dot**: Green "Open now" pill when the restaurant is open for delivery or collection, red "Offline" pill (and dimmed logo) when temporarily offline
+- **Free delivery label**: e.g. "Free delivery" or "Free delivery over £10", derived from the API's delivery fee bands
+- Restaurant cards are now rendered inside the FlatList header/footer structure of the DisplayPage, keeping the header (area, count, search bar, chips, carousel) scrollable with the list
 
 #### Advanced Filtering System
 - **FilterModal Component**: Interactive modal with animated slide-up behavior
@@ -365,15 +394,21 @@ The Full-Info-Display branch extends the main branch with enhanced features:
 - **Distance from you**: Each restaurant card shows its straight-line distance from your current GPS location, formatted as meters/km (`formatDistance`); when GPS is unavailable it falls back to the API's `driveDistanceMeters`
 - **Location permission handling**: `useUserLocation` requests the Android fine-location permission with a rationale dialog, caches the last known location, and degrades gracefully on denial or timeout
 - **Restaurant map**: The detail page shows the restaurant on an interactive map (`RestaurantMap`) with a marker and your location; tapping the map or the "Full screen" button opens an animated full-screen map modal
+- **Area header**: The DisplayPage shows the search area name and postal code (e.g. "Anfield · L4 0TH") from the API's `metaData`
+
+#### Promoted Placement Sorting
+- **"Promoted first" sorting option**: New 7th sorting option that orders restaurants by the API's promoted placement ranking (`rankedIds`), putting promoted restaurants at the top while keeping the rest in their existing order
+- **Promoted badge**: Restaurants flagged `defaultPromoted` in the API's `promotedPlacement` data are marked with an orange "Promoted" badge on their card
 
 #### Technical Implementation
 - **ViewModel Layer**: Business logic extracted into per-screen viewmodels (`useMainPageViewModel`, `useDisplayPageViewModel`, `useFilterModalViewModel`, `useRestaurantDetailViewModel`), keeping components presentational
 - **Filter State Management**: Centralized filter configuration with `FilterState` type and `applyFilters` function
+- **Search Enrichment Data**: The API request layer now extracts and passes through `metaData`, `deliveryFees`, `promotedPlacement`, `filters`, and `layout` from the Just Eat API response (and the sample data fallback), typed in `searchData.ts`
 - **Search Algorithm**: Multi-keyword AND filtering across all restaurant fields, with search results randomized (Fisher-Yates shuffle) and limited to `SEARCH_RESULT_LIMIT` (10)
 - **Deduplication Logic**: Smart deal deduplication using offerType + description keys
 - **Performance Optimization**: Memoized filtering, sorting, and search operations
 - **Distance Calculation**: Haversine formula computes the straight-line distance from the user's location to each restaurant, memoized per restaurant list, with fallback to API-provided drive distance
-- **Sorting**: 6 options covering rating, rating count, and name, each in ascending and descending order
+- **Sorting**: 7 options covering rating, rating count, name, and promoted placement, each in ascending and descending order (promoted first is a single direction)
 
 ## Visuals
 
@@ -435,3 +470,4 @@ The definition of "cuisine" is not specified. There are names such as "Local Leg
 6. GeoPoint + Map Integration for navigation to the restaurant. ✅ (`Full-Info-Display` branch: map display & full-screen modal; turn-by-turn navigation still pending)
 7. More Restaurant Sorting Options. ✅ (`main` branch)
 8. Advanced Filtering by Rating, Delivery Cost, Cuisine, and availability toggles (Open Now, Delivery, Collection, Has Deals). ✅ (`Full-Info-Display` branch)
+9. Quick filter chips, Local Legends carousel, and promoted placement sorting. ✅ (`Full-Info-Display` branch)
