@@ -114,57 +114,62 @@ Extends the `main` branch structure with the following additions:
     ├── pages/
     │   ├── MainPage.tsx
     │   ├── DisplayPage.tsx
-    │   └── RestaurantDetailPage.tsx  # Full restaurant details view [NEW]
+    │   └── RestaurantDetailPage.tsx  # Full restaurant details view
     │
-    ├── viewmodels/                   # ViewModel layer: per-screen state & business logic [NEW]
+    ├── viewmodels/                   # ViewModel layer: per-screen state & business logic
     │   ├── useMainPageViewModel.ts        # Search state, postcode validation, navigation
     │   ├── useDisplayPageViewModel.ts     # Sorting, filtering, search, refresh, shuffle
     │   ├── useFilterModalViewModel.ts     # Filter/sort draft state & change tracking
     │   └── useRestaurantDetailViewModel.ts # Detail data selection & deal deduplication
     │
     ├── components/
-    │   ├── RestaurantCard.tsx
+    │   ├── RestaurantCard.tsx        # Card with rating, cuisines, address & distance
     │   ├── SearchBar.tsx
-    │   ├── FilterModal.tsx           # Advanced filtering modal [NEW]
-    │   └── FilterSearchBar.tsx       # Search with filter integration [NEW]
+    │   ├── FilterModal.tsx           # Advanced filtering modal
+    │   ├── FilterSearchBar.tsx       # Search with filter integration
+    │   └── RestaurantMap.tsx         # Restaurant map with full-screen modal
     │
     ├── types/
     │   ├── restaurant.ts
     │   ├── restaurantCard.ts
     │   ├── searchBar.ts
     │   ├── navigation.ts
-    │   ├── filterOptions.ts          # Filter state and option types [NEW]
-    │   └── filterSearchBar.ts        # Props for FilterSearchBar [NEW]
+    │   ├── filterOptions.ts          # Filter state and option types
+    │   └── filterSearchBar.ts        # Props for FilterSearchBar
     │
     ├── functions/
     │   ├── api/
     │   │   └── apiRequest.ts
     │   ├── filtering/
     │   │   ├── filter.ts             # Function to format cuisine names with emojis
-    │   │   ├── searchRestaurants.ts  # Multi-keyword search, shuffle, result limit [NEW]
-    │   │   └── applyFilters.ts       # Filter + sort application logic [NEW]
+    │   │   ├── searchRestaurants.ts  # Multi-keyword search, shuffle, result limit
+    │   │   └── applyFilters.ts       # Filter + sort application logic
+    │   ├── map/
+    │   │   └── distance.ts           # Haversine distance calculation & formatting
     │   └── sorting/
     │       └── sortRestaurantData.ts
     │
     ├── hooks/
-    │   └── useKeyboardVisible.ts     # Hook to track keyboard visibility
+    │   ├── useKeyboardVisible.ts     # Hook to track keyboard visibility
+    │   └── useUserLocation.ts        # Hook to request & track the user's GPS location
     │
     ├── configs/
     │   ├── api.ts
     │   ├── sortingOptions.ts         # 6 sorting options (rating/count/name, asc & desc)
     │   ├── cuisineEmojiMatch.ts
-    │   └── filterDefaults.ts         # Rating, delivery cost, cuisine options & defaults [NEW]
+    │   └── filterDefaults.ts         # Rating, delivery cost, cuisine options & defaults
     │
     ├── stylesheets/
     │   ├── pages/
     │   │   ├── mainPage.ts
     │   │   ├── displayPage.ts
-    │   │   └── restaurantDetailPage.ts # Styles for RestaurantDetailPage [NEW]
+    │   │   └── restaurantDetailPage.ts
     │   └── props/
     │       ├── restaurantCard.ts
     │       ├── searchBar.ts
-    │       ├── filterModal.ts         # Styles for FilterModal [NEW]
-    │       └── filterSearchBar.ts     # Styles for FilterSearchBar [NEW]
+    │       ├── filterModal.ts
+    │       ├── filterSearchBar.ts
+    │       └── restaurantMap.ts
     │
     ├── assets/
     │   ├── data/
@@ -181,10 +186,11 @@ Extends the `main` branch structure with the following additions:
     │   └── @react-native-community/
     │       └── netinfo.js
     │
-    ├── __tests__/                     # Test files [NEW ViewModel tests]
+    ├── __tests__/
     │   ├── MainPage.test.tsx
     │   ├── customSorting.test.tsx
     │   ├── apiRequest.test.ts
+    │   ├── distance.test.ts
     │   ├── useMainPageViewModel.test.ts
     │   ├── useDisplayPageViewModel.test.ts
     │   ├── useFilterModalViewModel.test.ts
@@ -355,12 +361,18 @@ The Full-Info-Display branch extends the main branch with enhanced features:
   - Integrated search functionality across full restaurant list
   - Multi-keyword AND filtering logic
 
+#### Distance & Map Display
+- **Distance from you**: Each restaurant card shows its straight-line distance from your current GPS location, formatted as meters/km (`formatDistance`); when GPS is unavailable it falls back to the API's `driveDistanceMeters`
+- **Location permission handling**: `useUserLocation` requests the Android fine-location permission with a rationale dialog, caches the last known location, and degrades gracefully on denial or timeout
+- **Restaurant map**: The detail page shows the restaurant on an interactive map (`RestaurantMap`) with a marker and your location; tapping the map or the "Full screen" button opens an animated full-screen map modal
+
 #### Technical Implementation
 - **ViewModel Layer**: Business logic extracted into per-screen viewmodels (`useMainPageViewModel`, `useDisplayPageViewModel`, `useFilterModalViewModel`, `useRestaurantDetailViewModel`), keeping components presentational
 - **Filter State Management**: Centralized filter configuration with `FilterState` type and `applyFilters` function
 - **Search Algorithm**: Multi-keyword AND filtering across all restaurant fields, with search results randomized (Fisher-Yates shuffle) and limited to `SEARCH_RESULT_LIMIT` (10)
 - **Deduplication Logic**: Smart deal deduplication using offerType + description keys
 - **Performance Optimization**: Memoized filtering, sorting, and search operations
+- **Distance Calculation**: Haversine formula computes the straight-line distance from the user's location to each restaurant, memoized per restaurant list, with fallback to API-provided drive distance
 - **Sorting**: 6 options covering rating, rating count, and name, each in ascending and descending order
 
 ## Visuals
@@ -420,6 +432,6 @@ The definition of "cuisine" is not specified. There are names such as "Local Leg
 4. Restaurant Details in a full page when each restaurant card is clicked. ✅ (`Full-Info-Display` branch)
 5. Tests for checking the returned data and the correct rendering of elements.
    (Can be done by *Jest* and *@testing-library/react-native*: e.g. Restaurant card components with various data inputs, Search input component behavior, Sorting controls and their state changes, Navigation between MainPage and DisplayPage, Data passing between screens, Dark/light mode toggle behavior) ✅ (`main` branch)
-6. GeoPoint + Map Integration for navigation to the restaurant.
+6. GeoPoint + Map Integration for navigation to the restaurant. ✅ (`Full-Info-Display` branch: map display & full-screen modal; turn-by-turn navigation still pending)
 7. More Restaurant Sorting Options. ✅ (`main` branch)
 8. Advanced Filtering by Rating, Delivery Cost, Cuisine, and availability toggles (Open Now, Delivery, Collection, Has Deals). ✅ (`Full-Info-Display` branch)
