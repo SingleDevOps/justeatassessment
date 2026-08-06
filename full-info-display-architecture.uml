@@ -1,0 +1,258 @@
+@startuml
+!theme plain
+title Just Eat Finder — Full-Info-Display Branch Architecture
+
+skinparam linetype ortho
+skinparam nodesep 40
+skinparam ranksep 60
+skinparam classFontSize 11
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam packageTitleAlignment left
+skinparam noteBackgroundColor #FFF7ED
+skinparam noteBorderColor #FBBF24
+skinparam ArrowColor #374151
+
+' ============================================================
+' Layers (color-coded packages)
+' ============================================================
+
+package "App (App.tsx)" as AppPkg #E2E8F0 {
+    class App {
+        + NavigationContainer
+        + Stack.Navigator (3 screens)
+        + StatusBar
+    }
+}
+
+package "Pages (src/pages)" as Pages #DBEAFE {
+    class MainPage
+    class DisplayPage
+    class RestaurantDetailPage
+}
+
+package "Components (src/components)" as Components #FEE2E2 {
+    class SearchBar
+    class RestaurantCard
+    class FilterSearchBar
+    class FilterChipsBar
+    class LocalLegendsCarousel
+    class FilterModal
+    class RestaurantMap {
+        + getRestaurantLatLng()
+        + FullScreenMapModal
+    }
+    class ErrorDialog
+    class ErrorStateView
+    class Logo
+    class StarIcon
+}
+
+package "Hooks (src/hooks)" as Hooks #EDE9FE {
+    class usePieTheme
+    class useUserLocation
+    class useKeyboardVisible
+}
+
+package "ViewModels (src/viewmodels)" as VMs #FEF3C7 {
+    together {
+        class useMainPageViewModel {
+            submit() / dismissError()
+        }
+        class useDisplayPageViewModel {
+            filteredRestaurants / matchCount
+            filters / layoutFilters / deliveryFees
+            toggleFilterModal() / onRefresh()
+        }
+        class useFilterModalViewModel {
+            localFilters / hasChanges / commit()
+        }
+        class useRestaurantDetailViewModel {
+            uniqueDeals / feeBands / freeDeliveryLabel
+        }
+    }
+}
+
+package "Functions (src/functions)" as Funcs #D1FAE5 {
+    package "api" #D1FAE5 {
+        class apiRequest {
+            validatePostcode()
+            fetchRestaurantsFromJustEat()
+            handleSearch()
+        }
+        class "L40TH.json (sample)" as sampleData
+    }
+    package "filtering" #D1FAE5 {
+        class filter
+        class searchRestaurants
+        class applyFilters
+        class deliveryFees
+        class layoutFilters
+    }
+    package "sorting" #D1FAE5 {
+        class sortRestaurantData
+        class sortByPromotedPlacement
+    }
+    package "map" #D1FAE5 {
+        class distance
+    }
+}
+
+package "Configs (src/configs)" as Configs #CCFBF1 {
+    together {
+        class apiConfig {
+            POSTCODE_VALIDATION_URL
+            JUST_EAT_API_URL
+        }
+        class sortingOptions {
+            SortOptionValue / SortOrder / SORT_OPTIONS
+        }
+        class filterDefaults {
+            DEFAULT_FILTER_STATE / DEFAULT_SORT_OPTION
+        }
+        class cuisineEmojiMatch
+        class pieTokens
+    }
+}
+
+package "Types (src/types)" as Types #F3F4F6 {
+    class navigation
+    class restaurant
+    class searchData
+    class filterOptions
+    class restaurantCard
+    class searchBar
+    class filterSearchBar
+}
+
+' ============================================================
+' Screens & navigation
+' ============================================================
+App --> MainPage : screen
+App --> DisplayPage : screen
+App --> RestaurantDetailPage : screen
+
+DisplayPage --> RestaurantDetailPage : navigate (card / local legend tap)
+RestaurantCard --> RestaurantDetailPage : navigate (card tap)
+
+' ============================================================
+' ViewModel ownership (one VM per screen)
+' ============================================================
+MainPage --> useMainPageViewModel
+DisplayPage --> useDisplayPageViewModel
+RestaurantDetailPage --> useRestaurantDetailViewModel
+FilterModal --> useFilterModalViewModel
+
+' ============================================================
+' Key data flows (highlighted)
+' ============================================================
+useMainPageViewModel --> apiRequest : handleSearch
+useDisplayPageViewModel --> apiRequest : handleSearch (pull-to-refresh)
+usePieTheme --> pieTokens : light / dark token set
+apiRequest --> sampleData : fallback (empty / 'L40TH')
+
+' ============================================================
+' Layer-level dependencies
+' ============================================================
+VMs --> Funcs : filtering / search / layout chips / sorting / fees
+VMs --> Configs : sorting options + filter defaults
+Funcs --> Configs : API URLs / SortOrder / cuisine emoji map
+Funcs --> Types : RestaurantType / SearchEnrichmentType / FilterState
+VMs --> Types : typed route params & filter state
+Pages --> Hooks : usePieTheme / useUserLocation / useKeyboardVisible
+Pages --> Components : compose (see note)
+
+' ============================================================
+' Notes (detail moved out of the arrows)
+' ============================================================
+note bottom of Pages
+  Composition per page:
+  - MainPage: SearchBar, Logo, ErrorDialog
+  - DisplayPage: RestaurantCard, FilterSearchBar, FilterChipsBar,
+    LocalLegendsCarousel, FilterModal, ErrorStateView
+  - RestaurantDetailPage: RestaurantMap, StarIcon
+end note
+
+note bottom of VMs
+  useDisplayPageViewModel drives: 7 sorting options (incl.
+  promoted-first), multi-keyword search, filters, quick-filter
+  chips, Local Legends carousel, and pull-to-refresh.
+  useMainPageViewModel handles postcode submission & error states.
+  useRestaurantDetailViewModel dedupes deals and formats fee bands.
+end note
+
+note bottom of Funcs
+  - api: postcode validation, enriched restaurant fetch, orchestration
+  - filtering: cuisine emojis, keyword search + shuffle, filter rules,
+    fee bands / free delivery, quick-filter chips
+  - sorting: rating / count / name orders + promoted placement
+  - map: haversine distance + formatting
+end note
+
+note bottom of Components
+  All components receive `theme` as a prop (from usePieTheme via
+  the pages). RestaurantCard formats distance via map/distance and
+  renders cuisines / free-delivery labels passed as props from
+  DisplayPage. FilterModal reads filter & sort configs directly.
+end note
+
+@enduml
+
+@startuml
+!theme plain
+title Just Eat Finder — Runtime Flow (Full-Info-Display)
+
+start
+:User enters postcode in SearchBar and submits;
+
+if (Postcode is empty or 'L40TH') then (true)
+  :Load sample data (src/assets/data/L40TH.json);
+  :Simulate 1s delay, pick random 10 restaurants;
+else (false)
+  if (No internet connection) then (true)
+    :Show ErrorDialog 'No Internet Connection';
+    stop
+  else (false)
+    :Format postcode (remove spaces, uppercase);
+
+    fork
+      :Call validatePostcode API (postcodes.io);
+    fork again
+      :Timeout after 3s;
+    end fork
+
+    if (Validation result is TIMEOUT or true) then (Valid / timeout: proceed)
+      :Call fetchRestaurantsFromJustEat (enriched endpoint);
+    else (false: Invalid postcode)
+      :Show ErrorDialog 'Invalid Postcode';
+      stop
+    endif
+
+    if (fetchRestaurantsFromJustEat returns null) then (API Error)
+      :Show ErrorDialog 'Just Eat API down or IP not European';
+      stop
+    else (Success)
+      :Extract enrichment data (metaData, deliveryFees,
+        promotedPlacement, filters, layout);
+    endif
+  endif
+endif
+
+:Navigate to DisplayPage with restaurants + enrichment;
+
+:Render list (sort / filter / search / quick chips / Local Legends);
+
+if (Pull-to-refresh) then (Yes)
+  :handleSearch(postcode) again;
+  :Update restaurants + enrichment;
+endif
+
+if (Tap restaurant card or Local Legends card) then (Yes)
+  :Navigate to RestaurantDetailPage;
+  :Render full info (rating, cuisines, address, GPS distance,
+    map, delivery & collection, fee bands, availability,
+    opening times, deals);
+endif
+
+stop
+@enduml
