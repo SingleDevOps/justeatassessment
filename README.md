@@ -313,17 +313,15 @@ This app handles problems gracefully.
 - **Custom Types**: Types like `OptionType` and `RestaurantType` define the structure of data, showing exactly what to expect.
 - **Enums**: Enums (like `SortOrder` and `SortOptionValue`) to define constant values for sorting, reducing the risk of typos or mistakes.
 
-## Programming Interface
+## Architecture
 
-![Programming-Interface.png](https://i.postimg.cc/WVSm3mL5/Programming-Interface.png)
+![Main Branch Architecture](main-branch-architecture.svg)
+
+![Full-Info-Display Architecture](full-info-display-architecture.svg)
 
 ## Program Flow Chart
 
 ![Program-Flow-Chart.png](https://i.postimg.cc/L6qMn014/Flow-Chart.png)
-
-## Architecture Diagrams
-
-![Full-Info-Display Architecture](full-info-display-architecture.svg)
 
 ![Full-Info-Display Runtime Flow](full-info-display-architecture_001.svg)
 

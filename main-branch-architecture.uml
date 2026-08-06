@@ -1,0 +1,152 @@
+@startuml
+!theme plain
+title Just Eat Finder — main Branch Architecture
+
+skinparam linetype ortho
+skinparam nodesep 40
+skinparam ranksep 60
+skinparam classFontSize 11
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam packageTitleAlignment left
+skinparam noteBackgroundColor #FFF7ED
+skinparam noteBorderColor #FBBF24
+skinparam ArrowColor #374151
+
+' ============================================================
+' Layers (color-coded packages)
+' ============================================================
+
+package "App (App.tsx)" as AppPkg #E2E8F0 {
+    class App {
+        + NavigationContainer
+        + Stack.Navigator (2 screens)
+        + StatusBar
+    }
+}
+
+package "Pages (src/pages)" as Pages #DBEAFE {
+    class MainPage {
+        + postcode / loading state
+        + onSubmit() via handleSearch
+    }
+    class DisplayPage {
+        + refreshing / list state
+        + sorting via useRestaurantSorting
+    }
+}
+
+package "Components (src/components)" as Components #FEE2E2 {
+    class SearchBar
+    class SelectList
+    class RestaurantCard
+}
+
+package "Hooks (src/hooks)" as Hooks #EDE9FE {
+    class useRestaurantSorting
+    class useKeyboardVisible
+}
+
+package "Functions (src/functions)" as Funcs #D1FAE5 {
+    package "api" #D1FAE5 {
+        class apiRequest {
+            validatePostcode()
+            fetchRestaurantsFromJustEat()
+            handleSearch()
+        }
+        class "L40TH.json (sample)" as sampleData
+    }
+    package "filtering" #D1FAE5 {
+        class filter {
+            filterCuisines()
+        }
+    }
+    package "sorting" #D1FAE5 {
+        class sortRestaurantData {
+            sortResData()
+        }
+    }
+}
+
+package "Configs (src/configs)" as Configs #CCFBF1 {
+    together {
+        class apiConfig {
+            POSTCODE_VALIDATION_URL
+            JUST_EAT_API_URL
+        }
+        class sortingOptions {
+            SortOptionValue / SortOrder
+            selectListOptions
+        }
+        class cuisineEmojiMatch
+    }
+}
+
+package "Types (src/types)" as Types #F3F4F6 {
+    class navigation
+    class restaurant
+    class restaurantCard
+    class searchBar
+    class selectList
+}
+
+' ============================================================
+' Screens & navigation
+' ============================================================
+App --> MainPage : screen
+App --> DisplayPage : screen
+
+' ============================================================
+' Page composition (tree)
+' ============================================================
+MainPage --> SearchBar : renders
+DisplayPage --> SelectList : renders
+DisplayPage --> RestaurantCard : renders (FlatList)
+
+' ============================================================
+' Key data flows (highlighted)
+' ============================================================
+MainPage --> apiRequest : handleSearch (submit)
+DisplayPage --> apiRequest : handleSearch (pull-to-refresh)
+DisplayPage --> filter : filterCuisines
+DisplayPage --> useRestaurantSorting : sort state
+useRestaurantSorting --> sortRestaurantData : sortResData
+useRestaurantSorting --> sortingOptions : SortOptionValue / SortOrder
+apiRequest --> sampleData : fallback (empty / 'L40TH')
+
+' ============================================================
+' Layer-level dependencies
+' ============================================================
+Pages --> Hooks : per-screen hook usage
+Pages --> Types : navigation props
+Functions --> Configs : API URLs / SortOrder / cuisine emoji map
+Functions --> Types : RestaurantType / SearchResult
+Components --> Types : typed props
+
+' ============================================================
+' Notes (detail moved out of the arrows)
+' ============================================================
+note bottom of Pages
+  Dark mode via useColorScheme + isDarkMode prop
+  propagation (parallel dark stylesheet variants).
+  Errors are surfaced with native Alert dialogs.
+end note
+
+note bottom of Hooks
+  useRestaurantSorting maps the selected option to a
+  SortOrder and re-sorts DisplayPage results.
+  useKeyboardVisible is defined but not currently wired.
+end note
+
+note bottom of Funcs
+  - api: postcode validation, restaurant fetch, orchestration
+  - filtering: cuisine emoji formatting for card display
+  - sorting: rating / rating-count / name orders (asc & desc)
+end note
+
+note bottom of Components
+  Components receive isDarkMode and typed props from their
+  owning page; there are no shared design tokens on main.
+end note
+
+@enduml
