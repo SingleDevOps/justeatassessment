@@ -1,44 +1,44 @@
 @startuml
-:User enters postcode;
+!theme plain
+title Just Eat Finder — main Branch Flow
 
-if (Postcode is empty or 'L40TH') then (true)
-  :Load sample data (L40TH.json);
-  :Show loading indicator;
-  :Navigate to DisplayPage with sample data;
+start
+:User enters postcode in SearchBar and submits;
+
+:Format postcode (remove spaces, uppercase);
+
+if (No internet connection) then (true)
+  :Show Alert 'No Internet Connection';
   stop
-else (false: API Flow)
+else (false)
   :Show loading indicator;
-  :Format postcode (remove spaces, uppercase);
 
-  fork
-    :Call validatePostcode API;
-    -->[API result] ValidationResult
-  fork again
-    :Timeout after 3s;
-    -->[Timeout] ValidationResult
-  end fork
+  if (Postcode is empty or 'L40TH') then (true)
+    :Load sample data (src/assets/data/L40TH.json);
+    :Simulate 1s delay, pick random 10 restaurants;
+  else (false)
+    fork
+      :Call validatePostcode API (postcodes.io);
+    fork again
+      :Timeout after 3s;
+    end fork
 
-  if (ValidationResult is TIMEOUT) then (Timeout: Skip Validation)
-    :Call fetchRestaurantsFromJustEat;
-  else if (ValidationResult is API result) then (true: Valid Postcode)
-    :Call fetchRestaurantsFromJustEat;
-  else (false: Invalid Postcode, or API Error(No Internet))
-    if (Internet Connection) then (No)
-      :Show Alert 'No Internet Connection';
-      stop
-    else (Yes)
+    if (Validation result is TIMEOUT or true) then (Valid / timeout: proceed)
+      :Call fetchRestaurantsFromJustEat (Just Eat endpoint);
+      if (Returns null) then (API Error)
+        :Show Alert 'Just Eat API Down or IP not European';
+        stop
+      else (Success)
+        :Pick random 10 restaurants;
+      endif
+    else (false: Invalid postcode)
       :Show Alert 'Invalid Postcode';
       stop
     endif
   endif
 
-  if (fetchRestaurantsFromJustEat) then (API Error)
-    :Show Alert 'Just Eat API Down or IP not European';
-    stop
-  else (Success)
-    :Navigate to DisplayPage;
-    :Display Retrieved Restaurant Data;
-  endif
+  :Navigate to DisplayPage with restaurants;
+  :Display retrieved restaurant data;
 endif
 
 stop

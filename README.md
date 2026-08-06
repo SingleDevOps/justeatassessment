@@ -321,7 +321,7 @@ This app handles problems gracefully.
 
 ## Program Flow Chart
 
-![Program-Flow-Chart.png](https://i.postimg.cc/L6qMn014/Flow-Chart.png)
+![Main Branch Runtime Flow](main-branch-architecture_001.svg)
 
 ![Full-Info-Display Runtime Flow](full-info-display-architecture_001.svg)
 
