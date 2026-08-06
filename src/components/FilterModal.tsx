@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Modal, View, Text, Pressable, ScrollView, Switch, Animated, PanResponder, Dimensions } from 'react-native';
+import { Modal, View, Text, Pressable, ScrollView, Switch, Animated, PanResponder, Dimensions, StyleSheet } from 'react-native';
 import { filterModalStyles } from '../stylesheets/props/filterModal';
-import { FilterState } from '../types/filterOptions';
-import { RATING_OPTIONS, DELIVERY_COST_OPTIONS, TOP_CUISINES, DEFAULT_FILTER_STATE } from '../configs/filterDefaults';
+import { RATING_OPTIONS, DELIVERY_COST_OPTIONS, TOP_CUISINES } from '../configs/filterDefaults';
+import { SORT_OPTIONS } from '../configs/sortingOptions';
+import { useFilterModalViewModel } from '../viewmodels/useFilterModalViewModel';
+import type { FilterState } from '../types/filterOptions';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const DISMISS_THRESHOLD = SCREEN_HEIGHT * 0.2;
@@ -10,13 +12,14 @@ const DISMISS_THRESHOLD = SCREEN_HEIGHT * 0.2;
 type FilterModalProps = {
     visible: boolean;
     onClose: () => void;
-    onApply: (filters: FilterState) => void;
+    onApply: (filters: FilterState, sortOption: string) => void;
     currentFilters: FilterState;
+    currentSortOption: string;
     isDarkMode: boolean;
 };
 
-export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkMode }: FilterModalProps) => {
-    const [localFilters, setLocalFilters] = useState<FilterState>(currentFilters);
+export const FilterModal = ({ visible, onClose, onApply, currentFilters, currentSortOption, isDarkMode }: FilterModalProps) => {
+    const vm = useFilterModalViewModel({ visible, currentFilters, currentSortOption, onApply, onClose });
     const [modalMounted, setModalMounted] = useState(false);
     const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
     const isClosingRef = useRef(false);
@@ -46,10 +49,9 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
 
     useEffect(() => {
         if (visible && !isClosingRef.current) {
-            setLocalFilters(currentFilters);
             animateIn();
         }
-    }, [visible, currentFilters, animateIn]);
+    }, [visible, animateIn]);
 
     const handleClose = useCallback(() => {
         if (isClosingRef.current) return;
@@ -87,41 +89,9 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
         })
     ).current;
 
-    const hasChanges = JSON.stringify(localFilters) !== JSON.stringify(DEFAULT_FILTER_STATE);
-
-    const toggleBoolean = (key: 'openNow' | 'delivery' | 'collection' | 'hasDeals') => {
-        setLocalFilters(prev => ({ ...prev, [key]: !prev[key] }));
-    };
-
-    const setMinRating = (value: number) => {
-        setLocalFilters(prev => ({ ...prev, minRating: prev.minRating === value ? 0 : value }));
-    };
-
-    const setMaxDeliveryCost = (value: number) => {
-        setLocalFilters(prev => ({ ...prev, maxDeliveryCost: prev.maxDeliveryCost === value ? 10 : value }));
-    };
-
-    const toggleCuisine = (uniqueName: string) => {
-        setLocalFilters(prev => {
-            const exists = prev.selectedCuisines.includes(uniqueName);
-            return {
-                ...prev,
-                selectedCuisines: exists
-                    ? prev.selectedCuisines.filter(c => c !== uniqueName)
-                    : [...prev.selectedCuisines, uniqueName],
-            };
-        });
-    };
-
-    const handleReset = () => {
-        setLocalFilters({ ...DEFAULT_FILTER_STATE });
-    };
-
     const handleApply = () => {
-        isClosingRef.current = true;
         animateOut(() => {
-            onApply(localFilters);
-            onClose();
+            vm.commit();
         });
     };
 
@@ -129,21 +99,21 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
 
     return (
         <Modal visible animationType="none" transparent onRequestClose={handleClose}>
-            <Pressable style={[filterModalStyles.overlay, isDarkMode && filterModalStyles.darkOverlay]} onPress={handleClose}>
+            <View style={filterModalStyles.overlay}>
+                <Pressable style={StyleSheet.absoluteFill} onPress={handleClose} />
                 <Animated.View
                     style={[
                         filterModalStyles.modalContainer,
                         isDarkMode && filterModalStyles.darkModalContainer,
                         { transform: [{ translateY }] },
                     ]}
-                    onStartShouldSetResponder={() => true}
                 >
                     <View {...panResponder.panHandlers}>
                         <View style={[filterModalStyles.handle, isDarkMode && filterModalStyles.darkHandle]} />
 
                         <View style={[filterModalStyles.header, isDarkMode && filterModalStyles.darkHeader]}>
-                            <Pressable onPress={handleReset}>
-                                <Text style={[filterModalStyles.headerButton, !hasChanges && filterModalStyles.disabledButton]}>
+                            <Pressable onPress={vm.reset}>
+                                <Text style={[filterModalStyles.headerButton, !vm.hasChanges && filterModalStyles.disabledButton]}>
                                     Reset
                                 </Text>
                             </Pressable>
@@ -159,6 +129,39 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
                     <ScrollView style={filterModalStyles.scrollView} showsVerticalScrollIndicator={false}>
                         <View style={filterModalStyles.section}>
                             <Text style={[filterModalStyles.sectionTitle, isDarkMode && filterModalStyles.darkSectionTitle]}>
+                                Sort By
+                            </Text>
+                            <View style={filterModalStyles.optionsRow}>
+                                {SORT_OPTIONS.map(option => {
+                                    const isSelected = vm.localSortOption === option.value;
+                                    return (
+                                        <Pressable
+                                            key={option.key}
+                                            style={[
+                                                filterModalStyles.optionPill,
+                                                isDarkMode && filterModalStyles.darkOptionPill,
+                                                isSelected && filterModalStyles.selectedOptionPill,
+                                                isSelected && isDarkMode && filterModalStyles.darkSelectedOptionPill,
+                                            ]}
+                                            onPress={() => vm.setSortOption(option.value)}
+                                        >
+                                            <Text
+                                                style={[
+                                                    filterModalStyles.optionPillText,
+                                                    isDarkMode && filterModalStyles.darkOptionPillText,
+                                                    isSelected && filterModalStyles.selectedOptionPillText,
+                                                ]}
+                                            >
+                                                {option.value}
+                                            </Text>
+                                        </Pressable>
+                                    );
+                                })}
+                            </View>
+                        </View>
+
+                        <View style={filterModalStyles.section}>
+                            <Text style={[filterModalStyles.sectionTitle, isDarkMode && filterModalStyles.darkSectionTitle]}>
                                 Quick Filters
                             </Text>
                             <View style={[filterModalStyles.toggleRow, isDarkMode && filterModalStyles.darkToggleRow]}>
@@ -166,10 +169,10 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
                                     Open Now
                                 </Text>
                                 <Switch
-                                    value={localFilters.openNow}
-                                    onValueChange={() => toggleBoolean('openNow')}
+                                    value={vm.localFilters.openNow}
+                                    onValueChange={() => vm.toggleBoolean('openNow')}
                                     trackColor={{ false: '#E0E0E0', true: '#FF8000' }}
-                                    thumbColor={localFilters.openNow ? '#FFFFFF' : '#F4F3F4'}
+                                    thumbColor={vm.localFilters.openNow ? '#FFFFFF' : '#F4F3F4'}
                                 />
                             </View>
                             <View style={[filterModalStyles.toggleRow, isDarkMode && filterModalStyles.darkToggleRow]}>
@@ -177,10 +180,10 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
                                     Delivery
                                 </Text>
                                 <Switch
-                                    value={localFilters.delivery}
-                                    onValueChange={() => toggleBoolean('delivery')}
+                                    value={vm.localFilters.delivery}
+                                    onValueChange={() => vm.toggleBoolean('delivery')}
                                     trackColor={{ false: '#E0E0E0', true: '#FF8000' }}
-                                    thumbColor={localFilters.delivery ? '#FFFFFF' : '#F4F3F4'}
+                                    thumbColor={vm.localFilters.delivery ? '#FFFFFF' : '#F4F3F4'}
                                 />
                             </View>
                             <View style={[filterModalStyles.toggleRow, isDarkMode && filterModalStyles.darkToggleRow]}>
@@ -188,10 +191,10 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
                                     Collection
                                 </Text>
                                 <Switch
-                                    value={localFilters.collection}
-                                    onValueChange={() => toggleBoolean('collection')}
+                                    value={vm.localFilters.collection}
+                                    onValueChange={() => vm.toggleBoolean('collection')}
                                     trackColor={{ false: '#E0E0E0', true: '#FF8000' }}
-                                    thumbColor={localFilters.collection ? '#FFFFFF' : '#F4F3F4'}
+                                    thumbColor={vm.localFilters.collection ? '#FFFFFF' : '#F4F3F4'}
                                 />
                             </View>
                             <View style={[filterModalStyles.toggleRow, isDarkMode && filterModalStyles.darkToggleRow]}>
@@ -199,10 +202,10 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
                                     Has Deals
                                 </Text>
                                 <Switch
-                                    value={localFilters.hasDeals}
-                                    onValueChange={() => toggleBoolean('hasDeals')}
+                                    value={vm.localFilters.hasDeals}
+                                    onValueChange={() => vm.toggleBoolean('hasDeals')}
                                     trackColor={{ false: '#E0E0E0', true: '#FF8000' }}
-                                    thumbColor={localFilters.hasDeals ? '#FFFFFF' : '#F4F3F4'}
+                                    thumbColor={vm.localFilters.hasDeals ? '#FFFFFF' : '#F4F3F4'}
                                 />
                             </View>
                         </View>
@@ -213,7 +216,7 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
                             </Text>
                             <View style={filterModalStyles.optionsRow}>
                                 {RATING_OPTIONS.map(option => {
-                                    const isSelected = localFilters.minRating === option.value;
+                                    const isSelected = vm.localFilters.minRating === option.value;
                                     return (
                                         <Pressable
                                             key={option.label}
@@ -223,7 +226,7 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
                                                 isSelected && filterModalStyles.selectedOptionPill,
                                                 isSelected && isDarkMode && filterModalStyles.darkSelectedOptionPill,
                                             ]}
-                                            onPress={() => setMinRating(option.value)}
+                                            onPress={() => vm.setMinRating(option.value)}
                                         >
                                             <Text
                                                 style={[
@@ -246,7 +249,7 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
                             </Text>
                             <View style={filterModalStyles.optionsRow}>
                                 {DELIVERY_COST_OPTIONS.map(option => {
-                                    const isSelected = localFilters.maxDeliveryCost === option.value;
+                                    const isSelected = vm.localFilters.maxDeliveryCost === option.value;
                                     return (
                                         <Pressable
                                             key={option.label}
@@ -256,7 +259,7 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
                                                 isSelected && filterModalStyles.selectedOptionPill,
                                                 isSelected && isDarkMode && filterModalStyles.darkSelectedOptionPill,
                                             ]}
-                                            onPress={() => setMaxDeliveryCost(option.value)}
+                                            onPress={() => vm.setMaxDeliveryCost(option.value)}
                                         >
                                             <Text
                                                 style={[
@@ -279,7 +282,7 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
                             </Text>
                             <View style={filterModalStyles.cuisineGrid}>
                                 {TOP_CUISINES.map(cuisine => {
-                                    const isSelected = localFilters.selectedCuisines.includes(cuisine.uniqueName);
+                                    const isSelected = vm.localFilters.selectedCuisines.includes(cuisine.uniqueName);
                                     return (
                                         <Pressable
                                             key={cuisine.uniqueName}
@@ -289,7 +292,7 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
                                                 isSelected && filterModalStyles.selectedCuisineChip,
                                                 isSelected && isDarkMode && filterModalStyles.darkSelectedCuisineChip,
                                             ]}
-                                            onPress={() => toggleCuisine(cuisine.uniqueName)}
+                                            onPress={() => vm.toggleCuisine(cuisine.uniqueName)}
                                         >
                                             <Text style={filterModalStyles.cuisineEmoji}>{cuisine.emoji}</Text>
                                             <Text
@@ -314,7 +317,7 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, isDarkM
                         </Pressable>
                     </View>
                 </Animated.View>
-            </Pressable>
+            </View>
         </Modal>
     );
 };

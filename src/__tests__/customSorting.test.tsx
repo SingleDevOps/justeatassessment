@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, within } from '@testing-library/react-native';
+import { render, screen, fireEvent, within, waitForElementToBeRemoved } from '@testing-library/react-native';
 import DisplayPage from '../pages/DisplayPage';
 import { TextMatch } from '@testing-library/react-native/build/matches';
 
@@ -52,10 +52,11 @@ describe('<DisplayPage />', () => {
     });
 
     const selectSortOption = async (optionText: TextMatch) => {
-        const dropdown = screen.getByText('Sort By');
-        fireEvent.press(dropdown);
+        fireEvent.press(screen.getByText('⚙'));
         const option = await screen.findByText(optionText);
         fireEvent.press(option);
+        fireEvent.press(screen.getByText('Apply Filters'));
+        await waitForElementToBeRemoved(() => screen.queryByText('Filters'));
     };
 
     it('renders restaurants initially', () => {

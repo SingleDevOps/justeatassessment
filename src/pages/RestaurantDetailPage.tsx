@@ -1,45 +1,9 @@
-﻿import React, { useEffect, useState, useMemo } from 'react';
+﻿import React, { useEffect } from 'react';
 import { useColorScheme, View, Text, Image, ScrollView, Pressable } from 'react-native';
 import { detailPageStyles } from '../stylesheets/pages/restaurantDetailPage';
+import { useRestaurantDetailViewModel, formatDate, formatEta, DEALS_INITIAL_LIMIT } from '../viewmodels/useRestaurantDetailViewModel';
 import type { DetailPageProps } from '../types/navigation';
-import type {  DealType, AvailabilitySlotType } from '../types/restaurant';
-
-const formatDate = (dateStr?: string): string => {
-    if (!dateStr) return 'N/A';
-    const d = new Date(dateStr);
-    return d.toLocaleString('en-GB', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        hour: '2-digit',
-        minute: '2-digit',
-    });
-};
-
-const formatEta = (eta?: { rangeLower?: number; rangeUpper?: number; approximate?: number }): string => {
-    if (!eta) return 'N/A';
-    if (eta.approximate !== undefined) return `~${eta.approximate} min`;
-    if (eta.rangeLower !== undefined && eta.rangeUpper !== undefined) {
-        return `${eta.rangeLower}-${eta.rangeUpper} min`;
-    }
-    return 'N/A';
-};
-
-
-const DEALS_INITIAL_LIMIT = 5;
-
-function deduplicateDeals(deals: DealType[]): DealType[] {
-    const seen = new Set<string>();
-    return deals.filter(deal => {
-        if (deal.offerType === 'StampCard' && (!deal.description || deal.description.trim() === '')) {
-            return false;
-        }
-        const key = deal.offerType + '::' + deal.description;
-        if (seen.has(key)) { return false; }
-        seen.add(key);
-        return true;
-    });
-}
+import type { DealType, AvailabilitySlotType } from '../types/restaurant';
 
 const InfoRow = ({ label, value, isDarkMode }: { label: string; value: string; isDarkMode: boolean }) => (
     <View style={[detailPageStyles.infoRow, isDarkMode && detailPageStyles.darkinfoRow]}>
@@ -80,9 +44,7 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
     const { restaurant } = route.params;
     const colorScheme = useColorScheme();
     const isDarkMode = colorScheme === 'dark';
-    const [dealsExpanded, setDealsExpanded] = useState(false);
-
-    const uniqueDeals = useMemo(() => deduplicateDeals(restaurant.deals ?? []), [restaurant.deals]);
+    const { uniqueDeals, dealsExpanded, toggleDealsExpanded } = useRestaurantDetailViewModel(restaurant);
 
     useEffect(() => {
         navigation.setOptions({
@@ -207,7 +169,7 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                         ))}
                         {uniqueDeals.length > DEALS_INITIAL_LIMIT && (
                             <Pressable
-                                onPress={() => setDealsExpanded(prev => !prev)}
+                                onPress={toggleDealsExpanded}
                                 style={[detailPageStyles.showMoreButton, isDarkMode && detailPageStyles.darkshowMoreButton]}
                             >
                                 <Text style={detailPageStyles.showMoreText}>

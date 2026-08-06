@@ -51,3 +51,5 @@ export const TOP_CUISINES: CuisineOption[] = [
 ];
 
 export const DEFAULT_FILTER_STATE: FilterState = { ...DEFAULT_FILTERS };
+
+export const DEFAULT_SORT_OPTION = '';
