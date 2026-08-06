@@ -85,9 +85,6 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                 <View style={detailPageStyles.headerSection}>
                     <Image source={{ uri: restaurant.logoUrl }} style={detailPageStyles.logo} />
                     <Text style={[detailPageStyles.restaurantName, isDarkMode && detailPageStyles.darkrestaurantName]}>{restaurant.name}</Text>
-                    {restaurant.uniqueName && (
-                        <Text style={detailPageStyles.uniqueName}>{restaurant.uniqueName}</Text>
-                    )}
                     <View style={detailPageStyles.badgesRow}>
                         {restaurant.isNew && (
                             <View style={[detailPageStyles.badge, detailPageStyles.blueBadge]}>
@@ -97,11 +94,6 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                         {restaurant.isPremier && (
                             <View style={[detailPageStyles.badge, detailPageStyles.purpleBadge]}>
                                 <Text style={detailPageStyles.badgeText}>PREMIER</Text>
-                            </View>
-                        )}
-                        {restaurant.isTemporarilyOffline && (
-                            <View style={[detailPageStyles.badge, detailPageStyles.redBadge]}>
-                                <Text style={detailPageStyles.badgeText}>OFFLINE</Text>
                             </View>
                         )}
                     </View>

@@ -17,7 +17,8 @@ export const detailPageStyles = StyleSheet.create({
 
     headerSection: {
         alignItems: 'center',
-        paddingVertical: 24,
+        paddingTop: 24,
+        paddingBottom: 4,
         paddingHorizontal: 16,
     },
     logo: {
