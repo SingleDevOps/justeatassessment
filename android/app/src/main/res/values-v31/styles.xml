@@ -1,0 +1,11 @@
+<resources>
+
+    <!-- Android 12+ system splash: white background, launcher icon on top.
+         Plain white window background so the launch-screen logo does not
+         re-flash after the system splash hands over to the app window. -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowSplashScreenBackground">@android:color/white</item>
+    </style>
+
+</resources>
