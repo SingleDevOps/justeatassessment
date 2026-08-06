@@ -8,13 +8,10 @@ It is a mobile application for Android system, and potentially for iOS system fo
 
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-This application includes two pages:
+This application includes three pages:
 
 1. MainPage
 2. DisplayPage
-
-On the `Full-Info-Display` branch, a third page is added:
-
 3. RestaurantDetailPage
 
 This application does two things:
@@ -30,83 +27,6 @@ This application does two things:
 Besides, this application has dark mode design, for the night usage.
 
 ## Code Structure
-
-### `main` Branch
-
-```
-├── App.tsx                     # Main application container with navigation setup
-└── src/
-    ├── pages/                  # Screen components
-    │   ├── MainPage.tsx        # Initial screen with search bar and logo
-    │   └── DisplayPage.tsx     # Screen to display the list of restaurants
-    │
-    ├── components/             # Reusable UI components
-    │   ├── RestaurantCard.tsx  # Card component to display a single restaurant's details
-    │   ├── SelectList.tsx      # Dropdown component for sorting options
-    │   └── SearchBar.tsx       # Search bar component for postcode input
-    │
-    ├── types/                  # Types for component props and data structures
-    │   ├── restaurant.ts
-    │   ├── restaurantCard.ts
-    │   ├── searchBar.ts
-    │   ├── selectList.ts
-    │   ├── selectListOption.ts
-    │   └── navigation.ts
-    │
-    ├── functions/              # Utility and logic functions
-    │   ├── api/
-    │   │   └── apiRequest.ts   # Functions for API calls (validatePostcode, fetchRestaurantsFromJustEat, handleSearch)
-    │   ├── filtering/
-    │   │   └── filter.ts       # Function to format cuisine names with emojis
-    │   └── sorting/
-    │       └── sortRestaurantData.ts # Function to sort restaurant data based on selected options
-    │
-    ├── hooks/
-    │   ├── useKeyboardVisible.ts     # Hook to track keyboard visibility
-    │   └── useRestaurantSorting.ts   # Hook to track selected sorting options and to sort restaurants
-    │
-    ├── configs/                # Static data files for configuration
-    │   ├── api.ts              # URL Constants and timeout settings
-    │   ├── sortingOptions.ts   # Sorting options for the sorting dropdown
-    │   └── cuisineEmojiMatch.ts # Data mapping cuisine keywords/names to emoji strings
-    │
-    ├── stylesheets/            # Style definitions
-    │   ├── pages/
-    │   │   ├── mainPage.ts     # Styles used by MainPage.tsx
-    │   │   └── displayPage.ts  # Styles used by DisplayPage.tsx
-    │   └── props/
-    │       ├── restaurantCard.ts # Styles for RestaurantCard component
-    │       ├── searchBar.ts     # Styles for SearchBar component
-    │       └── selectList.ts    # Styles for SelectList component
-    │
-    ├── assets/                 # Static assets
-    │   ├── data/
-    │   │   └── L40TH.json      # Sample restaurant data for display purpose
-    │   ├── fonts/              # OpenSans font files
-    │   └── icon/
-    │       └── search_icon.png
-    │
-    ├── images/                 # Static image assets
-    │   ├── just-eat-logo.png
-    │   ├── Just-Eat-Star.png
-    │   └── downarrow.png
-    │
-    ├── __mocks__/              # Test mocks
-    │   └── @react-native-community/
-    │       └── netinfo.js
-    │
-    ├── __tests__/              # Test files
-    │   ├── MainPage.test.tsx
-    │   ├── customSorting.test.tsx
-    │   └── apiRequest.test.ts
-    │
-    └── apk/
-        └── just-eat.apk        # Pre-built Android APK
-```
-
-### `Full-Info-Display` Branch
-
-Extends the `main` branch structure with the following additions:
 
 ```
 ├── App.tsx                     # Main application container with navigation setup
@@ -284,7 +204,7 @@ The TS modules are generated verbatim from the downloaded repos by `scripts/gene
 
 - **Functions (`src/functions/`)**: Functions organized by domain (`api/`, `filtering/`, `sorting/`), each with a single, clear responsibility.
 - **Components (`src/components/`)**: Reusable visual components with PascalCase naming.
-- **ViewModels (`src/viewmodels/`)**: Per-screen state and business logic hooks, keeping pages and components presentational (`Full-Info-Display` branch).
+- **ViewModels (`src/viewmodels/`)**: Per-screen state and business logic hooks, keeping pages and components presentational.
 - **Hooks (`src/hooks/`)**: Custom hooks for shared logic, such as tracking keyboard visibility.
 - **Pages (`src/pages/`)**: Separate page files of the app.
 - **Configuration Files (`src/configs/`)**: All configuration values are in the `configs` directory, making them easy to find and update.
@@ -395,18 +315,7 @@ yarn ios
 
 This is one way to run your app — you can also build it directly from Android Studio or Xcode.
 
-## Branches
-
-### `main` Branch
-The main branch contains the core restaurant search functionality:
-- Search restaurants by UK postcode using postcode.io validation API
-- Display first 10 restaurants from Just Eat API
-- Basic sorting options (Rating, RatingCount, Alphabetical Order)
-- Dark mode support for night usage
-- Error handling for API failures, timeouts, and network issues
-
-### `Full-Info-Display` Branch
-The Full-Info-Display branch extends the main branch with enhanced features:
+## Features
 
 #### Restaurant Detail Page
 - Click on any restaurant card to view detailed information
@@ -518,12 +427,12 @@ The definition of "cuisine" is not specified. There are names such as "Local Leg
 ## Potential Improvements
 
 1. Better Displaying of Cuisine Items & Better Distinguishability of Restaurants / Non-Restaurants.
-2. More custom components to increase modularity. ✅ (`main` branch)
-3. Better StyleSheet Design with more dynamic settings. ✅ (`main` branch)
-4. Restaurant Details in a full page when each restaurant card is clicked. ✅ (`Full-Info-Display` branch)
+2. More custom components to increase modularity. ✅
+3. Better StyleSheet Design with more dynamic settings. ✅
+4. Restaurant Details in a full page when each restaurant card is clicked. ✅
 5. Tests for checking the returned data and the correct rendering of elements.
-   (Can be done by *Jest* and *@testing-library/react-native*: e.g. Restaurant card components with various data inputs, Search input component behavior, Sorting controls and their state changes, Navigation between MainPage and DisplayPage, Data passing between screens, Dark/light mode toggle behavior) ✅ (`main` branch)
-6. GeoPoint + Map Integration for navigation to the restaurant. ✅ (`Full-Info-Display` branch: map display & full-screen modal; turn-by-turn navigation still pending)
-7. More Restaurant Sorting Options. ✅ (`main` branch)
-8. Advanced Filtering by Rating, Delivery Cost, Cuisine, and availability toggles (Open Now, Delivery, Collection, Has Deals). ✅ (`Full-Info-Display` branch)
-9. Quick filter chips, Local Legends carousel, and promoted placement sorting. ✅ (`Full-Info-Display` branch)
+   (Can be done by *Jest* and *@testing-library/react-native*: e.g. Restaurant card components with various data inputs, Search input component behavior, Sorting controls and their state changes, Navigation between MainPage and DisplayPage, Data passing between screens, Dark/light mode toggle behavior) ✅
+6. GeoPoint + Map Integration for navigation to the restaurant. ✅ (map display & full-screen modal; turn-by-turn navigation still pending)
+7. More Restaurant Sorting Options. ✅
+8. Advanced Filtering by Rating, Delivery Cost, Cuisine, and availability toggles (Open Now, Delivery, Collection, Has Deals). ✅
+9. Quick filter chips, Local Legends carousel, and promoted placement sorting. ✅
