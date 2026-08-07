@@ -14,8 +14,8 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'justeatassessment' do
-  project 'justeatassessment.xcodeproj'
+target 'justeatfinder' do
+  project 'justeatfinder.xcodeproj'
   config = use_native_modules!
 
   use_react_native!(
