@@ -4,7 +4,8 @@ export type FilterState = {
     collection: boolean;
     hasDeals: boolean;
     minRating: number;
-    maxDeliveryCost: number;
+    /** Upper bound in pounds; null means no cap ("Any"). */
+    maxDeliveryCost: number | null;
     selectedCuisines: string[];
 };
 
@@ -14,6 +15,6 @@ export const DEFAULT_FILTERS: FilterState = {
     collection: false,
     hasDeals: false,
     minRating: 0,
-    maxDeliveryCost: 10,
+    maxDeliveryCost: null,
     selectedCuisines: [],
 };

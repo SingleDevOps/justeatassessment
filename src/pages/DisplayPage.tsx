@@ -77,6 +77,7 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
                                 isPromoted={vm.isPromoted(item.id)}
                                 isBoosted={item.isTemporaryBoost}
                                 freeDeliveryLabel={getFreeDeliveryLabel(item.id, vm.deliveryFees)}
+                                deliveryFeesEntry={getDeliveryFeesEntry(item.id, vm.deliveryFees)}
                             />
                         </View>
                     );

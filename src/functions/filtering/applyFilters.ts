@@ -19,8 +19,9 @@ export function applyFilters(restaurants: RestaurantType[], filters: FilterState
     if (filters.minRating > 0) {
         results = results.filter(r => r.rating.starRating >= filters.minRating);
     }
-    if (filters.maxDeliveryCost < 10) {
-        results = results.filter(r => (r.deliveryCost ?? 0) <= filters.maxDeliveryCost);
+    if (filters.maxDeliveryCost !== null) {
+        const maxCost = filters.maxDeliveryCost;
+        results = results.filter(r => r.deliveryCost !== undefined && r.deliveryCost <= maxCost);
     }
     if (filters.selectedCuisines.length > 0) {
         results = results.filter(r =>
@@ -46,7 +47,7 @@ export function countActiveFilters(filters: FilterState): number {
     if (filters.collection) count++;
     if (filters.hasDeals) count++;
     if (filters.minRating > 0) count++;
-    if (filters.maxDeliveryCost < 10) count++;
+    if (filters.maxDeliveryCost !== null) count++;
     count += filters.selectedCuisines.length;
     return count;
 }

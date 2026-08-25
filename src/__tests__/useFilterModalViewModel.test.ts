@@ -62,9 +62,11 @@ describe('useFilterModalViewModel', () => {
         expect(result.current.localFilters.minRating).toBe(0);
     });
 
-    it('toggles the max delivery cost between the value and the default', () => {
+    it('toggles the max delivery cost between the value and Any (null)', () => {
         const props = createProps();
         const { result } = renderHook(() => useFilterModalViewModel(props));
+
+        expect(result.current.localFilters.maxDeliveryCost).toBeNull();
 
         act(() => {
             result.current.setMaxDeliveryCost(2);
@@ -72,9 +74,14 @@ describe('useFilterModalViewModel', () => {
         expect(result.current.localFilters.maxDeliveryCost).toBe(2);
 
         act(() => {
-            result.current.setMaxDeliveryCost(2);
+            result.current.setMaxDeliveryCost(5);
         });
-        expect(result.current.localFilters.maxDeliveryCost).toBe(10);
+        expect(result.current.localFilters.maxDeliveryCost).toBe(5);
+
+        act(() => {
+            result.current.setMaxDeliveryCost(5);
+        });
+        expect(result.current.localFilters.maxDeliveryCost).toBeNull();
     });
 
     it('adds and removes selected cuisines', () => {
@@ -127,28 +134,28 @@ describe('useFilterModalViewModel', () => {
         expect(result.current.localSortOption).toBe(DEFAULT_SORT_OPTION);
     });
 
-    it('reports hasChanges based on the default state', () => {
+    it('reports hasActiveFilters based on the default state', () => {
         const props = createProps();
         const { result } = renderHook(() => useFilterModalViewModel(props));
 
-        expect(result.current.hasChanges).toBe(false);
+        expect(result.current.hasActiveFilters).toBe(false);
 
         act(() => {
             result.current.toggleBoolean('hasDeals');
         });
-        expect(result.current.hasChanges).toBe(true);
+        expect(result.current.hasActiveFilters).toBe(true);
     });
 
-    it('reports hasChanges when a sort option is selected', () => {
+    it('reports hasActiveFilters when a sort option is selected', () => {
         const props = createProps();
         const { result } = renderHook(() => useFilterModalViewModel(props));
 
-        expect(result.current.hasChanges).toBe(false);
+        expect(result.current.hasActiveFilters).toBe(false);
 
         act(() => {
             result.current.setSortOption('Name (A-Z)');
         });
-        expect(result.current.hasChanges).toBe(true);
+        expect(result.current.hasActiveFilters).toBe(true);
     });
 
     it('reset restores the default filter state and sort option', () => {
@@ -161,7 +168,7 @@ describe('useFilterModalViewModel', () => {
 
         expect(result.current.localFilters).toEqual(DEFAULT_FILTER_STATE);
         expect(result.current.localSortOption).toBe(DEFAULT_SORT_OPTION);
-        expect(result.current.hasChanges).toBe(false);
+        expect(result.current.hasActiveFilters).toBe(false);
     });
 
     it('commit applies the draft filters and sort option, then closes', () => {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { handleSearch } from '../functions/api/apiRequest';
 import { applyFilters, applyRestaurantIdFilter, countActiveFilters } from '../functions/filtering/applyFilters';
 import { filterRestaurants, shuffleArray, SEARCH_RESULT_LIMIT } from '../functions/filtering/searchRestaurants';
@@ -52,7 +52,6 @@ export const useDisplayPageViewModel = ({ route }: UseDisplayPageViewModelOption
     const [displayRestaurants, setDisplayRestaurants] = useState<RestaurantType[]>(routeRestaurants ?? []);
     const [refreshing, setRefreshing] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [shuffleKey, setShuffleKey] = useState(0);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
     const [selectedSortOption, setSelectedSortOption] = useState('');
     const [filters, setFilters] = useState<FilterState>({ ...DEFAULT_FILTER_STATE });
@@ -61,13 +60,6 @@ export const useDisplayPageViewModel = ({ route }: UseDisplayPageViewModelOption
     const [deliveryFees, setDeliveryFees] = useState<DeliveryFeesType | undefined>(routeDeliveryFees);
     const [promotedPlacement, setPromotedPlacement] = useState<PromotedPlacementType | undefined>(routePromotedPlacement);
     const [filterDefs, setFilterDefs] = useState<Record<string, FilterDefType> | undefined>(routeFilters);
-
-    useEffect(() => {
-        return () => {
-            setFilters({ ...DEFAULT_FILTER_STATE });
-            setLayoutFilters([]);
-        };
-    }, []);
 
     const activeFilterCount = useMemo(
         () => countActiveFilters(filters) + layoutFilters.length,
@@ -140,8 +132,7 @@ export const useDisplayPageViewModel = ({ route }: UseDisplayPageViewModelOption
         }
 
         return filtered;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sortedRestaurants, allRestaurants, searchQuery, shuffleKey, filters, layoutRestaurantIds]);
+    }, [sortedRestaurants, allRestaurants, searchQuery, filters, layoutRestaurantIds]);
 
     const matchCount = useMemo(() => {
         let base: RestaurantType[];
@@ -168,7 +159,6 @@ export const useDisplayPageViewModel = ({ route }: UseDisplayPageViewModelOption
             setSelectedSortOption('');
             setDisplayRestaurants(result.restaurants);
             setAllRestaurants(result.allRestaurants);
-            setShuffleKey(prev => prev + 1);
             if (result.metaData) {
                 setMetaData(result.metaData);
             }

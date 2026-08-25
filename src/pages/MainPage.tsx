@@ -20,12 +20,12 @@ const MainPage = ({ navigation }: MainPageProps) => {
   const styles = mainpageStyles(theme);
 
   useEffect(() => {
-    SystemNavigationBar.setNavigationColor(isDarkMode ? theme.color.backgroundSubtle : 'gray');
+    SystemNavigationBar.setNavigationColor(isDarkMode ? theme.color.backgroundDefault : theme.color.containerDefault);
 
     navigation.setOptions({
       headerShown: false,
     });
-  }, [navigation, isDarkMode, theme.color.backgroundSubtle]);
+  }, [navigation, isDarkMode, theme.color.backgroundDefault, theme.color.containerDefault]);
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>

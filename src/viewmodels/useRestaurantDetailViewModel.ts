@@ -57,14 +57,14 @@ function deduplicateDeals(deals: DealType[]): DealType[] {
 }
 
 export const useRestaurantDetailViewModel = (
-    restaurant: { deals?: DealType[]; rating?: { userRating?: number | null } },
+    restaurant?: { deals?: DealType[]; rating?: { userRating?: number | null } },
     deliveryFees?: DeliveryFeesEntryType
 ) => {
     const [dealsExpanded, setDealsExpanded] = useState(false);
 
-    const uniqueDeals = useMemo(() => deduplicateDeals(restaurant.deals ?? []), [restaurant.deals]);
+    const uniqueDeals = useMemo(() => deduplicateDeals(restaurant?.deals ?? []), [restaurant?.deals]);
 
-    const userRating = restaurant.rating?.userRating ?? null;
+    const userRating = restaurant?.rating?.userRating ?? null;
 
     const feeBands = useMemo(() => formatFeeBands(deliveryFees), [deliveryFees]);
 

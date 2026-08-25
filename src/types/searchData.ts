@@ -1,3 +1,4 @@
+/** Delivery fee bands; all amounts are in pence (minor units). */
 export type FeeBandType = {
     minimumAmount: number;
     fee: number;
@@ -5,6 +6,7 @@ export type FeeBandType = {
 
 export type DeliveryFeesEntryType = {
     restaurantId: string;
+    /** Minimum order value in pence (minor units). */
     minimumOrderValue: number;
     bands: FeeBandType[];
 };

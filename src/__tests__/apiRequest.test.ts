@@ -6,9 +6,10 @@ import {
 
 global.fetch = jest.fn();
 
-const createMockResponse = (body: any, ok: boolean = true): Response => {
+const createMockResponse = (body: any, ok: boolean = true, status = 200): Response => {
   return {
     ok,
+    status,
     json: () => Promise.resolve(body),
   } as Response;
 };
@@ -20,36 +21,60 @@ describe('API Functions', () => {
   });
 
   describe('validatePostcode', () => {
-    it('should return true for a valid postcode', async () => {
+    it('should return valid for a valid postcode', async () => {
       const mockPostcode = 'SW1A0AA';
       (fetch as jest.Mock).mockResolvedValueOnce(
         createMockResponse({ result: true })
       );
 
-      const isValid = await validatePostcode(mockPostcode);
+      const result = await validatePostcode(mockPostcode);
 
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(
         `https://postcodes.io/postcodes/${mockPostcode}/validate`,
         { method: 'GET' }
       );
-      expect(isValid).toBe(true);
+      expect(result).toBe('valid');
     });
 
-    it('should return false for an invalid postcode', async () => {
+    it('should return invalid for an invalid postcode', async () => {
       const mockPostcode = '12345';
       (fetch as jest.Mock).mockResolvedValueOnce(
         createMockResponse({ result: false })
       );
 
-      const isValid = await validatePostcode(mockPostcode);
+      const result = await validatePostcode(mockPostcode);
 
       expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(
-        `https://postcodes.io/postcodes/${mockPostcode}/validate`,
-        { method: 'GET' }
+      expect(result).toBe('invalid');
+    });
+
+    it('should return invalid when the postcode is not found (404)', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce(
+        createMockResponse({}, false, 404)
       );
-      expect(isValid).toBe(false);
+
+      const result = await validatePostcode('XXXX XXX');
+
+      expect(result).toBe('invalid');
+    });
+
+    it('should return error for a server error response', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce(
+        createMockResponse({}, false, 500)
+      );
+
+      const result = await validatePostcode('SW1A0AA');
+
+      expect(result).toBe('error');
+    });
+
+    it('should return error when the request fails', async () => {
+      (fetch as jest.Mock).mockRejectedValueOnce(new Error('network down'));
+
+      const result = await validatePostcode('SW1A0AA');
+
+      expect(result).toBe('error');
     });
   });
 
@@ -78,17 +103,53 @@ describe('API Functions', () => {
 
       expect(result).toBeNull();
     });
+
+    it('should return null for an error status response', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce(
+        createMockResponse({ message: 'oops' }, false, 500)
+      );
+
+      const result = await fetchRestaurantsFromJustEat('SW1A0AA');
+
+      expect(result).toBeNull();
+    });
   });
 
   describe('handleSearch', () => {
     const mockRestaurants = [{ id: '1', name: 'Testaurant' }];
-    const mockPostcode = 'sw1a1aa';
+    const mockPostcodeInput = 'sw1a1aa';
+    const mockPostcode = 'SW1A1AA';
+
+    it('should reject an empty postcode without calling the API', async () => {
+      const result = await handleSearch('');
+
+      expect(fetch).not.toHaveBeenCalled();
+      expect(result).toEqual({ ok: false, reason: 'invalid_postcode' });
+    });
+
+    it('should serve the offline demo dataset for L40TH regardless of case', async () => {
+      jest.useFakeTimers();
+
+      const searchPromise = handleSearch('l40th');
+      jest.advanceTimersByTime(1001);
+      const result = await searchPromise;
+
+      expect(fetch).not.toHaveBeenCalled();
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.restaurants.length).toBeLessThanOrEqual(10);
+        expect(result.allRestaurants.length).toBeGreaterThan(10);
+        expect(result.metaData?.postalCode).toBe('L40TH');
+      }
+
+      jest.useRealTimers();
+    });
 
     it('should fetch restaurants if validation succeeds', async () => {
       (fetch as jest.Mock).mockResolvedValueOnce(createMockResponse({ result: true }));
       (fetch as jest.Mock).mockResolvedValueOnce(createMockResponse({ restaurants: mockRestaurants }));
 
-      const result = await handleSearch(mockPostcode);
+      const result = await handleSearch(mockPostcodeInput);
 
       expect(fetch).toHaveBeenCalledTimes(2);
       expect(fetch).toHaveBeenNthCalledWith(1, `https://postcodes.io/postcodes/${mockPostcode}/validate`, { method: 'GET' });
@@ -115,7 +176,7 @@ describe('API Functions', () => {
       });
       (fetch as jest.Mock).mockResolvedValueOnce(createMockResponse({ restaurants: mockRestaurants }));
 
-      const searchPromise = handleSearch(mockPostcode);
+      const searchPromise = handleSearch(mockPostcodeInput);
 
       jest.advanceTimersByTime(3001);
 
@@ -127,6 +188,24 @@ describe('API Functions', () => {
       expect(result).toEqual({ ok: true, restaurants: mockRestaurants, allRestaurants: mockRestaurants });
 
       jest.useRealTimers();
+    });
+
+    it('should fall back to the live API when validation errors', async () => {
+      (fetch as jest.Mock).mockRejectedValueOnce(new Error('postcodes.io down'));
+      (fetch as jest.Mock).mockResolvedValueOnce(createMockResponse({ restaurants: mockRestaurants }));
+
+      const result = await handleSearch(mockPostcodeInput);
+
+      expect(fetch).toHaveBeenCalledTimes(2);
+      expect(result).toEqual({ ok: true, restaurants: mockRestaurants, allRestaurants: mockRestaurants });
+    });
+
+    it('should return api_error when both validation errors and the live API fails', async () => {
+      (fetch as jest.Mock).mockRejectedValue(new Error('everything down'));
+
+      const result = await handleSearch(mockPostcodeInput);
+
+      expect(result).toEqual({ ok: false, reason: 'api_error' });
     });
   });
 });

@@ -11,6 +11,12 @@ export const detailPageStyles = makeThemedStyles((t) => ({
     scrollContent: {
         paddingBottom: t.spacing.g,
     },
+    missingState: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: t.spacing.e,
+    },
 
     headerSection: {
         alignItems: 'center',

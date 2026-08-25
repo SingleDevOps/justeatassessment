@@ -1,18 +1,28 @@
 import { cuisineEmojiMatch } from '../../configs/cuisineEmojiMatch';
 import { RestaurantType, CuisineType } from '../../types/restaurant';
 
-const emojiEntries = Object.entries(cuisineEmojiMatch)
-  .sort(([a], [b]) => b.length - a.length);
+type EmojiMatcher = {
+    key: string;
+    emoji: string;
+    pattern: RegExp;
+};
+
+// Longest keys first so e.g. "fish-and-chips" wins over "chips"-style overlaps.
+const emojiMatchers: EmojiMatcher[] = Object.entries(cuisineEmojiMatch)
+  .sort(([a], [b]) => b.length - a.length)
+  .map(([key, emoji]) => ({
+      key,
+      emoji,
+      pattern: new RegExp(`(?:^|[\\s_\\-&/]+)${escapeRegex(key)}(?:[\\s_\\-&/]+|$)`, 'i'),
+  }));
 
 function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function matchEmoji(cuisineName: string): string | null {
-  const lower = cuisineName.toLowerCase();
-  for (const [key, emoji] of emojiEntries) {
-    const pattern = new RegExp(`(?:^|[\\s_\\-&/]+)${escapeRegex(key)}(?:[\\s_\\-&/]+|$)`, 'i');
-    if (pattern.test(lower)) {
+  for (const { emoji, pattern } of emojiMatchers) {
+    if (pattern.test(cuisineName)) {
       return emoji;
     }
   }

@@ -5,7 +5,7 @@ import { formatDistance } from '../functions/map/distance';
 import { StarIcon } from './icons/StarIcon';
 import { LocationPinIcon } from './icons/LocationPinIcon';
 
-export const RestaurantCard = ({ item, theme, cuisines, navigation, distanceMeters, distanceIsFromUser, isPromoted, isBoosted, freeDeliveryLabel }: RestaurantCardPropType) => {
+export const RestaurantCard = ({ item, theme, cuisines, navigation, distanceMeters, distanceIsFromUser, isPromoted, isBoosted, freeDeliveryLabel, deliveryFeesEntry }: RestaurantCardPropType) => {
     const isOffline = item.isTemporarilyOffline === true;
     const isOpenNow = item.isOpenNowForDelivery || item.isOpenNowForCollection;
     const showNewBadge = item.isNew === true;
@@ -15,7 +15,7 @@ export const RestaurantCard = ({ item, theme, cuisines, navigation, distanceMete
         <TouchableHighlight
             testID={`restaurant-card-${item.id}`}
             underlayColor={theme.color.backgroundSubtle}
-            onPress={() => navigation.navigate('RestaurantDetailPage', { restaurant: item })}
+            onPress={() => navigation.navigate('RestaurantDetailPage', { restaurant: item, deliveryFees: deliveryFeesEntry })}
             style={styles.touchableHighlight}
             accessibilityRole="button"
             accessibilityLabel={`${item.name}, rating ${item.rating.starRating} out of 5`}

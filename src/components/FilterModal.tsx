@@ -77,6 +77,11 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, current
         animateOut(onClose);
     }, [animateOut, onClose]);
 
+    // The pan responder below is created once, so it reads the newest values
+    // through this ref instead of closing over a stale render.
+    const latest = useRef({ reduceMotion, dismissDuration: theme.motion.timing250, onClose });
+    latest.current = { reduceMotion, dismissDuration: theme.motion.timing250, onClose };
+
     const panResponder = useRef(
         PanResponder.create({
             onStartShouldSetPanResponder: () => true,
@@ -89,20 +94,20 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, current
             onPanResponderRelease: (_, gestureState) => {
                 if (gestureState.dy > DISMISS_THRESHOLD || gestureState.vy > 0.5) {
                     isClosingRef.current = true;
-                    if (reduceMotion) {
+                    if (latest.current.reduceMotion) {
                         setModalMounted(false);
                         isClosingRef.current = false;
-                        onClose();
+                        latest.current.onClose();
                         return;
                     }
                     Animated.timing(translateY, {
                         toValue: SCREEN_HEIGHT,
-                        duration: theme.motion.timing250,
+                        duration: latest.current.dismissDuration,
                         useNativeDriver: true,
                     }).start(() => {
                         setModalMounted(false);
                         isClosingRef.current = false;
-                        onClose();
+                        latest.current.onClose();
                     });
                 } else {
                     Animated.spring(translateY, {
@@ -141,8 +146,8 @@ export const FilterModal = ({ visible, onClose, onApply, currentFilters, current
                         <View style={styles.handle} />
 
                         <View style={styles.header}>
-                            <Pressable onPress={vm.reset} accessibilityRole="button" accessibilityLabel="Reset filters" accessibilityState={{ disabled: !vm.hasChanges }}>
-                                <Text style={[styles.headerButton, !vm.hasChanges && styles.disabledButton]}>
+                            <Pressable onPress={vm.reset} accessibilityRole="button" accessibilityLabel="Reset filters" accessibilityState={{ disabled: !vm.hasActiveFilters }}>
+                                <Text style={[styles.headerButton, !vm.hasActiveFilters && styles.disabledButton]}>
                                     Reset
                                 </Text>
                             </Pressable>

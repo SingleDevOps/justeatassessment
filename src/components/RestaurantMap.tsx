@@ -5,8 +5,8 @@ import { restaurantMapStyles } from '../stylesheets/props/restaurantMap';
 import type { RestaurantType } from '../types/restaurant';
 import type { PieTokens } from '../configs/pieTokens';
 
-export const getRestaurantLatLng = (restaurant: RestaurantType) => {
-    const coordinates = restaurant.address.location?.coordinates;
+export const getRestaurantLatLng = (restaurant?: RestaurantType) => {
+    const coordinates = restaurant?.address.location?.coordinates;
     if (!coordinates || coordinates.length < 2) {
         return null;
     }

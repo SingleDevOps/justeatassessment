@@ -13,7 +13,7 @@ jest.mock('@react-native-community/netinfo', () => ({
 
 jest.mock('@react-native-community/geolocation', () => ({
     getCurrentPosition: jest.fn(),
-    requestAuthorization: jest.fn(),
+    requestAuthorization: jest.fn((onSuccess) => onSuccess()),
 }));
 
 jest.mock('react-native-maps', () => {

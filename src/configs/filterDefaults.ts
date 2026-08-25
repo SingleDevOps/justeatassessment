@@ -8,8 +8,8 @@ export const RATING_OPTIONS = [
     { label: '4.5+', value: 4.5 },
 ];
 
-export const DELIVERY_COST_OPTIONS = [
-    { label: 'Any', value: 10 },
+export const DELIVERY_COST_OPTIONS: { label: string; value: number | null }[] = [
+    { label: 'Any', value: null },
     { label: '£1', value: 1 },
     { label: '£2', value: 2 },
     { label: '£3', value: 3 },
@@ -37,7 +37,7 @@ export const TOP_CUISINES: CuisineOption[] = [
     { name: 'Italian', uniqueName: 'italian', emoji: '🇮🇹' },
     { name: 'Curry', uniqueName: 'curry', emoji: '🍛' },
     { name: 'Mexican', uniqueName: 'mexican', emoji: '🇲🇽' },
-    { name: 'Halal', uniqueName: 'halal', emoji: 'Halal' },
+    { name: 'Halal', uniqueName: 'halal', emoji: '🥙' },
     { name: 'Sushi', uniqueName: 'sushi', emoji: '🍣' },
     { name: 'Coffee', uniqueName: 'coffee', emoji: '☕' },
     { name: 'Milkshakes', uniqueName: 'milkshakes', emoji: '🥤' },

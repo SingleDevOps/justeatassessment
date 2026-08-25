@@ -6,6 +6,8 @@ import { RestaurantMap, getRestaurantLatLng } from '../components/RestaurantMap'
 import { useUserLocation } from '../hooks/useUserLocation';
 import { usePieTheme } from '../hooks/usePieTheme';
 import { haversineDistanceMeters, formatDistance } from '../functions/map/distance';
+import { formatPounds } from '../functions/filtering/deliveryFees';
+import { ErrorStateView } from '../components/icons/ErrorStateView';
 import { StarIcon } from '../components/icons/StarIcon';
 import type { DetailPageProps } from '../types/navigation';
 import type { DealType, AvailabilitySlotType } from '../types/restaurant';
@@ -70,7 +72,7 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
 
     useEffect(() => {
         navigation.setOptions({
-            title: restaurant.name,
+            title: restaurant?.name ?? 'Restaurant',
             headerTitleAlign: 'center',
             headerStyle: {
                 backgroundColor: theme.color.backgroundDefault,
@@ -83,7 +85,20 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                 color: theme.color.interactiveBrand,
             },
         });
-    }, [navigation, restaurant.name, isDarkMode, theme]);
+    }, [navigation, restaurant?.name, isDarkMode, theme]);
+
+    if (!restaurant) {
+        return (
+            <View style={[styles.fullview, styles.missingState]}>
+                <ErrorStateView
+                    illustration="apiError"
+                    title="Restaurant unavailable"
+                    message="We couldn't load this restaurant. Go back and try again."
+                    theme={theme}
+                />
+            </View>
+        );
+    }
 
     return (
         <View style={styles.fullview}>
@@ -159,7 +174,7 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                     <InfoRow label="Open for Collection" value={restaurant.isOpenNowForCollection ? 'Yes' : 'No'} theme={theme} />
                     <InfoRow label="Open for Preorder" value={restaurant.isOpenNowForPreorder ? 'Yes' : 'No'} theme={theme} />
                     {restaurant.deliveryCost !== undefined && (
-                        <InfoRow label="Delivery Cost" value={`£${restaurant.deliveryCost.toFixed(2)}`} theme={theme} />
+                        <InfoRow label="Delivery Cost" value={formatPounds(restaurant.deliveryCost)} theme={theme} />
                     )}
                     {minimumOrderValue !== null && minimumOrderValue > 0 && (
                         <InfoRow label="Minimum Order" value={`£${(minimumOrderValue / 100).toFixed(2)}`} theme={theme} />
@@ -171,7 +186,7 @@ const RestaurantDetailPage = ({ navigation, route }: DetailPageProps) => {
                         <InfoRow key={i} label={band.label} value={band.fee} theme={theme} />
                     ))}
                     {restaurant.minimumDeliveryValue !== undefined && (
-                        <InfoRow label="Min Delivery Value" value={restaurant.minimumDeliveryValue === 0 ? 'None' : `£${restaurant.minimumDeliveryValue.toFixed(2)}`} theme={theme} />
+                        <InfoRow label="Min Delivery Value" value={restaurant.minimumDeliveryValue === 0 ? 'None' : formatPounds(restaurant.minimumDeliveryValue)} theme={theme} />
                     )}
                     <InfoRow label="Delivery ETA" value={formatEta(restaurant.deliveryEtaMinutes)} theme={theme} />
                     {restaurant.driveDistanceMeters !== undefined && (

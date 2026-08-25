@@ -1,20 +1,16 @@
 import * as sampleData from '../../assets/data/L40TH.json';
 import { RestaurantType } from '../../types/restaurant';
 import { SearchEnrichmentType } from '../../types/searchData';
-import { API_URLS } from '../../configs/api';
+import { API_URLS, API_TIMEOUTS } from '../../configs/api';
+import { shuffleArray } from '../filtering/searchRestaurants';
 
 export type SearchResult =
   | { ok: true; restaurants: RestaurantType[]; allRestaurants: RestaurantType[] } & Partial<SearchEnrichmentType>
   | { ok: false; reason: 'invalid_postcode' | 'api_error' };
 
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
+export type PostcodeValidation = 'valid' | 'invalid' | 'error';
+
+const DEMO_POSTCODE = 'L40TH';
 
 function pickRandomTen(restaurants: RestaurantType[]): RestaurantType[] {
   if (restaurants.length <= 10) {
@@ -23,19 +19,26 @@ function pickRandomTen(restaurants: RestaurantType[]): RestaurantType[] {
   return shuffleArray(restaurants).slice(0, 10);
 }
 
-export async function validatePostcode(postcode: string): Promise<boolean> {
+export async function validatePostcode(postcode: string): Promise<PostcodeValidation> {
   try {
     const response = await fetch(API_URLS.POSTCODE_VALIDATION_URL(postcode), { method: 'GET' });
+    if (!response.ok) {
+      // postcodes.io answers 404 for postcodes it does not recognise.
+      return response.status === 404 ? 'invalid' : 'error';
+    }
     const data = await response.json();
-    return data.result === true;
+    return data.result === true ? 'valid' : 'invalid';
   } catch {
-    return false;
+    return 'error';
   }
 }
 
 export async function fetchRestaurantsFromJustEat(postcode: string): Promise<{ restaurants: RestaurantType[] } & Partial<SearchEnrichmentType> | null> {
   try {
     const response = await fetch(API_URLS.JUST_EAT_API_URL(postcode), { method: 'GET' });
+    if (!response.ok) {
+      return null;
+    }
     const apiData = await response.json();
     if (apiData.restaurants) {
       const enrichment: Partial<SearchEnrichmentType> = {};
@@ -54,7 +57,14 @@ export async function fetchRestaurantsFromJustEat(postcode: string): Promise<{ r
 }
 
 export async function handleSearch(postcode: string): Promise<SearchResult> {
-  if (!postcode || postcode === 'L40TH') {
+  const normalized = postcode.trim().toUpperCase();
+  if (!normalized) {
+    return { ok: false, reason: 'invalid_postcode' };
+  }
+
+  // Offline demo mode: the bundled L40TH dataset stands in for the live API
+  // so the app remains fully explorable without network access.
+  if (normalized === DEMO_POSTCODE) {
     const allRestaurants = sampleData.restaurants as RestaurantType[];
     const restaurants = await new Promise<RestaurantType[]>((resolve) => {
       setTimeout(() => {
@@ -73,24 +83,33 @@ export async function handleSearch(postcode: string): Promise<SearchResult> {
     };
   }
 
-  const POSTCODE_VALIDATION_TIMEOUT = new Promise<string>((resolve) =>
-    setTimeout(() => resolve('TIMEOUT'), 3000)
-  );
+  let validationTimeoutId: ReturnType<typeof setTimeout> | undefined;
+  const validationTimeout = new Promise<'timeout'>((resolve) => {
+    validationTimeoutId = setTimeout(() => resolve('timeout'), API_TIMEOUTS.POSTCODE_VALIDATION);
+  });
 
-  const validationResult = await Promise.race([
-    validatePostcode(postcode),
-    POSTCODE_VALIDATION_TIMEOUT,
-  ]);
+  try {
+    const validationResult = await Promise.race([
+      validatePostcode(normalized),
+      validationTimeout,
+    ]);
 
-  if (validationResult === 'TIMEOUT' || validationResult === true) {
-    const result = await fetchRestaurantsFromJustEat(postcode);
-    if (result === null) {
-      return { ok: false, reason: 'api_error' };
+    if (validationResult === 'invalid') {
+      return { ok: false, reason: 'invalid_postcode' };
     }
-    const { restaurants: allRestaurants, ...enrichment } = result;
-    const restaurants = pickRandomTen(allRestaurants);
-    return { ok: true, restaurants, allRestaurants, ...enrichment };
+  } finally {
+    if (validationTimeoutId !== undefined) {
+      clearTimeout(validationTimeoutId);
+    }
   }
 
-  return { ok: false, reason: 'invalid_postcode' };
+  // 'valid' plus validation timeouts/errors fall through to the live API so a
+  // postcodes.io outage cannot block an otherwise working Just Eat lookup.
+  const result = await fetchRestaurantsFromJustEat(normalized);
+  if (result === null) {
+    return { ok: false, reason: 'api_error' };
+  }
+  const { restaurants: allRestaurants, ...enrichment } = result;
+  const restaurants = pickRandomTen(allRestaurants);
+  return { ok: true, restaurants, allRestaurants, ...enrichment };
 }

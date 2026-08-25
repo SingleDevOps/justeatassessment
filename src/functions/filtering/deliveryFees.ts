@@ -18,6 +18,18 @@ export function getFreeDeliveryThreshold(entry?: DeliveryFeesEntryType): number 
     return freeBand.minimumAmount;
 }
 
+/**
+ * Format an amount expressed in pounds (major units), e.g.
+ * `restaurant.deliveryCost` / `restaurant.minimumDeliveryValue`.
+ */
+export function formatPounds(amount: number): string {
+    return `£${amount.toFixed(2)}`;
+}
+
+/**
+ * Format an amount expressed in pence (minor units), e.g. values from
+ * `deliveryFees` bands and `minimumOrderValue`.
+ */
 export function formatMoney(value: number): string {
     if (value === 0) {
         return 'Free';

@@ -23,7 +23,7 @@ export const useFilterModalViewModel = ({ visible, currentFilters, currentSortOp
         }
     }, [visible, currentFilters, currentSortOption]);
 
-    const hasChanges = JSON.stringify(localFilters) !== JSON.stringify(DEFAULT_FILTER_STATE) ||
+    const hasActiveFilters = JSON.stringify(localFilters) !== JSON.stringify(DEFAULT_FILTER_STATE) ||
         localSortOption !== DEFAULT_SORT_OPTION;
 
     const toggleBoolean = useCallback((key: BooleanFilterKey) => {
@@ -34,8 +34,8 @@ export const useFilterModalViewModel = ({ visible, currentFilters, currentSortOp
         setLocalFilters(prev => ({ ...prev, minRating: prev.minRating === value ? 0 : value }));
     }, []);
 
-    const setMaxDeliveryCost = useCallback((value: number) => {
-        setLocalFilters(prev => ({ ...prev, maxDeliveryCost: prev.maxDeliveryCost === value ? 10 : value }));
+    const setMaxDeliveryCost = useCallback((value: number | null) => {
+        setLocalFilters(prev => ({ ...prev, maxDeliveryCost: prev.maxDeliveryCost === value ? null : value }));
     }, []);
 
     const toggleCuisine = useCallback((uniqueName: string) => {
@@ -67,7 +67,7 @@ export const useFilterModalViewModel = ({ visible, currentFilters, currentSortOp
     return {
         localFilters,
         localSortOption,
-        hasChanges,
+        hasActiveFilters,
         toggleBoolean,
         setMinRating,
         setMaxDeliveryCost,

@@ -2,13 +2,18 @@ import { RestaurantType } from '../../types/restaurant';
 
 export const SEARCH_RESULT_LIMIT = 10;
 
-function matchesQuery(obj: unknown, query: string): boolean {
+// Identifiers are meaningless to a text search and would only produce
+// surprising matches (e.g. searching "213" hitting an id).
+const SEARCH_IGNORED_KEYS = new Set(['id', 'restaurantId']);
+
+function matchesQuery(obj: unknown, query: string, key?: string): boolean {
   if (obj === null || obj === undefined) { return false; }
+  if (key !== undefined && SEARCH_IGNORED_KEYS.has(key)) { return false; }
   if (typeof obj === 'string') { return obj.toLowerCase().includes(query); }
   if (typeof obj === 'number') { return obj.toString().includes(query); }
-  if (typeof obj === 'boolean') { return obj ? 'true'.includes(query) : 'false'.includes(query); }
+  if (typeof obj === 'boolean') { return false; }
   if (Array.isArray(obj)) { return obj.some(item => matchesQuery(item, query)); }
-  if (typeof obj === 'object') { return Object.values(obj).some(val => matchesQuery(val, query)); }
+  if (typeof obj === 'object') { return Object.entries(obj).some(([k, val]) => matchesQuery(val, query, k)); }
   return false;
 }
 

@@ -1,6 +1,7 @@
 ﻿import { RestaurantType } from './restaurant';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './navigation';
+import type { DeliveryFeesEntryType } from './searchData';
 import type { PieTokens } from '../configs/pieTokens';
 
 export type RestaurantCardPropType = {
@@ -13,4 +14,6 @@ export type RestaurantCardPropType = {
     isPromoted?: boolean;
     isBoosted?: boolean;
     freeDeliveryLabel?: string | null;
+    /** Fee bands for this restaurant, forwarded to RestaurantDetailPage. */
+    deliveryFeesEntry?: DeliveryFeesEntryType;
 };
