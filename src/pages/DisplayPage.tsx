@@ -1,31 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { useColorScheme, View, FlatList, RefreshControl } from 'react-native';
+import { useColorScheme, View, FlatList, RefreshControl, Alert } from 'react-native';
 import { displayPageStyles } from '../stylesheets/pages/displayPage';
 import { filterCuisines } from '../functions/filtering/filter';
 import { RestaurantCard } from '../components/RestaurantCard';
 import { SelectListComponent } from '../components/SelectList';
 import { useRestaurantSorting } from '../hooks/useRestaurantSorting';
 import { handleSearch } from '../functions/api/apiRequest';
+import { SEARCH_ERROR_MESSAGES } from '../configs/errorMessages';
+import type { RestaurantType } from '../types/restaurant';
 import type { DisplayPageProps } from '../types/navigation';
 
 const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
-  const { restaurants, postcode: routePostcode } = route.params ?? {};
-  const postcode = routePostcode || 'L40TH';
+  const { restaurants: initialRestaurants, postcode } = route.params;
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
-  const {sortedRestaurants, setSelectedSortOption, setSortedRestaurants, selectedSortOption} = useRestaurantSorting(restaurants ?? []);
+
+  const [restaurants, setRestaurants] = useState<RestaurantType[]>(initialRestaurants);
   const [refreshing, setRefreshing] = useState(false);
-  const [key, setKey] = useState(0);
+  const [dropdownResetKey, setDropdownResetKey] = useState(0);
+  const {sortedRestaurants, setSelectedSortOption, selectedSortOption} = useRestaurantSorting(restaurants);
 
   const onRefresh = async () => {
     setRefreshing(true);
     const result = await handleSearch(postcode);
-    if (result.ok) {
-      setSelectedSortOption('');
-      setSortedRestaurants(result.restaurants);
-      setKey(prevKey => prevKey + 1);
-    }
     setRefreshing(false);
+    if (result.ok) {
+      setRestaurants(result.restaurants);
+      setDropdownResetKey((current) => current + 1);
+    } else {
+      const { title, message } = SEARCH_ERROR_MESSAGES[result.reason];
+      Alert.alert(title, message);
+    }
   };
 
   useEffect(() => {
@@ -51,7 +56,7 @@ const DisplayPage = ({ navigation, route }: DisplayPageProps) => {
         setSelected={(value: string) => setSelectedSortOption(value)}
         isDarkMode={isDarkMode}
         selected={selectedSortOption}
-        key={key}
+        key={dropdownResetKey}
       />
       <View style={displayPageStyles.container}>
         <FlatList

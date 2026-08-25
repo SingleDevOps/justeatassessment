@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 import { useColorScheme, Text, View, Alert, Image, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { handleSearch } from '../functions/api/apiRequest';
+import { SEARCH_ERROR_MESSAGES } from '../configs/errorMessages';
 import { mainpageStyles } from '../stylesheets/pages/mainPage';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { SearchBarComponent } from '../components/SearchBar';
@@ -27,6 +28,11 @@ const MainPage = ({ navigation }: MainPageProps) => {
   const onSubmit = async (text: string): Promise<void> => {
     const cleaned = text.replaceAll(' ', '').toUpperCase();
 
+    if (!cleaned) {
+      Alert.alert('Empty Postcode', 'Please enter a UK postcode before searching.');
+      return;
+    }
+
     if (!netInfo.isConnected) {
       Alert.alert('No Internet Connection', 'Please check your internet.');
       return;
@@ -38,10 +44,9 @@ const MainPage = ({ navigation }: MainPageProps) => {
 
     if (result.ok) {
       navigation.navigate('DisplayPage', { postcode: cleaned, restaurants: result.restaurants });
-    } else if (result.reason === 'api_error') {
-      Alert.alert('Error fetching restaurant data', 'The Just Eat API Endpoint is down, or your IP address is not European.');
     } else {
-      Alert.alert('Invalid Postcode', 'You may have entered the wrong postal code, or it has been terminated.');
+      const { title, message } = SEARCH_ERROR_MESSAGES[result.reason];
+      Alert.alert(title, message);
     }
   };
 

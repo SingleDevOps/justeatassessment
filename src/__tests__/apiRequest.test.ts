@@ -91,7 +91,7 @@ describe('API Functions', () => {
       const result = await handleSearch(mockPostcode);
 
       expect(fetch).toHaveBeenCalledTimes(2);
-      expect(fetch).toHaveBeenNthCalledWith(1, `https://postcodes.io/postcodes/${mockPostcode}/validate`, { method: 'GET' });
+      expect(fetch).toHaveBeenNthCalledWith(1, `https://postcodes.io/postcodes/${mockPostcode}/validate`, { method: 'GET', signal: expect.anything() });
       expect(fetch).toHaveBeenNthCalledWith(2, `https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/${mockPostcode}`, { method: 'GET' });
       expect(result).toEqual({ ok: true, restaurants: mockRestaurants });
     });
@@ -122,7 +122,7 @@ describe('API Functions', () => {
       const result = await searchPromise;
 
       expect(fetch).toHaveBeenCalledTimes(2);
-      expect(fetch).toHaveBeenNthCalledWith(1, `https://postcodes.io/postcodes/${mockPostcode}/validate`, { method: 'GET' });
+      expect(fetch).toHaveBeenNthCalledWith(1, `https://postcodes.io/postcodes/${mockPostcode}/validate`, { method: 'GET', signal: expect.anything() });
       expect(fetch).toHaveBeenNthCalledWith(2, `https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/${mockPostcode}`, { method: 'GET' });
       expect(result).toEqual({ ok: true, restaurants: mockRestaurants });
 

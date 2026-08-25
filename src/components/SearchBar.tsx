@@ -10,7 +10,11 @@ export const SearchBarComponent = ({ setPostcode, loading, onSubmit, isDarkMode,
                     placeholder="Enter a UK Postcode"
                     onChangeText={(text: string) => setPostcode(text)}
                     value={postcode}
-                    onSubmitEditing={() => onSubmit(postcode)}
+                    onSubmitEditing={() => {
+                        if (!loading) {
+                            onSubmit(postcode);
+                        }
+                    }}
                     style={[searchBarStyles.searchInput, isDarkMode && searchBarStyles.darksearchInput]}
                     placeholderTextColor="#888"
                     autoCapitalize="characters"

@@ -9,8 +9,8 @@
     "start": "react-native start",
     "test": "jest",
     "postinstall": "patch-package",
-    "createAPK": "cd android && gradlew.bat clean && gradlew.bat assembleRelease",
-    "clean": "cd android && gradlew.bat clean"
+    "createAPK": "cd android && ./gradlew clean assembleRelease",
+    "clean": "cd android && ./gradlew clean"
   },
   "dependencies": {
     "@react-native-community/netinfo": "^11.5.2",

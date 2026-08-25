@@ -34,8 +34,6 @@ local.properties
 *.keystore
 !debug.keystore
 .kotlin/
-gradlew
-gradlew.bat
 
 # node.js
 #
