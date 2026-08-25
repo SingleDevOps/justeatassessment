@@ -3,6 +3,7 @@ import SystemNavigationBar from 'react-native-system-navigation-bar';
 import { useColorScheme, Text, View, Alert, Image, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { handleSearch } from '../functions/api/apiRequest';
 import { SEARCH_ERROR_MESSAGES } from '../configs/errorMessages';
+import { SAMPLE_POSTCODE } from '../configs/api';
 import { mainpageStyles } from '../stylesheets/pages/mainPage';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { SearchBarComponent } from '../components/SearchBar';
@@ -33,7 +34,7 @@ const MainPage = ({ navigation }: MainPageProps) => {
       return;
     }
 
-    if (!netInfo.isConnected) {
+    if (!netInfo.isConnected && !(__DEV__ && cleaned === SAMPLE_POSTCODE)) {
       Alert.alert('No Internet Connection', 'Please check your internet.');
       return;
     }
